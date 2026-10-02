@@ -186,11 +186,11 @@ export default function WorkTimePage() {
     },
     { title: 'เข้างาน', dataIndex: 'timeIn', key: 'timeIn', align: 'center' },
     { title: 'ออกงาน', dataIndex: 'timeOut', key: 'timeOut', align: 'center' },
-    { title: 'เริ่มพัก', dataIndex: 'breakStart', key: 'breakStart', align: 'center' },
-    { title: 'เสร็จพัก', dataIndex: 'breakEnd', key: 'breakEnd', align: 'center' },
+    { title: 'เริ่มเวลาพัก', dataIndex: 'breakStart', key: 'breakStart', align: 'center' },
+    { title: 'สิ้นสุดเวลาพัก', dataIndex: 'breakEnd', key: 'breakEnd', align: 'center' },
     { title: 'วันทำงาน', dataIndex: 'workDays', key: 'workDays' },
     { title: 'เวลาที่ยอมให้สาย', dataIndex: 'allowedLate', key: 'allowedLate', align: 'center' },
-    { title: 'เวลาที่สายจนขาด', dataIndex: 'allowedAbsence', key: 'allowedLate', align: 'center' },
+    
     
     {
       title: 'จัดการ',
