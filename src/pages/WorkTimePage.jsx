@@ -30,6 +30,7 @@ export default function WorkTimePage() {
       breakEnd: '13:00',
       workDays: 'จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์',
       allowedLate: '0',
+      allowedAbsence: '0',
     },
     {
       key: '2',
@@ -44,6 +45,7 @@ export default function WorkTimePage() {
       breakEnd: '13:00',
       workDays: 'จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์',
       allowedLate: '0',
+      allowedAbsence: '0',
     },
     {
       key: '3',
@@ -58,6 +60,7 @@ export default function WorkTimePage() {
       breakEnd: '-',
       workDays: 'จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์',
       allowedLate: '-',
+      allowedAbsence: '0',
     },
     {
       key: '4',
@@ -72,6 +75,7 @@ export default function WorkTimePage() {
       breakEnd: '-',
       workDays: 'ทุกวัน',
       allowedLate: '0',
+      allowedAbsence: '0',
     },
   ]);
 
@@ -112,6 +116,7 @@ export default function WorkTimePage() {
       breakStart: record.breakStart === '-' ? '' : record.breakStart,
       breakEnd: record.breakEnd === '-' ? '' : record.breakEnd,
       allowedLate: record.allowedLate === '-' ? '' : record.allowedLate,
+      allowedAbsence: record.allowedAbsence === '-' ? '' : record.allowedAbsence,
     });
     setIsModalOpen(true);
   };
@@ -135,6 +140,8 @@ export default function WorkTimePage() {
           breakEnd: isHourFormat ? '-' : (values.breakEnd || '-'),
           workDays: 'จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์',
           allowedLate: isHourFormat ? '-' : (values.allowedLate || '0'),
+          allowedAbsence: isHourFormat ? '-' : (values.allowedLate || '0'),
+          
         };
         setDataSource([...dataSource, newRecord]);
         message.success('เพิ่มข้อมูลกะสำเร็จ');
@@ -183,6 +190,8 @@ export default function WorkTimePage() {
     { title: 'เสร็จพัก', dataIndex: 'breakEnd', key: 'breakEnd', align: 'center' },
     { title: 'วันทำงาน', dataIndex: 'workDays', key: 'workDays' },
     { title: 'เวลาที่ยอมให้สาย', dataIndex: 'allowedLate', key: 'allowedLate', align: 'center' },
+    { title: 'เวลาที่สายจนขาด', dataIndex: 'allowedAbsence', key: 'allowedLate', align: 'center' },
+    
     {
       title: 'จัดการ',
       key: 'action',
@@ -404,6 +413,10 @@ export default function WorkTimePage() {
                   </Row>
 
                   <Form.Item label="เวลาที่ยอมให้สาย :" name="allowedLate">
+                    <Input addonAfter="นาที" style={{ backgroundColor: '#fffbe6' }} />
+                  </Form.Item>
+
+                  <Form.Item label="เวลาที่สายจนขาด :" name="allowedAbsence">
                     <Input addonAfter="นาที" style={{ backgroundColor: '#fffbe6' }} />
                   </Form.Item>
                 </>
