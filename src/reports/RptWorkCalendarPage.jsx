@@ -246,7 +246,7 @@ export default function RptWorkCalendarPage() {
       onCell: (record) => {
         const st = record.statuses[item.day];
         if (st === 'holiday') {
-          return { style: { backgroundColor: '#ff7875', padding: 0 } };
+          return { style: { backgroundColor: '#e4e4e4', padding: 0 } };
         }
         return { style: { padding: 0 } };
       },
@@ -348,7 +348,7 @@ export default function RptWorkCalendarPage() {
               <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: '#1890ff', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ลา</Text></Space>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, background: '#ff7875', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์</Text></Space>
+              <Space><span style={{ width: 10, height: 10, background: '#e4e4e4', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์</Text></Space>
             </Col>
             <Col xs={12} sm={8} md={6}>
               <Space><span style={{ color: '#ff4d4f', fontWeight: 'bold' }}>✕</span> <Text style={{ fontSize: '12px' }}>= ขาดงาน</Text></Space>

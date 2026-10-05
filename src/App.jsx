@@ -27,6 +27,14 @@ import {
 
 // ดึงไฟล์หน้าต่างๆ เข้ามา
 import DashboardPage from './pages/DashboardPage';
+// Request
+import WorkCyclePage from './pages/WorkCyclePage';
+import WorkCycleDetailPage from './pages/WorkCycleDetailPage';
+import OTPage from './pages/OTPage';
+import OTDetailPage from './pages/OTDetailPage';
+import WFAPage from './pages/WFAPage';
+import WFADetailPage from './pages/WFADetailPage';
+
 // Report
 import RptAttatancePage from './reports/RptAttatancePage';
 import RptWorkCalendarPage from './reports/RptWorkCalendarPage';
@@ -36,13 +44,8 @@ import RptOvertimePage from './reports/RptOvertimePage';
 //Settings
 import WorkTimePage from './pages/WorkTimePage'; 
 import HolidayPage from './pages/HolidayPage';
-import WorkCyclePage from './pages/WorkCyclePage';
-import WorkCycleDetailPage from './pages/WorkCycleDetailPage';
 import LocationPage from './pages/LocationPage';
-import OTPage from './pages/OTPage';
-import OTDetailPage from './pages/OTDetailPage';
-import WFAPage from './pages/WFAPage';
-import WFADetailPage from './pages/WFADetailPage';
+
 
 
 
@@ -67,6 +70,16 @@ function MainLayout() {
   const menuItems = [
     { key: '/DashboardPage', icon: <ClockCircleOutlined />, label: 'dashboard' },
     { key: '/report/RptWorkCalendarPage', icon: <CalendarOutlined />, label: 'ปฏิทินสรุปการมาปฏิบัติราชการ' },
+    { key: '/report', icon: <FileSearchOutlined />, label: 'ตั้งค่าการทำงาน',
+children: [
+        { key: '/settings/WorkTimePage', label: 'ตั้งค่าเวลาการทำงาน' },
+        { key: '/settings/WorkCyclePage', label: 'ตั้งค่ารอบการมาปฏิบัติราชการ' },
+        { key: '/settings/OTPage', label: 'กำหนดผู้มีสิทธิทำงานล่วงเวลา' },
+        { key: '/settings/WFAPage', label: 'กำหนดผู้มีสิทธิลงเวลานอกสถานที่' },
+        
+      ],
+
+     },
     { key: '/report', icon: <FileSearchOutlined />, label: 'รายงาน',
 children: [
         { key: '/report/RptAttatancePage', label: 'รายงานสรุปการมาปฏิบัติราชการ' },
@@ -79,15 +92,12 @@ children: [
     {
       key: '/settings',
       icon: <SettingOutlined />,
-      label: 'ตั้งค่า',
+      label: 'ตั้งค่าข้อมูลพื้นฐาน',
       children: [
         { key: '/settings/HolidayPage', label: 'ตั้งค่าวันหยุดประจำปี' },
-        { key: '/settings/WorkTimePage', label: 'ตั้งค่าเวลาการทำงาน' },
-        { key: '/settings/LocationPage', label: 'ตั้งค่าพิกัดการลงเวลา' },
-        { key: '/settings/WorkCyclePage', label: 'ตั้งค่ารอบการมาปฏิบัติราชการ' },
         
-        { key: '/settings/OTPage', label: 'กำหนดผู้มีสิทธิทำงานล่วงเวลา' },
-        { key: '/settings/WFAPage', label: 'กำหนดผู้มีสิทธิลงเวลานอกสถานที่' },
+        { key: '/settings/LocationPage', label: 'ตั้งค่าพิกัดการลงเวลา' },
+        
       ],
     },
   ];
