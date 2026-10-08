@@ -186,10 +186,10 @@ export default function WorkTimePage() {
     },
     { title: 'เข้างาน', dataIndex: 'timeIn', key: 'timeIn', align: 'center' },
     { title: 'ออกงาน', dataIndex: 'timeOut', key: 'timeOut', align: 'center' },
-    { title: 'เริ่มเวลาพัก', dataIndex: 'breakStart', key: 'breakStart', align: 'center' },
-    { title: 'สิ้นสุดเวลาพัก', dataIndex: 'breakEnd', key: 'breakEnd', align: 'center' },
+    /*{ title: 'เริ่มเวลาพัก', dataIndex: 'breakStart', key: 'breakStart', align: 'center' },
+    { title: 'สิ้นสุดเวลาพัก', dataIndex: 'breakEnd', key: 'breakEnd', align: 'center' }, */
     { title: 'วันทำงาน', dataIndex: 'workDays', key: 'workDays' },
-    { title: 'เวลาที่ยอมให้สาย', dataIndex: 'allowedLate', key: 'allowedLate', align: 'center' },
+    /*{ title: 'เวลาที่ยอมให้สาย', dataIndex: 'allowedLate', key: 'allowedLate', align: 'center' },*/
     
     
     {
@@ -249,7 +249,7 @@ export default function WorkTimePage() {
         <div style={{ padding: '16px 0', marginBottom: 16 }}>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={8}>
-              <Space direction="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
+              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
                 <Text className="filter-label">หน่วยงาน :</Text>
                 <Select defaultValue="all">
                   <Option value="all">ทั้งหมด</Option>
@@ -261,43 +261,32 @@ export default function WorkTimePage() {
               </Space>
             </Col>
             <Col xs={24} md={8}>
-              <Space direction="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
+              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
                 <Text className="filter-label">เข้างาน :</Text>
                 <Input placeholder="เลือกเวลาเข้างาน" suffix={<ClockCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />} />
               </Space>
             </Col>
             <Col xs={24} md={8}>
-              <Space direction="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
+              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
                 <Text className="filter-label">ออกงาน :</Text>
                 <Input placeholder="เลือกเวลาออกงาน" suffix={<ClockCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />} />
               </Space>
             </Col>
 
             <Col xs={24} md={8}>
-              <Space direction="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
-                <Text className="filter-label">เวลาพัก :</Text>
-                <Input placeholder="เลือกเวลาเริ่มพัก" suffix={<ClockCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />} />
-              </Space>
-            </Col>
-            <Col xs={24} md={8}>
-              <Space direction="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
-                <Text className="filter-label">สิ้นสุดเวลาพัก :</Text>
-                <Input placeholder="เลือกเวลาสิ้นสุดพัก" suffix={<ClockCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />} />
-              </Space>
-            </Col>
-            <Col xs={24} md={8}>
-              <Space direction="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
+              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
                 <Text className="filter-label">ค้นหา :</Text>
                 <Input placeholder="รหัสตารางการทำงาน, ชื่อตารางการทำงาน" />
               </Space>
             </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <div style={{ textAlign: 'center', marginTop: 20 }}>
             <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: '#1890ff' }}>
               ค้นหา
             </Button>
           </div>
+          </Row>
+
+          
         </div>
 
         {/* ตารางแสดงผล */}
@@ -392,27 +381,22 @@ export default function WorkTimePage() {
                     </Col>
                   </Row>
 
-                  <Form.Item label="การกำหนดเวลาพัก :" name="breakType">
-                    <Radio.Group>
-                      <Radio value="custom">กำหนด</Radio>
-                      <Radio value="none">ไม่มีการพัก</Radio>
-                    </Radio.Group>
-                  </Form.Item>
+                  
 
                   <Row gutter={12}>
                     <Col span={12}>
-                      <Form.Item label="เริ่มพัก :" name="breakStart">
-                        <Input suffix={<ClockCircleOutlined />} placeholder="เลือกเวลาเริ่มพัก" />
+                      <Form.Item label="เวลาเข้างานกรณีลาครึ่งวันเช้า :" name="breakStart">
+                        <Input suffix={<ClockCircleOutlined />} placeholder="เวลาเข้างานกรณีลาครึ่งวันเช้า" />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
-                      <Form.Item label="เสร็จพัก :" name="breakEnd">
-                        <Input suffix={<ClockCircleOutlined />} placeholder="เลือกเวลาเสร็จพัก" />
+                      <Form.Item label="เวลาออกงานกรณีลาครึ่งวันบ่าย :" name="breakEnd">
+                        <Input suffix={<ClockCircleOutlined />} placeholder="เวลาเข้างานกรณีลาครึ่งวันบ่าย" />
                       </Form.Item>
                     </Col>
                   </Row>
 
-                  <Form.Item label="เวลาที่ยอมให้สาย :" name="allowedLate">
+                  <Form.Item label="เวลาที่อนุญาตให้สาย :" name="allowedLate">
                     <Input addonAfter="นาที" style={{ backgroundColor: '#fffbe6' }} />
                   </Form.Item>
 
