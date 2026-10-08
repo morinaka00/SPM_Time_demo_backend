@@ -27,6 +27,13 @@ import {
 
 // ดึงไฟล์หน้าต่างๆ เข้ามา
 import DashboardPage from './pages/DashboardPage';
+//Attandance
+import AttendancePage from './pages/attandance/AttendancePage';
+import CalendarPage from './pages/attandance/CalendarPage';
+import LeavehistoryPage from './pages/attandance/LeavehistoryPage';
+import OvertimeHistoryPage from './pages/attandance/OvertimeHistoryPage';
+import AttendanceHistoryPage from './pages/attandance/AttendanceHistoryPage';
+
 // Request
 import WorkCyclePage from './pages/WorkCyclePage';
 import WorkCycleDetailPage from './pages/WorkCycleDetailPage';
@@ -69,8 +76,19 @@ function MainLayout() {
 
   const menuItems = [
     { key: '/DashboardPage', icon: <ClockCircleOutlined />, label: 'dashboard' },
+    { key: '/attendance', icon: <FileSearchOutlined />, label: 'การปฏิบัติราชการ',
+children: [
+    { key: '/attendance/AttendancePage', icon: <ClockCircleOutlined />, label: 'ลงเวลาทำงาน' },
+    { key: '/attendance/AttendanceRequestPage', icon: <CalendarOutlined />, label: 'ขอลงเวลา' },
+    { key: '/attendance/CalendarPage', icon: <CalendarOutlined />, label: 'ปฏิทินการทำงาน' },
+    { key: '/attendance/LeavehistoryPage', icon: <SnippetsOutlined />, label: 'ประวัติการลา' },
+    { key: '/attendance/OvertimeHistoryPage', icon: <DashboardOutlined />, label: 'ประวัติการทำงานล่วงเวลา' },
+    
+],
+
+     },
     { key: '/report/RptWorkCalendarPage', icon: <CalendarOutlined />, label: 'ปฏิทินสรุปการมาปฏิบัติราชการ' },
-    { key: '/report', icon: <FileSearchOutlined />, label: 'ตั้งค่าการทำงาน',
+    { key: '/tasetting', icon: <FileSearchOutlined />, label: 'ตั้งค่าการทำงาน',
 children: [
         { key: '/settings/WorkTimePage', label: 'ตั้งค่าเวลาการทำงาน' },
         { key: '/settings/WorkCyclePage', label: 'ตั้งค่ารอบการมาปฏิบัติราชการ' },
@@ -98,6 +116,29 @@ children: [
         
         { key: '/settings/LocationPage', label: 'ตั้งค่าพิกัดการลงเวลา' },
         
+      ],
+    },
+    {
+      key: '/users',
+      icon: <SettingOutlined />,
+      label: 'ข้อมูลผู้ใช้งาน',
+      children: [
+        { key: '/users/UserPage', label: 'ข้อมูลผู้ใช้งาน' },
+        { key: '/users/UserGroupPage', label: 'สิทธิการใช้งาน' },
+        { key: '/users/ActivityPage', label: 'Activity Log' },
+        { key: '/users/LoginPage', label: 'Login Log' },
+      ],
+    },
+    {
+      key: '/system_settings',
+      icon: <SettingOutlined />,
+      label: 'การตั้งค่าการใช้งานระบบ',
+      children: [
+        { key: '/system_settings/MailPage', label: 'ตั้งค่า Mail Server' },
+        { key: '/system_settings/CaptchaPage', label: 'ตั้งค่า Captcha' },
+        { key: '/system_settings/LineOAPage', label: 'ตั้งค่าการแจ้งเตือน LINE OA' },
+        { key: '/system_settings/EULAPage', label: 'ประกาศความเป็นส่วนตัว' },
+        { key: '/system_settings/ConsentPage', label: 'ตั้งค่าการให้ความยินยอม' },
       ],
     },
   ];
@@ -174,6 +215,15 @@ children: [
               <Route path="/" element={<Navigate to="/DashboardPage" replace />} />
               
               <Route path="/DashboardPage" element={<DashboardPage />} />
+              
+              <Route path="/attendance/AttendancePage" element={<AttendancePage />} />
+              <Route path="/attendance/CalendarPage" element={<CalendarPage />} />
+              <Route path="/attendance/LeavehistoryPage" element={<LeavehistoryPage />} />
+              <Route path="/attendance/OvertimeHistoryPage" element={<OvertimeHistoryPage />} />
+              <Route path="/attendance/DashboardOutlined" element={<DashboardOutlined />} />
+              <Route path="/attendance/AttendanceHistoryPage" element={<AttendanceHistoryPage />} />
+              
+
 
               <Route path="/report/RptAttatancePage" element={<RptAttatancePage />} />
               <Route path="/report/RptWorkCalendarPage" element={<RptWorkCalendarPage />} />

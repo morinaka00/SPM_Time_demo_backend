@@ -1,160 +1,174 @@
 import React, { useState } from 'react';
-import { Card, Row, Col, Statistic, Button, Select, Input, Space, Tag, Avatar, Typography } from 'antd';
-import { 
-  TeamOutlined, 
-  DownloadOutlined, 
-  CalendarOutlined, 
-  LeftOutlined, 
-  RightOutlined,
-  SearchOutlined
-} from '@ant-design/icons';
+import { Typography, Row, Col, Button } from 'antd';
+import { LeftOutlined, RightOutlined, EnvironmentOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
-const { Option } = Select;
 
-export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState('normal');
+export default function CalendarPage() {
+  const [selectedDay, setSelectedDay] = useState(19); // ค่าเริ่มต้นเลือกวันที่ 19 (วันที่ตัวอย่างมีข้อมูลการลา)
 
-  // ข้อมูลจำลองพนักงาน
-  const attendanceList = [
-    { id: 41066, name: 'นาง xxx xxx', position: 'xxxx', timeOut: '14:40', timeIn: '08:02' },
-    { id: 40914, name: 'นาย xxx xxx', position: 'xxxxx', timeOut: '15:25', timeIn: '00:01' },
-    { id: 40822, name: 'นาย xxx xxxx', position: 'xxxxx', timeOut: '16:30', timeIn: '08:15' },
+  // จำลองข้อมูลตารางปฏิทินเดือนสิงหาคม 2569
+  const calendarWeeks = [
+    [
+      { day: 26, type: 'holiday', month: 'prev' },
+      { day: 27, type: 'complete', month: 'prev' },
+      { day: 28, type: 'complete', month: 'prev' },
+      { day: 29, type: 'complete', month: 'prev' },
+      { day: 30, type: 'complete', month: 'prev' },
+      { day: 31, type: 'complete', month: 'prev' },
+      { day: 1, type: 'holiday', month: 'current' },
+    ],
+    [
+      { day: 2, type: 'holiday', month: 'current' },
+      { day: 3, type: 'complete', month: 'current' },
+      { day: 4, type: 'complete', month: 'current' },
+      { day: 5, type: 'complete', month: 'current' },
+      { day: 6, type: 'complete', month: 'current' },
+      { day: 7, type: 'complete', month: 'current' },
+      { day: 8, type: 'holiday', month: 'current' },
+    ],
+    [
+      { day: 9, type: 'holiday', month: 'current' },
+      { day: 10, type: 'complete', month: 'current' },
+      { day: 11, type: 'complete', month: 'current' },
+      { day: 12, type: 'holiday', month: 'current' },
+      { day: 13, type: 'complete', month: 'current' },
+      { day: 14, type: 'complete', month: 'current' },
+      { day: 15, type: 'holiday', month: 'current' },
+    ],
+    [
+      { day: 16, type: 'holiday', month: 'current' },
+      { day: 17, type: 'complete', month: 'current' },
+      { day: 18, type: 'complete', month: 'current' },
+      { day: 19, type: 'incomplete', month: 'current' }, // วันที่ 19 มีข้อมูลไม่สมบูรณ์ (จุดแดง)
+      { day: 20, type: 'complete', month: 'current' },
+      { day: 21, type: 'complete', month: 'current' },
+      { day: 22, type: 'holiday', month: 'current' },
+    ],
+    [
+      { day: 23, type: 'holiday', month: 'current' },
+      { day: 24, type: 'complete', month: 'current' },
+      { day: 25, type: 'complete', month: 'current' },
+      { day: 26, type: 'normal', month: 'current' },
+      { day: 27, type: 'normal', month: 'current' },
+      { day: 28, type: 'normal', month: 'current' },
+      { day: 29, type: 'normal', month: 'current' },
+    ],
+    [
+      { day: 30, type: 'normal', month: 'current' },
+      { day: 31, type: 'normal', month: 'current' },
+      { day: 1, type: 'normal', month: 'next' },
+      { day: 2, type: 'normal', month: 'next' },
+      { day: 3, type: 'normal', month: 'next' },
+      { day: 4, type: 'normal', month: 'next' },
+      { day: 5, type: 'holiday', month: 'next' },
+    ],
   ];
 
-  // ข้อมูลจำลองการลา
-  const leaveList = [
-    { id: 40248, name: 'นาย xxx xxx', type: 'ลาป่วย', reason: 'มีน้ำมูก', time: '24 ส.ค. ,7:00-16:30' },
-    { id: 21001, name: 'นาย xxx xxx', type: 'ลาพักร้อน', reason: 'พักร้อน', time: '24 ส.ค. ,8:00-17:00' },
-    { id: 40249, name: 'นาง xxx xxx', type: 'ลาพักร้อน', reason: 'ไปทำธุระกับที่บ้าน', time: '24 ส.ค. ,7:00-11:15' },
-  ];
+  const weekDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์'];
 
   return (
-    <div style={{ width: '100%', maxWidth: '1300px', margin: '0 auto' }}>
+    <div style={{ maxWidth: 420, margin: '0 auto', background: '#fff', borderRadius: 8, overflow: 'hidden', border: '1px solid #d9d9d9', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
       
-      {/* CSS สำหรับบังคับให้ข้อความใน Dropdown (Select) ชิดซ้าย */}
-      <style>{`
-        .ant-select-selection-item, .ant-select-selection-search-input {
-          text-align: left !important;
-        }
-      `}</style>
-      
-      {/* 1. การ์ดสถิติด้านบนสุด 4 ช่อง */}
-      <Row gutter={[12, 12]} style={{ marginBottom: 20 }}>
-        <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#262626', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#d9d9d9' }}>เจ้าหน้าที่ทั้งหมด</span>} value={271} valueStyle={{ color: '#fff', fontWeight: 'bold' }} prefix={<TeamOutlined />} />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#1890ff', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#e6f7ff' }}>ลงเวลาแล้ว</span>} value="126 / 213" valueStyle={{ color: '#fff', fontWeight: 'bold' }} />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#13c2c2', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#e6fffb' }}>ลาวันนี้</span>} value={13} valueStyle={{ color: '#fff', fontWeight: 'bold' }} suffix="" />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#52c41a', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#f6ffed' }}>ปฏิบัติงานล่วงเวลา</span>} value={0} valueStyle={{ color: '#fff', fontWeight: 'bold' }} suffix="" />
-          </Card>
-        </Col>
-        
-      </Row>
-
-      {/* 2. แถบควบคุมวันที่และปุ่มส่งออก */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10, background: '#fff', padding: '12px 16px', borderRadius: 8, border: '1px solid #f0f0f0' }}>
-        <Text strong style={{ fontSize: '16px' }}>วันจันทร์ ที่ 24 สิงหาคม 2569</Text>
-        <Space wrap>
-          
-          <Input style={{ width: 130 }} defaultValue="24/08/2026" suffix={<CalendarOutlined />} />
-          <Button icon={<CalendarOutlined />} />
-          <Button>วันนี้</Button>
-          <Button icon={<LeftOutlined />} size="small" />
-          <Button icon={<RightOutlined />} size="small" />
-        </Space>
+      {/* 1. หัวข้อหน้า */}
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0' }}>
+        <Text strong style={{ fontSize: '16px' }}>ปฏิทินสรุปการทำงาน</Text>
       </div>
 
-      {/* 3. ส่วนเนื้อหาหลักแบ่งซ้าย (การลงเวลา) และขวา (การลา) */}
-      <Row gutter={[16, 16]}>
-        
-        {/* ฝั่งซ้าย: การลงเวลา */}
-        <Col xs={24} lg={14}>
-          <Card style={{ borderRadius: 8, height: '100%' }}>
-            
-            {/* แท็บตัวเลือกสถานะการลงเวลา */}
-            <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-              <Text strong style={{ fontSize: '15px', marginRight: 4 }}>การลงเวลา</Text>
-              <Button size="small" type={activeTab === 'normal' ? 'primary' : 'default'} ghost={activeTab !== 'normal'} onClick={() => setActiveTab('normal')} default>ปกติ</Button>
-              <Button size="small" type={activeTab === 'late' ? 'primary' : 'default'} ghost={activeTab !== 'late'} onClick={() => setActiveTab('late')} danger>สาย</Button>
-              <Button size="small" type={activeTab === 'early' ? 'primary' : 'default'} ghost={activeTab !== 'early'} onClick={() => setActiveTab('early')} danger>กลับก่อน</Button>
-              <Button size="small" type={activeTab === 'absent' ? 'primary' : 'default'} ghost={activeTab !== 'absent'} onClick={() => setActiveTab('absent')} danger>ขาด/ไม่ลงเวลา</Button>
-              <Button size="small" type={activeTab === 'all' ? 'primary' : 'default'} onClick={() => setActiveTab('all')}>ทั้งหมด</Button>
-            </div>
+      {/* 2. แถบเปลี่ยนเดือน */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', padding: '8px 16px', borderBottom: '1px solid #d9d9d9' }}>
+        <Button type="text" icon={<LeftOutlined />} size="small" />
+        <Text strong style={{ fontSize: '15px' }}>สิงหาคม 2569</Text>
+        <Button type="text" icon={<RightOutlined />} size="small" />
+      </div>
 
-            {/* ฟิลเตอร์ค้นหา */}
-            <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
-              <Col xs={24} sm={12}><Select defaultValue="dept" style={{ width: '100%', textAlign: 'left' }}><Option value="dept">หน่วยงาน</Option></Select></Col>
-              <Col xs={24} sm={12}><Select defaultValue="pos" style={{ width: '100%', textAlign: 'left' }}><Option value="pos">ตำแหน่ง</Option></Select></Col>
-              <Col xs={24} sm={12}><Select defaultValue="level" style={{ width: '100%', textAlign: 'left' }}><Option value="level">ระดับตำแหน่ง</Option></Select></Col>
-              <Col xs={24} sm={12}><Input placeholder="ชื่อ, รหัส" /></Col>
-            </Row>
+      {/* 3. แถบหัววันในสัปดาห์ */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', background: '#1890ff', color: '#fff', textAlign: 'center', fontSize: '12px', padding: '6px 0', fontWeight: 'bold' }}>
+        {weekDays.map((d, index) => (
+          <div key={index}>{d}</div>
+        ))}
+      </div>
 
-            <div style={{ textAlign: 'right', marginBottom: 16 }}>
-              <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1890ff' }}>ค้นหา</Button>
-            </div>
-
-            {/* รายการพนักงานและการลงเวลา */}
-            <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 12 }}>
-              {attendanceList.map((item, index) => (
-                <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
-                  <Space size={12}>
-                    <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} size={44} />
-                    <div>
-                      <Text strong>{item.name} ({item.id})</Text>
-                      <br />
-                      <Text type="secondary" style={{ fontSize: '12px' }}>{item.position}</Text>
-                    </div>
-                  </Space>
-                  <Space>
-                    <Tag color="success" style={{ fontSize: '14px', padding: '4px 12px', fontWeight: 'bold' }}>{item.timeOut}</Tag>
-                    <Tag color={index === 1 ? 'error' : 'success'} style={{ fontSize: '14px', padding: '4px 12px', fontWeight: 'bold' }}>{item.timeIn}</Tag>
-                  </Space>
+      {/* 4. ตาราง Grid วันที่และจุดสถานะ */}
+      <div style={{ padding: '8px 4px', background: '#fff', borderBottom: '1px solid #d9d9d9' }}>
+        {calendarWeeks.map((week, wIndex) => (
+          <div key={wIndex} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 6 }}>
+            {week.map((item, dIndex) => {
+              const isSelected = selectedDay === item.day && item.month === 'current';
+              return (
+                <div 
+                  key={dIndex} 
+                  onClick={() => item.month === 'current' && setSelectedDay(item.day)}
+                  style={{ 
+                    textAlign: 'center', 
+                    cursor: item.month === 'current' ? 'pointer' : 'default',
+                    padding: '4px 0',
+                    background: isSelected ? '#fffbe6' : 'transparent',
+                    border: isSelected ? '1px solid #ffe58f' : '1px solid transparent',
+                    borderRadius: 4,
+                    opacity: item.month === 'current' ? 1 : 0.4
+                  }}
+                >
+                  <div style={{ fontSize: '13px', color: '#262626', marginBottom: 2 }}>{item.day}</div>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    {item.type === 'complete' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #52c41a', display: 'inline-block' }} />}
+                    {item.type === 'holiday' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #1890ff', display: 'inline-block' }} />}
+                    {item.type === 'incomplete' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #ff4d4f', display: 'inline-block' }} />}
+                    {item.type === 'normal' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #d9d9d9', display: 'inline-block' }} />}
+                  </div>
                 </div>
-              ))}
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      {/* 5. คำอธิบายสัญลักษณ์ (Legend) */}
+      <div style={{ padding: '8px 16px', background: '#fafafa', borderBottom: '1px solid #d9d9d9', fontSize: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid #52c41a', display: 'inline-block' }} />
+          <Text style={{ fontSize: '12px' }}>ข้อมูลครบถ้วน</Text>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 4 }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid #1890ff', display: 'inline-block' }} />
+          <Text style={{ fontSize: '12px' }}>วันหยุด</Text>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid #ff4d4f', display: 'inline-block' }} />
+          <Text style={{ fontSize: '12px' }}>ข้อมูลไม่สมบูรณ์</Text>
+        </div>
+      </div>
+
+      {/* 6. ส่วนแสดงการลงเวลาของวันที่ถูกเลือก */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #d9d9d9', padding: '12px 16px' }}>
+        <Text strong style={{ fontSize: '15px', display: 'block', marginBottom: 8 }}>การลงเวลา</Text>
+        <Row gutter={8}>
+          <Col span={12} style={{ borderRight: '1px solid #f0f0f0', paddingRight: 8 }}>
+            <div style={{ fontSize: '11px', color: '#595959', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <EnvironmentOutlined /> The Government House
             </div>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#262626', marginTop: 2 }}>ลงเวลาเข้า (08:30)</div>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#52c41a', marginTop: 2 }}>08:10</div>
+          </Col>
+          <Col span={12} style={{ paddingLeft: 8 }}>
+            <div style={{ fontSize: '11px', color: '#595959', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <EnvironmentOutlined /> The Government House
+            </div>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#262626', marginTop: 2 }}>ลงเวลาออก (16:30)</div>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ff4d4f', marginTop: 2 }}>13:10</div>
+          </Col>
+        </Row>
+      </div>
 
-          </Card>
-        </Col>
-
-        {/* ฝั่งขวา: การลา */}
-        <Col xs={24} lg={10}>
-          <Card title={<Text strong style={{ fontSize: '16px' }}>การลา</Text>} style={{ borderRadius: 8, height: '100%' }}>
-            <Space orientation="vertical" size={16} style={{ width: '100%' }}>
-              {leaveList.map((leave, index) => (
-                <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottom: index < leaveList.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
-                  <Space size={12} align="start">
-                    <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=leave-${index}`} size={44} />
-                    <div>
-                      <Text strong>{leave.name} ({leave.id})</Text>
-                      <br />
-                      <Text type="secondary" style={{ fontSize: '13px' }}>ประเภท : {leave.type}</Text>
-                      <br />
-                      <Text type="secondary" style={{ fontSize: '13px' }}>เหตุผล : {leave.reason}</Text>
-                      <br />
-                      <Text style={{ fontSize: '12px', color: '#8c8c8c' }}>{leave.time}</Text>
-                    </div>
-                  </Space>
-                  <Tag color="success" style={{ margin: 0, fontWeight: 'bold' }}>อนุมัติแล้ว</Tag>
-                </div>
-              ))}
-            </Space>
-          </Card>
-        </Col>
-
-      </Row>
+      {/* 7. ส่วนแสดงข้อมูลการลา */}
+      <div style={{ background: '#fff', padding: '12px 16px' }}>
+        <Text strong style={{ fontSize: '15px', display: 'block', marginBottom: 6 }}>การลา</Text>
+        <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#262626' }}>ลาป่วย</div>
+        <div style={{ fontSize: '12px', color: '#595959', marginTop: 2 }}>(19 ส.ค. 2569 13:00 - 16:30)</div>
+        <div style={{ fontSize: '13px', marginTop: '4px' }}>
+          สถานะ : <span style={{ color: '#faad14', fontWeight: 'bold' }}>รออนุมัติ</span>
+        </div>
+      </div>
 
     </div>
   );
