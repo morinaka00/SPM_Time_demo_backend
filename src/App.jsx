@@ -34,24 +34,34 @@ import LeavehistoryPage from './pages/attandance/LeavehistoryPage';
 import OvertimeHistoryPage from './pages/attandance/OvertimeHistoryPage';
 import AttendanceHistoryPage from './pages/attandance/AttendanceHistoryPage';
 
+// Calendar Report
+import RptWorkCalendarPage from './reports/RptWorkCalendarPage';
+
+//Attandance Settings
+import WorkTimePage from './pages/attandance_setting/WorkTimePage'; 
+import WorkCyclePage from './pages/attandance_setting/WorkCyclePage';
+import WorkCycleDetailPage from './pages/attandance_setting/WorkCycleDetailPage';
+import OTPage from './pages/attandance_setting/OTPage';
+import OTDetailPage from './pages/attandance_setting/OTDetailPage';
+import WFAPage from './pages/attandance_setting/WFAPage';
+import WFADetailPage from './pages/attandance_setting/WFADetailPage';
+
 // Request
-import WorkCyclePage from './pages/WorkCyclePage';
-import WorkCycleDetailPage from './pages/WorkCycleDetailPage';
-import OTPage from './pages/OTPage';
-import OTDetailPage from './pages/OTDetailPage';
-import WFAPage from './pages/WFAPage';
-import WFADetailPage from './pages/WFADetailPage';
+
+
+
+// System Setting
+import HolidayGroupPage from './pages/setting/HolidayGroupPage';
+import HolidayPage from './pages/setting/HolidayPage';
+import LocationPage from './pages/setting/LocationPage';
 
 // Report
 import RptAttatancePage from './reports/RptAttatancePage';
-import RptWorkCalendarPage from './reports/RptWorkCalendarPage';
 import RptLeaveDetailPage from './reports/RptLeaveDetailPage';
 import RptOvertimePage from './reports/RptOvertimePage';
 
-//Settings
-import WorkTimePage from './pages/WorkTimePage'; 
-import HolidayPage from './pages/HolidayPage';
-import LocationPage from './pages/LocationPage';
+//user && permission
+import TermsConditionPage from './pages/setting/TermsConditionPage';
 
 
 
@@ -112,8 +122,8 @@ children: [
       icon: <SettingOutlined />,
       label: 'ตั้งค่าข้อมูลพื้นฐาน',
       children: [
+        { key: '/settings/HolidayGroupPage', label: 'ตั้งค่ากลุ่มวันหยุดประจำปี' },
         { key: '/settings/HolidayPage', label: 'ตั้งค่าวันหยุดประจำปี' },
-        
         { key: '/settings/LocationPage', label: 'ตั้งค่าพิกัดการลงเวลา' },
         
       ],
@@ -134,10 +144,11 @@ children: [
       icon: <SettingOutlined />,
       label: 'การตั้งค่าการใช้งานระบบ',
       children: [
+        { key: '/system_settings/ClientPage', label: 'ตั้งค่า การใช้งานของหน่วยงาน' },
         { key: '/system_settings/MailPage', label: 'ตั้งค่า Mail Server' },
         { key: '/system_settings/CaptchaPage', label: 'ตั้งค่า Captcha' },
         { key: '/system_settings/LineOAPage', label: 'ตั้งค่าการแจ้งเตือน LINE OA' },
-        { key: '/system_settings/EULAPage', label: 'ประกาศความเป็นส่วนตัว' },
+        { key: '/settings/TermsConditionPage', label: 'ประกาศความเป็นส่วนตัว' },
         { key: '/system_settings/ConsentPage', label: 'ตั้งค่าการให้ความยินยอม' },
       ],
     },
@@ -232,6 +243,7 @@ children: [
 
               {/* เปลี่ยนมาเรียกใช้งานคอมโพเนนต์ WorkTimePage จริงๆ ตรงนี้ */}
               <Route path="/settings/WorkTimePage" element={<WorkTimePage />} />
+              <Route path="/settings/HolidayGroupPage" element={<HolidayGroupPage title="ตั้งค่ากลุ่มวันหยุดประจำปี" />} />
               <Route path="/settings/HolidayPage" element={<HolidayPage title="ตั้งค่าวันหยุดประจำปี" />} />
               <Route path="/settings/WorkCyclePage" element={<WorkCyclePage title="ตั้งค่ารอบการมาปฏิบัติราชการ" />} />
               <Route path="/settings/WorkCycleDetailPage" element={<WorkCycleDetailPage title="ตั้งค่ารอบการมาปฏิบัติราชการ" />} />
@@ -240,6 +252,9 @@ children: [
               <Route path="/settings/OTDetailPage" element={<OTDetailPage title="Add/Edit ผู้มีสิทธิทำงานล่วงเวลา" />} />
               <Route path="/settings/WFAPage" element={<WFAPage title="กำหนดผู้มีสิทธิลงเวลานอกสถานที่" />} />
               <Route path="/settings/WFADetailPage" element={<WFADetailPage title="Add/Edit ผู้มีสิทธิลงเวลานอกสถานที่" />} />
+
+              <Route path="/settings/TermsConditionPage" element={<TermsConditionPage title="ตั้งค่าข้อกำหนดและเงื่อนไขการใช้งาน" />} />
+              
             </Routes>
           </div>
         </Content>
