@@ -33,6 +33,7 @@ import DashboardPage from './pages/DashboardPage';
 //Attandance การมาปฏิบัติราชการ
 import AttendancePage from './pages/attandance/AttendancePage';
 import CalendarPage from './pages/attandance/CalendarPage';
+import AttendanceRequestPage from './pages/attandance/AttendanceRequestPage';
 import LeavehistoryPage from './pages/attandance/LeavehistoryPage';
 import OvertimeHistoryPage from './pages/attandance/OvertimeHistoryPage';
 import AttendanceHistoryPage from './pages/attandance/AttendanceHistoryPage';
@@ -40,7 +41,7 @@ import AttendanceHistoryPage from './pages/attandance/AttendanceHistoryPage';
 // Calendar Report ปฏิทินสรุปการมาทำงาน
 import RptWorkCalendarPage from './reports/RptWorkCalendarPage';
 
-//Attandance Settings
+//Attandance Settings ตั้งค่าการทำงาน
 import WorkTimePage from './pages/attandance_setting/WorkTimePage'; 
 import WorkCyclePage from './pages/attandance_setting/WorkCyclePage';
 import WorkCycleDetailPage from './pages/attandance_setting/WorkCycleDetailPage';
@@ -49,14 +50,15 @@ import OTDetailPage from './pages/attandance_setting/OTDetailPage';
 import WFAPage from './pages/attandance_setting/WFAPage';
 import WFADetailPage from './pages/attandance_setting/WFADetailPage';
 
-// Request
 
 
 
 // System Setting
 import HolidayGroupPage from './pages/setting/HolidayGroupPage';
 import HolidayPage from './pages/setting/HolidayPage';
+import OTRatePage from './pages/setting/OTRatePage';
 import LocationPage from './pages/setting/LocationPage';
+
 
 // Report
 import RptAttatancePage from './reports/RptAttatancePage';
@@ -124,10 +126,11 @@ children: [
       key: '/settings',
       icon: <SettingOutlined />,
       label: 'ตั้งค่าข้อมูลพื้นฐาน',
-      children: [
+      children: [ 
         { key: '/settings/HolidayGroupPage', label: 'ตั้งค่ากลุ่มวันหยุดประจำปี' },
         { key: '/settings/HolidayPage', label: 'ตั้งค่าวันหยุดประจำปี' },
         { key: '/settings/LocationPage', label: 'ตั้งค่าพิกัดการลงเวลา' },
+        { key: '/settings/OTRatePage', label: 'ตั้งค่าอัตราค่าล่วงเวลา' },
         
       ],
     },
@@ -230,6 +233,7 @@ children: [
               <Route path="/DashboardPage" element={<DashboardPage />} />
               
               <Route path="/attendance/AttendancePage" element={<AttendancePage />} />
+               <Route path="/attendance/AttendanceRequestPage" element={<AttendanceRequestPage />} />
               <Route path="/attendance/CalendarPage" element={<CalendarPage />} />
               <Route path="/attendance/LeavehistoryPage" element={<LeavehistoryPage />} />
               <Route path="/attendance/OvertimeHistoryPage" element={<OvertimeHistoryPage />} />
@@ -247,6 +251,9 @@ children: [
               <Route path="/settings/WorkTimePage" element={<WorkTimePage />} />
               <Route path="/settings/HolidayGroupPage" element={<HolidayGroupPage title="ตั้งค่ากลุ่มวันหยุดประจำปี" />} />
               <Route path="/settings/HolidayPage" element={<HolidayPage title="ตั้งค่าวันหยุดประจำปี" />} />
+              <Route path="/settings/OTRatePage" element={<OTRatePage title="ตั้งค่าอัตราค่าล่วงเวลา" />} />
+
+              
               <Route path="/settings/WorkCyclePage" element={<WorkCyclePage title="ตั้งค่ารอบการมาปฏิบัติราชการ" />} />
               <Route path="/settings/WorkCycleDetailPage" element={<WorkCycleDetailPage title="ตั้งค่ารอบการมาปฏิบัติราชการ" />} />
               <Route path="/settings/LocationPage" element={<LocationPage title="ตั้งค่าพิกัดการลงเวลา" />} />
