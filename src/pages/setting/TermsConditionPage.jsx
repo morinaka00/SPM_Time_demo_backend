@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
-import { Card, Row, Col, Button, Select, Input, Table, Switch, Typography, Space, Checkbox } from 'antd';
+import { Card, Row, Col, Button, Select, Input, Table, Switch, Typography, Space, Checkbox, Pagination, DatePicker } from 'antd';
 import { 
   SearchOutlined, 
   PlusOutlined, 
   EyeOutlined, 
   EditOutlined, 
-  DeleteOutlined 
+  DeleteOutlined,
+  ArrowLeftOutlined,
+  ReloadOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 export default function TermsConditionPage() {
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState('list'); // 'list' หรือ 'detail'
+  const [currentTerm, setCurrentTerm] = useState(null);
 
-  // ข้อมูลจำลอง (Mock Data)
+  // ข้อมูลจำลอง (Mock Data) หน้าหลัก
   const [dataSource, setDataSource] = useState([
     { key: '1', version: '1', title: 'ข้อกำหนดและเงื่อนไขการใช้งาน', publishDate: '1 พ.ค. 2569', createDate: '-', acceptCount: 2, status: true },
     { key: '2', version: '2', title: 'เพิ่มเนื้อหาทดสอบ', publishDate: '21 พ.ค. 2569', createDate: '-', acceptCount: 2, status: false },
@@ -28,6 +33,12 @@ export default function TermsConditionPage() {
     { key: '9', version: '9', title: 'ข้อกำหนดและเงื่อนไขการใช้งาน1', publishDate: '7 ก.ย. 2569', createDate: '-', acceptCount: 21, status: true },
   ]);
 
+  // ข้อมูลจำลองรายชื่อผู้ยอมรับเงื่อนไข (Detail Data)
+  const detailDataSource = [
+    { key: '1', no: 1, name: 'DOE-59514 ทดสอบระบบ', email: 'kiattiphum.j2@gmail.com', ip: '172.26.0.3', consentDate: '8 ก.ค. 2569 16:03', publishDate: '1 พ.ค. 2569' },
+    { key: '2', no: 2, name: 'DLPW-13755 ทดสอบระบบ', email: 'adminssomolhrmsdev@gmail.com', ip: '172.26.0.3', consentDate: '8 ก.ค. 2569 16:04', publishDate: '1 พ.ค. 2569' },
+  ];
+
   // ฟังก์ชันสลับสถานะเปิด/ปิดใช้งาน (Switch)
   const handleStatusChange = (key, checked) => {
     setDataSource(prev => 
@@ -35,16 +46,22 @@ export default function TermsConditionPage() {
     );
   };
 
-  // โครงสร้าง Columns ของตาราง
+  // เมื่อคลิกที่จำนวนผู้ยอมรับเงื่อนไข
+  const handleRowClick = (record) => {
+    setCurrentTerm(record);
+    setViewMode('detail');
+  };
+
+  // ปุ่มย้อนกลับ
+  const handleBackToList = () => {
+    setViewMode('list');
+    setCurrentTerm(null);
+  };
+
+  // โครงสร้าง Columns หน้าหลัก
   const columns = [
-    {
-      title: <Checkbox />,
-      dataIndex: 'checkbox',
-      key: 'checkbox',
-      width: 50,
-      align: 'center',
-      render: () => <Checkbox />
-    },
+    
+  
     {
       title: 'Version',
       dataIndex: 'version',
@@ -78,8 +95,14 @@ export default function TermsConditionPage() {
       key: 'acceptCount',
       align: 'center',
       width: 160,
-      render: (count) => (
-        <a style={{ color: '#1890ff', fontWeight: '500' }}>
+      render: (count, record) => (
+        <a 
+          onClick={(e) => {
+            e.stopPropagation();
+            handleRowClick(record);
+          }}
+          style={{ color: '#1890ff', fontWeight: '500', cursor: 'pointer' }}
+        >
           ({count})
         </a>
       ),
@@ -104,26 +127,158 @@ export default function TermsConditionPage() {
       width: 100,
       render: (_, record) => (
         <Space size={4}>
-          
-          <Button 
-            type="text" 
-            size="small" 
-            icon={<EditOutlined />} 
-            style={{ color: '#1890ff' }} 
-            title="แก้ไข"
-          />
-          <Button 
-            type="text" 
-            size="small" 
-            icon={<DeleteOutlined />} 
-            style={{ color: '#ff4d4f' }} 
-            title="ลบ"
-          />
+          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#1890ff' }} title="แก้ไข" />
+          <Button type="text" size="small" icon={<DeleteOutlined />} style={{ color: '#ff4d4f' }} title="ลบ" />
         </Space>
       ),
     },
   ];
 
+  // โครงสร้าง Columns หน้ารายละเอียดผู้ยอมรับเงื่อนไข
+  const detailColumns = [
+    {
+      title: 'ลำดับ',
+      dataIndex: 'no',
+      key: 'no',
+      align: 'center',
+      width: 70,
+    },
+    {
+      title: 'ชื่อ-สกุล',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => <a style={{ color: '#1890ff' }}>{text}</a>,
+    },
+    {
+      title: 'อีเมล',
+      dataIndex: 'email',
+      key: 'email',
+      render: (text) => <a style={{ color: '#1890ff' }}>{text}</a>,
+    },
+    {
+      title: 'IP Address',
+      dataIndex: 'ip',
+      key: 'ip',
+      width: 130,
+    },
+    {
+      title: 'วันที่ยินยอม',
+      dataIndex: 'consentDate',
+      key: 'consentDate',
+      align: 'center',
+      width: 160,
+    },
+    {
+      title: 'วันที่เริ่มเผยแพร่เอกสาร',
+      dataIndex: 'publishDate',
+      key: 'publishDate',
+      align: 'center',
+      width: 160,
+    },
+  ];
+
+  // หากอยู่ในโหมดแสดงรายชื่อผู้ยอมรับเงื่อนไข (Detail View)
+  if (viewMode === 'detail') {
+    return (
+      <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
+        <style>{`
+          .ant-table-cell {
+            padding: 10px 12px !important;
+          }
+        `}</style>
+
+        {/* ส่วน Filter ค้นหาด้านบน (เพิ่มช่วงวันที่) */}
+        <div style={{ padding: '20px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+          <Row gutter={[16, 12]}>
+            <Col xs={24} md={12}>
+              <Row gutter={8} align="middle">
+                <Col span={6} style={{ textAlign: 'right' }}><Text>ตั้งแต่วันที่ :</Text></Col>
+                <Col span={18}>
+                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="เลือกวันที่เริ่มต้น" />
+                </Col>
+              </Row>
+            </Col>
+            <Col xs={24} md={12}>
+              <Row gutter={8} align="middle">
+                <Col span={6} style={{ textAlign: 'right' }}><Text>ถึงวันที่ :</Text></Col>
+                <Col span={18}>
+                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="เลือกวันที่สิ้นสุด" />
+                </Col>
+              </Row>
+            </Col>
+            <Col xs={24} md={12}>
+              <Row gutter={8} align="middle">
+                <Col span={6} style={{ textAlign: 'right' }}><Text>ค้นหา :</Text></Col>
+                <Col span={18}>
+                  <Input placeholder="ชื่อ อีเมล หรือ IP Address" allowClear />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <Space>
+              <Button icon={<ReloadOutlined />}>
+                ล้างเงื่อนไข
+              </Button>
+              <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 36px', height: '38px' }}>
+                ค้นหา
+              </Button>
+            </Space>
+          </div>
+        </div>
+
+        {/* ส่วนรายการข้อมูล */}
+        <Card 
+          title={<Text strong style={{ fontSize: '15px', color: '#1f2937' }}>รายการข้อมูล</Text>}
+          extra={
+            <Button 
+              icon={<ArrowLeftOutlined />} 
+              onClick={handleBackToList}
+              style={{ borderRadius: 6, fontWeight: '500' }}
+            >
+              ย้อนกลับ
+            </Button>
+          }
+          bordered={false}
+          style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+          headStyle={{ borderBottom: '1px solid #f0f0f0', padding: '0 20px' }}
+          bodyStyle={{ padding: '16px 20px' }}
+        >
+          {/* Pagination ด้านบน */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 12, gap: 12 }}>
+            <Text type="secondary" style={{ fontSize: '13px' }}>แสดง 1 ถึง 2 จากทั้งหมด 2 รายการ</Text>
+            <Pagination simple defaultCurrent={1} total={2} pageSize={25} />
+            <Select defaultValue={25} size="small" style={{ width: 85 }}>
+              <Option value={25}>25 / หน้า</Option>
+              <Option value={50}>50 / หน้า</Option>
+            </Select>
+          </div>
+
+          <Table 
+            dataSource={detailDataSource} 
+            columns={detailColumns} 
+            pagination={false} 
+            bordered={false}
+            size="middle"
+            rowClassName={(record, index) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
+          />
+
+          {/* Pagination ด้านล่าง */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 16, gap: 12 }}>
+            <Text type="secondary" style={{ fontSize: '13px' }}>แสดง 1 ถึง 2 จากทั้งหมด 2 รายการ</Text>
+            <Pagination simple defaultCurrent={1} total={2} pageSize={25} />
+            <Select defaultValue={25} size="small" style={{ width: 85 }}>
+              <Option value={25}>25 / หน้า</Option>
+              <Option value={50}>50 / หน้า</Option>
+            </Select>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  // โหมดแสดงรายการหลัก (List View)
   return (
     <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
       <style>{`
@@ -132,7 +287,6 @@ export default function TermsConditionPage() {
         }
       `}</style>
 
-      {/* Main Card with Dark Header matching the theme */}
       <Card 
         title={
           <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
@@ -147,7 +301,6 @@ export default function TermsConditionPage() {
         headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
         style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
       >
-        {/* ส่วน Filter ด้านบน */}
         <div style={{ padding: '20px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
@@ -179,7 +332,6 @@ export default function TermsConditionPage() {
           </div>
         </div>
 
-        {/* ตารางแสดงข้อมูล */}
         <Table 
           dataSource={dataSource} 
           columns={columns} 

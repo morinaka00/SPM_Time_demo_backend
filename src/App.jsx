@@ -26,15 +26,18 @@ import {
 } from '@ant-design/icons';
 
 // ดึงไฟล์หน้าต่างๆ เข้ามา
+
+// Dash Board
 import DashboardPage from './pages/DashboardPage';
-//Attandance
+
+//Attandance การมาปฏิบัติราชการ
 import AttendancePage from './pages/attandance/AttendancePage';
 import CalendarPage from './pages/attandance/CalendarPage';
 import LeavehistoryPage from './pages/attandance/LeavehistoryPage';
 import OvertimeHistoryPage from './pages/attandance/OvertimeHistoryPage';
 import AttendanceHistoryPage from './pages/attandance/AttendanceHistoryPage';
 
-// Calendar Report
+// Calendar Report ปฏิทินสรุปการมาทำงาน
 import RptWorkCalendarPage from './reports/RptWorkCalendarPage';
 
 //Attandance Settings
@@ -149,7 +152,6 @@ children: [
         { key: '/system_settings/CaptchaPage', label: 'ตั้งค่า Captcha' },
         { key: '/system_settings/LineOAPage', label: 'ตั้งค่าการแจ้งเตือน LINE OA' },
         { key: '/settings/TermsConditionPage', label: 'ประกาศความเป็นส่วนตัว' },
-        { key: '/system_settings/ConsentPage', label: 'ตั้งค่าการให้ความยินยอม' },
       ],
     },
   ];
