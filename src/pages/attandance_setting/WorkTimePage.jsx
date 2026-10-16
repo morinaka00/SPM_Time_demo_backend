@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Card, Row, Col, Button, Select, Input, Table, Space, Typography, 
-  Tooltip, Popconfirm, message, Modal, Form, Radio, Checkbox, Divider 
+  Tooltip, Popconfirm, message, Modal, Form, Checkbox, Divider 
 } from 'antd';
 import { 
   PlusOutlined, 
@@ -202,12 +202,12 @@ export default function WorkTimePage() {
             <Button 
               type="link" 
               icon={<EditOutlined />} 
-              style={{ color: '#1890ff', padding: 0 }} 
+              style={{ color: 'var(--navy-3)', padding: 0 }} 
               onClick={() => handleEditClick(record)}
             />
           </Tooltip>
           <Popconfirm title="คุณแน่ใจหรือไม่ที่จะลบรายการนี้?" onConfirm={() => handleDelete(record.key)} okText="ใช่" cancelText="ยกเลิก">
-            <Button type="link" icon={<DeleteOutlined />} style={{ color: '#ff4d4f', padding: 0 }} />
+            <Button type="link" icon={<DeleteOutlined />} style={{ color: 'var(--danger)', padding: 0 }} />
           </Popconfirm>
         </Space>
       ),
@@ -236,11 +236,11 @@ export default function WorkTimePage() {
 
       {/* Card หลัก */}
       <Card 
-        title={<Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>จัดการข้อมูลการลงเวลา</Text>}
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        title={<Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>จัดการข้อมูลการลงเวลา</Text>}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
         extra={
-          <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: '#1890ff' }} onClick={handleAddClick}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAddClick}>
             เพิ่ม
           </Button>
         }
@@ -263,13 +263,13 @@ export default function WorkTimePage() {
             <Col xs={24} md={8}>
               <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
                 <Text className="filter-label">เข้างาน :</Text>
-                <Input placeholder="เลือกเวลาเข้างาน" suffix={<ClockCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />} />
+                <Input placeholder="เลือกเวลาเข้างาน" suffix={<ClockCircleOutlined style={{ color: 'var(--text-muted)' }} />} />
               </Space>
             </Col>
             <Col xs={24} md={8}>
               <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
                 <Text className="filter-label">ออกงาน :</Text>
-                <Input placeholder="เลือกเวลาออกงาน" suffix={<ClockCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />} />
+                <Input placeholder="เลือกเวลาออกงาน" suffix={<ClockCircleOutlined style={{ color: 'var(--text-muted)' }} />} />
               </Space>
             </Col>
 
@@ -280,7 +280,7 @@ export default function WorkTimePage() {
               </Space>
             </Col>
             <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: '#1890ff' }}>
+            <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: 'var(--navy-3)' }}>
               ค้นหา
             </Button>
           </div>
@@ -313,24 +313,24 @@ export default function WorkTimePage() {
         width={900}
         okText="บันทึก"
         cancelText="ปิด"
-        okButtonProps={{ style: { backgroundColor: '#1f2937' } }}
+        okButtonProps={{ style: { backgroundColor: 'var(--navy-1)' } }}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           
           {/* หมวดที่ 1: เวลาในกะ */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #52c41a', paddingBottom: 6, marginBottom: 16 }}>
-            <Text style={{ color: '#52c41a', fontWeight: 'bold', fontSize: '15px' }}>เวลาในกะ</Text>
-            <DownOutlined style={{ color: '#52c41a' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid var(--ok)', paddingBottom: 6, marginBottom: 16 }}>
+            <Text style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '15px' }}>เวลาในกะ</Text>
+            <DownOutlined style={{ color: 'var(--ok)' }} />
           </div>
 
           <Row gutter={24}>
             <Col xs={24} md={14}>
               <Form.Item label="รหัสกะ :" name="code" rules={[{ required: true, message: 'กรุณากรอกรหัสกะ' }]}>
-                <Input placeholder="ระบุรหัสกะ" style={{ backgroundColor: '#fffbe6' }} />
+                <Input placeholder="ระบุรหัสกะ" style={{ backgroundColor: 'var(--gold-tint)' }} />
               </Form.Item>
 
               <Form.Item label="ชื่อกะ :" name="name" rules={[{ required: true, message: 'กรุณากรอกชื่อกะ' }]}>
-                <Input placeholder="ระบุชื่อกะ" style={{ backgroundColor: '#fffbe6' }} />
+                <Input placeholder="ระบุชื่อกะ" style={{ backgroundColor: 'var(--gold-tint)' }} />
               </Form.Item>
 
               <Form.Item label="หน่วยงาน :" name="department">
@@ -363,7 +363,7 @@ export default function WorkTimePage() {
                   <Input 
                     placeholder="ระบุจำนวนชั่วโมง เช่น 8" 
                     addonAfter="ชั่วโมง" 
-                    style={{ backgroundColor: '#fffbe6' }} 
+                    style={{ backgroundColor: 'var(--gold-tint)' }} 
                   />
                 </Form.Item>
               ) : (
@@ -371,12 +371,12 @@ export default function WorkTimePage() {
                   <Row gutter={12}>
                     <Col span={12}>
                       <Form.Item label="เข้างาน :" name="timeIn">
-                        <Input suffix={<ClockCircleOutlined />} placeholder="00:00" style={{ backgroundColor: '#fffbe6' }} />
+                        <Input suffix={<ClockCircleOutlined />} placeholder="00:00" style={{ backgroundColor: 'var(--gold-tint)' }} />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item label="ออกงาน :" name="timeOut">
-                        <Input suffix={<ClockCircleOutlined />} placeholder="08:00" style={{ backgroundColor: '#fffbe6' }} />
+                        <Input suffix={<ClockCircleOutlined />} placeholder="08:00" style={{ backgroundColor: 'var(--gold-tint)' }} />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -397,11 +397,11 @@ export default function WorkTimePage() {
                   </Row>
 
                   <Form.Item label="เวลาที่อนุญาตให้สาย :" name="allowedLate">
-                    <Input addonAfter="นาที" style={{ backgroundColor: '#fffbe6' }} />
+                    <Input addonAfter="นาที" style={{ backgroundColor: 'var(--gold-tint)' }} />
                   </Form.Item>
 
                   <Form.Item label="เวลาที่สายจนขาด :" name="allowedAbsence">
-                    <Input addonAfter="นาที" style={{ backgroundColor: '#fffbe6' }} />
+                    <Input addonAfter="นาที" style={{ backgroundColor: 'var(--gold-tint)' }} />
                   </Form.Item>
                 </>
               )}
@@ -409,7 +409,7 @@ export default function WorkTimePage() {
 
             {/* คอลัมน์ขวา: วันทำงานในสัปดาห์ */}
             <Col xs={24} md={10}>
-              <div style={{ background: '#fafafa', padding: 16, borderRadius: 8, border: '1px solid #f0f0f0' }}>
+              <div style={{ background: 'var(--bg)', padding: 16, borderRadius: 8, border: '1px solid var(--border-soft)' }}>
                 <Text strong style={{ display: 'block', marginBottom: 12 }}>วันทำงานประจำสัปดาห์ :</Text>
                 <Space direction="vertical" size={10}>
                   <Checkbox defaultChecked>อาทิตย์</Checkbox>

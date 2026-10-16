@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Card, Row, Col, Button, Select, Input, Table, Space, Typography, 
   Tooltip, Popconfirm, message, Modal, Form, Radio, Tag 
@@ -101,7 +101,7 @@ export default function LocationPage() {
       title: 'ชื่อสถานที่', 
       dataIndex: 'name', 
       key: 'name', 
-      render: (text) => <a style={{ color: '#1890ff', fontWeight: 'bold' }}>{text}</a> 
+      render: (text) => <a style={{ color: 'var(--navy-3)', fontWeight: 'bold' }}>{text}</a> 
     },
     { 
       title: 'ผู้สร้าง', 
@@ -147,12 +147,12 @@ export default function LocationPage() {
             <Button 
               type="link" 
               icon={<EditOutlined />} 
-              style={{ color: '#1890ff', padding: 0 }} 
+              style={{ color: 'var(--navy-3)', padding: 0 }} 
               onClick={() => handleEditClick(record)}
             />
           </Tooltip>
           <Popconfirm title="คุณแน่ใจหรือไม่ที่จะลบรายการนี้?" onConfirm={() => handleDelete(record.key)} okText="ใช่" cancelText="ยกเลิก">
-            <Button type="link" icon={<DeleteOutlined />} style={{ color: '#ff4d4f', padding: 0 }} />
+            <Button type="link" icon={<DeleteOutlined />} style={{ color: 'var(--danger)', padding: 0 }} />
           </Popconfirm>
         </Space>
       ),
@@ -178,17 +178,17 @@ export default function LocationPage() {
 
       {/* Card หลัก */}
       <Card 
-        title={<Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>สถานที่ลงเวลา</Text>}
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        title={<Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>สถานที่ลงเวลา</Text>}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
         extra={
-          <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: '#1890ff' }} onClick={handleAddClick}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAddClick}>
               เพิ่ม
             </Button>
         }
       >
         {/* ส่วน Filter */}
-        <div style={{ padding: '24px 16px', marginBottom: 16, background: '#fff' }}>
+        <div style={{ padding: '24px 16px', marginBottom: 16, background: 'var(--surface)' }}>
           <Row gutter={[16, 16]} align="middle" justify="center">
             <Col xs={24} md={4} style={{ textAlign: 'right' }}>
               <Text className="filter-label">สถานะ :</Text>
@@ -212,7 +212,7 @@ export default function LocationPage() {
           </Row>
 
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1890ff' }}>
+            <Button type="primary" icon={<SearchOutlined />}>
               ค้นหา
             </Button>
           </div>
@@ -241,7 +241,7 @@ export default function LocationPage() {
         width={650}
         okText="บันทึก"
         cancelText="ยกเลิก"
-        okButtonProps={{ style: { backgroundColor: '#1f2937', borderColor: '#1f2937' } }}
+        okButtonProps={{ style: { backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)' } }}
       >
         <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
           
@@ -255,9 +255,9 @@ export default function LocationPage() {
 
           <Form.Item label={<span style={{ fontWeight: '500' }}>Location :</span>}>
             <Button 
-              icon={<EnvironmentOutlined style={{ color: '#ea4335' }} />} 
+              icon={<EnvironmentOutlined style={{ color: 'var(--danger)' }} />} 
               onClick={() => message.info('เปิดหน้าต่าง Google Maps สำเร็จ')}
-              style={{ width: '100%', textAlign: 'left', height: '40px', borderColor: '#d9d9d9' }}
+              style={{ width: '100%', textAlign: 'left', height: '40px', borderColor: 'var(--border)' }}
             >
               ปักหมุดตำแหน่งบน Google Maps
             </Button>

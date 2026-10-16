@@ -1,24 +1,20 @@
-import React, { useState } from 'react';
-import { Card, Row, Col, Button, Select, Input, Table, Switch, Typography, Space, Checkbox, Pagination, DatePicker } from 'antd';
+import { useState } from 'react';
+import { Card, Row, Col, Button, Select, Input, Table, Switch, Typography, Space, Pagination, DatePicker } from 'antd';
 import { 
   SearchOutlined, 
   PlusOutlined, 
-  EyeOutlined, 
   EditOutlined, 
   DeleteOutlined,
   ArrowLeftOutlined,
   ReloadOutlined
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import dayjs from 'dayjs';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 export default function TermsConditionPage() {
-  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('list'); // 'list' หรือ 'detail'
-  const [currentTerm, setCurrentTerm] = useState(null);
+  const [, setCurrentTerm] = useState(null);
 
   // ข้อมูลจำลอง (Mock Data) หน้าหลัก
   const [dataSource, setDataSource] = useState([
@@ -73,7 +69,7 @@ export default function TermsConditionPage() {
       title: 'หัวข้อ',
       dataIndex: 'title',
       key: 'title',
-      render: (text) => <a style={{ color: '#1890ff' }}>{text}</a>
+      render: (text) => <a style={{ color: 'var(--navy-3)' }}>{text}</a>
     },
     {
       title: 'วันที่เริ่มเผยแพร่',
@@ -101,7 +97,7 @@ export default function TermsConditionPage() {
             e.stopPropagation();
             handleRowClick(record);
           }}
-          style={{ color: '#1890ff', fontWeight: '500', cursor: 'pointer' }}
+          style={{ color: 'var(--navy-3)', fontWeight: '500', cursor: 'pointer' }}
         >
           ({count})
         </a>
@@ -125,10 +121,10 @@ export default function TermsConditionPage() {
       key: 'action',
       align: 'center',
       width: 100,
-      render: (_, record) => (
+      render: () => (
         <Space size={4}>
-          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: '#1890ff' }} title="แก้ไข" />
-          <Button type="text" size="small" icon={<DeleteOutlined />} style={{ color: '#ff4d4f' }} title="ลบ" />
+          <Button type="text" size="small" icon={<EditOutlined />} style={{ color: 'var(--navy-3)' }} title="แก้ไข" />
+          <Button type="text" size="small" icon={<DeleteOutlined />} style={{ color: 'var(--danger)' }} title="ลบ" />
         </Space>
       ),
     },
@@ -147,13 +143,13 @@ export default function TermsConditionPage() {
       title: 'ชื่อ-สกุล',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <a style={{ color: '#1890ff' }}>{text}</a>,
+      render: (text) => <a style={{ color: 'var(--navy-3)' }}>{text}</a>,
     },
     {
       title: 'อีเมล',
       dataIndex: 'email',
       key: 'email',
-      render: (text) => <a style={{ color: '#1890ff' }}>{text}</a>,
+      render: (text) => <a style={{ color: 'var(--navy-3)' }}>{text}</a>,
     },
     {
       title: 'IP Address',
@@ -188,7 +184,7 @@ export default function TermsConditionPage() {
         `}</style>
 
         {/* ส่วน Filter ค้นหาด้านบน (เพิ่มช่วงวันที่) */}
-        <div style={{ padding: '20px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Row gutter={[16, 12]}>
             <Col xs={24} md={12}>
               <Row gutter={8} align="middle">
@@ -221,7 +217,7 @@ export default function TermsConditionPage() {
               <Button icon={<ReloadOutlined />}>
                 ล้างเงื่อนไข
               </Button>
-              <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 36px', height: '38px' }}>
+              <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}>
                 ค้นหา
               </Button>
             </Space>
@@ -230,7 +226,7 @@ export default function TermsConditionPage() {
 
         {/* ส่วนรายการข้อมูล */}
         <Card 
-          title={<Text strong style={{ fontSize: '15px', color: '#1f2937' }}>รายการข้อมูล</Text>}
+          title={<Text strong style={{ fontSize: '15px', color: 'var(--navy-1)' }}>รายการข้อมูล</Text>}
           extra={
             <Button 
               icon={<ArrowLeftOutlined />} 
@@ -240,10 +236,9 @@ export default function TermsConditionPage() {
               ย้อนกลับ
             </Button>
           }
-          bordered={false}
-          style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
-          headStyle={{ borderBottom: '1px solid #f0f0f0', padding: '0 20px' }}
-          bodyStyle={{ padding: '16px 20px' }}
+          variant="borderless"
+          style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.06)' }}
+          styles={{ header: { borderBottom: '1px solid var(--border-soft)', padding: '0 20px' }, body: { padding: '16px 20px' } }}
         >
           {/* Pagination ด้านบน */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 12, gap: 12 }}>
@@ -289,19 +284,19 @@ export default function TermsConditionPage() {
 
       <Card 
         title={
-          <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
+          <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
             ข้อกำหนดและเงื่อนไขการใช้งาน
           </Text>
         }
         extra={
-          <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: '#1890ff', borderColor: '#1890ff', fontWeight: '500' }}>
+          <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: 'var(--navy-3)', borderColor: 'var(--navy-3)', fontWeight: '500' }}>
             เพิ่ม
           </Button>
         }
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
-        <div style={{ padding: '20px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
               <Row gutter={8} align="middle">
@@ -326,7 +321,7 @@ export default function TermsConditionPage() {
           </Row>
 
           <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 36px', height: '38px' }}>
+            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}>
               ค้นหา
             </Button>
           </div>
@@ -335,7 +330,7 @@ export default function TermsConditionPage() {
         <Table 
           dataSource={dataSource} 
           columns={columns} 
-          pagination={{ pageSize: 10, position: ['bottomRight'] }} 
+          pagination={{ pageSize: 10, placement: ['bottomEnd'] }} 
           bordered
           size="middle"
           rowClassName={(record, index) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}

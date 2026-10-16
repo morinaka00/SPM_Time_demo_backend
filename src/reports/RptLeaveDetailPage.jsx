@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
 import { 
-  ArrowLeftOutlined, 
   SearchOutlined, 
   FileExcelOutlined 
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 export default function RptLeaveDetailPage() {
-  const navigate = useNavigate();
   const [searched, setSearched] = useState(false);
 
   // กดปุ่มค้นหาเพื่อแสดงตาราง
@@ -31,10 +28,10 @@ export default function RptLeaveDetailPage() {
       width: 34,
       render: (val) => {
         let bg = 'transparent';
-        let color = '#000';
-        if (val === 'ป') { bg = '#ffe58f'; color = '#d48806'; } // ป่วย/กิจ
-        else if (val === 'พ') { bg = '#d9f7be'; color = '#389e0d'; } // พักผ่อน
-        else if (val === 'ล') { bg = '#bae7ff'; color = '#096dd9'; } // ลาอื่นๆ
+        let color = 'var(--text-dark)';
+        if (val === 'ป') { bg = 'var(--warn-bg)'; color = 'var(--warn)'; } // ป่วย/กิจ
+        else if (val === 'พ') { bg = 'var(--ok-bg)'; color = 'var(--ok)'; } // พักผ่อน
+        else if (val === 'ล') { bg = 'var(--navy-tint)'; color = 'var(--navy-3)'; } // ลาอื่นๆ
         return (
           <span style={{ display: 'block', background: bg, color: color, fontWeight: 'bold', fontSize: '11px', borderRadius: 2 }}>
             {val || ''}
@@ -44,7 +41,7 @@ export default function RptLeaveDetailPage() {
       onCell: () => ({
         style: {
           // ทำไฮไลต์วันเสาร์-อาทิตย์จำลอง
-          backgroundColor: (i === 6 || i === 7 || i === 13 || i === 14 || i === 20 || i === 21 || i === 27 || i === 28) ? '#e6f4ea' : 'inherit',
+          backgroundColor: (i === 6 || i === 7 || i === 13 || i === 14 || i === 20 || i === 21 || i === 27 || i === 28) ? 'var(--ok-bg)' : 'inherit',
           fontSize: '11px',
           padding: '2px 1px',
           textAlign: 'center'
@@ -66,14 +63,14 @@ export default function RptLeaveDetailPage() {
           return {
             props: {
               colSpan: 38,
-              style: { backgroundColor: '#f0f2f5', fontWeight: 'bold' }
+              style: { backgroundColor: 'var(--bg)', fontWeight: 'bold' }
             },
-            children: <Text strong style={{ color: '#1f2937', fontSize: '13px' }}>{text}</Text>
+            children: <Text strong style={{ color: 'var(--navy-1)', fontSize: '13px' }}>{text}</Text>
           };
         }
         return (
           <div>
-            <Text strong style={{ fontSize: '12px', display: 'block', color: '#1f2937' }}>{text}</Text>
+            <Text strong style={{ fontSize: '12px', display: 'block', color: 'var(--navy-1)' }}>{text}</Text>
             {record.code && <Text type="secondary" style={{ fontSize: '10px' }}>({record.code})</Text>}
           </div>
         );
@@ -182,7 +179,7 @@ export default function RptLeaveDetailPage() {
       <Card 
         title={
           <Space>
-            <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
+            <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
               รายงานสรุปการลา
             </Text>
           </Space>
@@ -190,18 +187,18 @@ export default function RptLeaveDetailPage() {
         extra={
           <Button 
             icon={<FileExcelOutlined />} 
-            style={{ backgroundColor: '#f6ffed', borderColor: '#b7eb8f', color: '#52c41a', fontWeight: '500' }}
+            style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
           >
             รายงานสรุปการลา
           </Button>
           
         }
         
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบนเหมือนหน้า RptAttatancePage */}
-        <div style={{ padding: '20px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Row gutter={[16, 12]}>
             <Col xs={24} md={12}>
               <Row gutter={8} align="middle">
@@ -270,7 +267,7 @@ export default function RptLeaveDetailPage() {
               type="primary" 
               icon={<SearchOutlined />} 
               onClick={handleSearch}
-              style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 36px', height: '38px' }}
+              style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}
             >
               ค้นหา
             </Button>
@@ -292,7 +289,7 @@ export default function RptLeaveDetailPage() {
             />
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '60px 0', background: '#fafafa', borderRadius: 8, border: '1px dashed #d9d9d9' }}>
+          <div style={{ textAlign: 'center', padding: '60px 0', background: 'var(--bg)', borderRadius: 8, border: '1px dashed var(--border)' }}>
             <Empty description={<Text type="secondary">กรุณากดปุ่ม "ค้นหา" ด้านบนเพื่อแสดงรายงานสรุปการลา</Text>} />
           </div>
         )}

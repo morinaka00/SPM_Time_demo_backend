@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, DatePicker } from 'antd';
 import { 
   ArrowLeftOutlined, 
@@ -161,7 +160,7 @@ export default function RptAttatancePage() {
       width: 140,
       render: (text, record) => (
         <div>
-          <Text strong style={{ fontSize: '13px', display: 'block', color: '#b8860b' }}>{text}</Text>
+          <Text strong style={{ fontSize: '13px', display: 'block', color: 'var(--gold)' }}>{text}</Text>
           <Text type="secondary" style={{ fontSize: '11px' }}>({record.code})</Text>
         </div>
       ),
@@ -195,7 +194,7 @@ export default function RptAttatancePage() {
           key: 'inActual', 
           align: 'center', 
           width: 75,
-          render: (val) => <span style={{ color: '#1890ff' }}>{val}</span>
+          render: (val) => <span style={{ color: 'var(--navy-3)' }}>{val}</span>
         },
         { title: 'เหตุผล', dataIndex: 'inReason', key: 'inReason', align: 'center', width: 70 },
         { 
@@ -203,7 +202,7 @@ export default function RptAttatancePage() {
           dataIndex: 'inLocation', 
           key: 'inLocation', 
           width: 150,
-          render: (val) => <span style={{ fontSize: '11px', color: '#1890ff' }}>{val}</span>
+          render: (val) => <span style={{ fontSize: '11px', color: 'var(--navy-3)' }}>{val}</span>
         },
         { title: 'ระยะห่าง', dataIndex: 'inDistance', key: 'inDistance', align: 'center', width: 80 },
       ],
@@ -218,7 +217,7 @@ export default function RptAttatancePage() {
           key: 'outActual', 
           align: 'center', 
           width: 75,
-          render: (val) => <span style={{ color: '#1890ff' }}>{val}</span>
+          render: (val) => <span style={{ color: 'var(--navy-3)' }}>{val}</span>
         },
         { title: 'เหตุผล', dataIndex: 'outReason', key: 'outReason', align: 'center', width: 70 },
         { 
@@ -226,7 +225,7 @@ export default function RptAttatancePage() {
           dataIndex: 'outLocation', 
           key: 'outLocation', 
           width: 150,
-          render: (val) => <span style={{ fontSize: '11px', color: '#1890ff' }}>{val}</span>
+          render: (val) => <span style={{ fontSize: '11px', color: 'var(--navy-3)' }}>{val}</span>
         },
         { title: 'ระยะห่าง', dataIndex: 'outDistance', key: 'outDistance', align: 'center', width: 80 },
       ],
@@ -246,13 +245,13 @@ export default function RptAttatancePage() {
       align: 'center',
       width: 150,
       render: (val) => {
-        let color = '#52c41a';
-        if (val === 'ยังไม่สมบูรณ์') color = '#8c8c8c';
-        else if (val === 'ลงเวลาปกติ') color = '#52c41a';
-        else if (val === 'เข้างานสาย/ออกงานก่อนเวลา') color = '#fa8c16';
-        else if (val === 'ลา') color = '#1890ff';
-        else if (val === 'วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์') color = '#ff7875';
-        else if (val === 'ขาดงาน') color = '#ff4d4f';
+        let color = 'var(--ok)';
+        if (val === 'ยังไม่สมบูรณ์') color = 'var(--text-muted)';
+        else if (val === 'ลงเวลาปกติ') color = 'var(--ok)';
+        else if (val === 'เข้างานสาย/ออกงานก่อนเวลา') color = 'var(--warn)';
+        else if (val === 'ลา') color = 'var(--navy-3)';
+        else if (val === 'วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์') color = 'var(--danger)';
+        else if (val === 'ขาดงาน') color = 'var(--danger)';
 
         return (
           <span style={{ color, fontSize: '11px', fontWeight: '500' }}>
@@ -267,7 +266,7 @@ export default function RptAttatancePage() {
       align: 'center',
       width: 60,
       render: () => (
-        <Button type="text" icon={<ReloadOutlined style={{ color: '#1890ff' }} />} />
+        <Button type="text" icon={<ReloadOutlined style={{ color: 'var(--navy-3)' }} />} />
       ),
     },
   ];
@@ -283,8 +282,8 @@ export default function RptAttatancePage() {
       <Card 
         title={
           <Space>
-            <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: '#fff' }} onClick={() => navigate(-1)} />
-            <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
+            <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: 'var(--white)' }} onClick={() => navigate(-1)} />
+            <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
               รายละเอียดการเข้าทำงาน
             </Text>
           </Space>
@@ -292,16 +291,16 @@ export default function RptAttatancePage() {
         extra={
           <Button 
             icon={<FileExcelOutlined />} 
-            style={{ backgroundColor: '#f6ffed', borderColor: '#b7eb8f', color: '#52c41a', fontWeight: '500' }}
+            style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
           >
             Export Excel
           </Button>
         }
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบน */}
-        <div style={{ padding: '20px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Row gutter={[16, 12]}>
             <Col xs={24} md={12}>
               <Row gutter={8} align="middle">
@@ -401,7 +400,7 @@ export default function RptAttatancePage() {
           </Row>
 
           <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 36px', height: '38px' }}>
+            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}>
               ค้นหา
             </Button>
           </div>

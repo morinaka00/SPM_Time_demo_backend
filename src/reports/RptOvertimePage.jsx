@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
 import { 
   ArrowLeftOutlined, 
@@ -29,7 +29,7 @@ export default function RptOvertimePage() {
       dataIndex: 'name',
       key: 'name',
       width: 150,
-      render: (text) => <Text strong style={{ fontSize: '13px', color: '#1f2937' }}>{text}</Text>
+      render: (text) => <Text strong style={{ fontSize: '13px', color: 'var(--navy-1)' }}>{text}</Text>
     },
     {
       title: 'หน่วยงาน',
@@ -56,7 +56,7 @@ export default function RptOvertimePage() {
       key: 'timeRange',
       align: 'center',
       width: 110,
-      render: (val) => <span style={{ color: '#1890ff' }}>{val}</span>
+      render: (val) => <span style={{ color: 'var(--navy-3)' }}>{val}</span>
     },
     {
       title: 'เวลาเข้า-ออก งาน',
@@ -130,8 +130,8 @@ export default function RptOvertimePage() {
       <Card 
         title={
           <Space>
-            <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: '#fff' }} onClick={() => navigate(-1)} />
-            <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
+            <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: 'var(--white)' }} onClick={() => navigate(-1)} />
+            <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
               รายงานสรุปการทำงานล่วงเวลา
             </Text>
           </Space>
@@ -140,29 +140,29 @@ export default function RptOvertimePage() {
           <Space>
             <Button 
               icon={<FileExcelOutlined />} 
-              style={{ backgroundColor: '#f6ffed', borderColor: '#b7eb8f', color: '#52c41a', fontWeight: '500' }}
+              style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
             >
               Export Excel
             </Button>
             <Button 
               icon={<FilePdfOutlined />} 
-              style={{ backgroundColor: '#fff1f0', borderColor: '#ffa39e', color: '#ff4d4f', fontWeight: '500' }}
+              style={{ backgroundColor: 'var(--danger-bg)', borderColor: 'var(--danger-border)', color: 'var(--danger)', fontWeight: '500' }}
             >
               Export PDF
             </Button>
             <Button 
               icon={<PrinterOutlined />} 
-              style={{ backgroundColor: '#e6f4ff', borderColor: '#91caff', color: '#1677ff', fontWeight: '500' }}
+              style={{ backgroundColor: 'var(--navy-tint)', borderColor: 'var(--navy-tint-border)', color: 'var(--navy-3)', fontWeight: '500' }}
             >
               พิมพ์รายงาน
             </Button>
           </Space>
         }
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบน */}
-        <div style={{ padding: '20px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Row gutter={[16, 12]}>
             <Col xs={24} md={12}>
               <Row gutter={8} align="middle">
@@ -240,7 +240,7 @@ export default function RptOvertimePage() {
               type="primary" 
               icon={<SearchOutlined />} 
               onClick={handleSearch}
-              style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 36px', height: '38px' }}
+              style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}
             >
               ค้นหา
             </Button>
@@ -263,7 +263,7 @@ export default function RptOvertimePage() {
             />
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '60px 0', background: '#fafafa', borderRadius: 8, border: '1px dashed #d9d9d9' }}>
+          <div style={{ textAlign: 'center', padding: '60px 0', background: 'var(--bg)', borderRadius: 8, border: '1px dashed var(--border)' }}>
             <Empty description={<Text type="secondary">กรุณากดปุ่ม "ค้นหา" ด้านบนเพื่อแสดงรายงานสรุปการทำงานล่วงเวลา</Text>} />
           </div>
         )}

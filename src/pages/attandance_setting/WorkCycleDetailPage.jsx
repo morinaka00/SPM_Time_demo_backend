@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Card, Row, Col, Button, Select, Space, Typography, 
   Form, Avatar, Divider, DatePicker, Upload, message 
@@ -23,6 +23,9 @@ const availableStaffList = [
   { id: '40822', name: 'นาย xxx รักสงบ', role: 'เจ้าหน้าที่บุคคล' },
   { id: '40755', name: 'นางสาว สมหญิง จริงใจ', role: 'เจ้าหน้าที่บุคคล' },
 ];
+
+// รหัสเวลาการทำงาน — กำหนดแยกรายบุคคลในแต่ละรอบการทำงาน
+const workTimeCodes = ['1 (กะปกติ)', 'DH3 (กะเช้าพิเศษ)', 'DS (กะบ่าย)'];
 
 export default function WorkCycleDetailPage() {
   const navigate = useNavigate();
@@ -67,20 +70,20 @@ export default function WorkCycleDetailPage() {
       <Card 
         title={
           <Space>
-            <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: '#fff' }} onClick={() => navigate(-1)} />
-            <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
+            <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: 'var(--white)' }} onClick={() => navigate(-1)} />
+            <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
               {mode === 'add' ? 'เพิ่มรอบการทำงาน (workCycleDetails)' : 'แก้ไขรอบการทำงาน (workCycleDetails)'}
             </Text>
           </Space>
         }
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         <Form form={form} layout="vertical">
           <Row gutter={24}>
             {/* Panel ซ้าย: ฟอร์มข้อมูล */}
             <Col xs={24} md={12}>
-              <Card style={{ background: '#f9fafb', height: '100%' }} bordered={false}>
+              <Card style={{ background: 'var(--bg)', height: '100%' }} variant="borderless">
                 <Title level={5} style={{ marginBottom: 20, textAlign: 'left' }}>ข้อมูลรอบการทำงาน</Title>
                 
                 <Form.Item label="หน่วยงาน" name="department" rules={[{ required: true, message: 'กรุณาเลือกหน่วยงาน' }]}>
@@ -96,14 +99,6 @@ export default function WorkCycleDetailPage() {
                   <RangePicker format="DD/MM/YYYY" placeholder={['เริ่มต้น', 'สิ้นสุด']} style={{ width: '100%' }} />
                 </Form.Item>
 
-                <Form.Item label="รหัสเวลาการทำงาน" name="workTimeCode" rules={[{ required: true, message: 'กรุณาเลือกรหัสเวลาการทำงาน' }]}>
-                  <Select placeholder="เลือกรหัสเวลาการทำงาน">
-                    <Option value="1 (กะปกติ)">1 (กะปกติ)</Option>
-                    <Option value="DH3 (กะเช้าพิเศษ)">DH3 (กะเช้าพิเศษ)</Option>
-                    <Option value="DS (กะบ่าย)">DS (กะบ่าย)</Option>
-                  </Select>
-                </Form.Item>
-
                 <Form.Item label="กลุ่มวันหยุด" name="holidayGroup" rules={[{ required: true, message: 'กรุณาเลือกกลุ่มวันหยุด' }]}>
                   <Select placeholder="เลือกกลุ่มวันหยุด">
                     <Option value="วันหยุดพื้นฐาน">วันหยุดพื้นฐาน</Option>
@@ -112,7 +107,7 @@ export default function WorkCycleDetailPage() {
                 </Form.Item>
 
                 {/* ข้อ 2: เพิ่ม Attatch Document ก่อน label จำนวนคน */}
-                <Form.Item label="แนบเอกสาร" name="document">
+                <Form.Item label="แนบเอกสาร" name="document" valuePropName="fileList" getValueFromEvent={(e) => e?.fileList}>
                   <Upload beforeUpload={() => false}>
                     <Button icon={<UploadOutlined />} style={{ width: '100%', textAlign: 'left' }}>
                       เลือกไฟล์เอกสารประกอบ
@@ -128,7 +123,7 @@ export default function WorkCycleDetailPage() {
 
             {/* Panel ขวา: เลือกและแสดง Card เจ้าหน้าที่ */}
             <Col xs={24} md={12}>
-              <Card style={{ background: '#f9fafb', height: '100%' }} bordered={false}>
+              <Card style={{ background: 'var(--bg)', height: '100%' }} variant="borderless">
                 <Title level={5} style={{ marginBottom: 20, textAlign: 'left' }}>รายชื่อเจ้าหน้าที่ในรอบการทำงาน</Title>
 
                 {/* ข้อ 3: Dropdown บุคลากรเพิ่มปุ่ม Add ข้างหลัง */}
@@ -152,7 +147,7 @@ export default function WorkCycleDetailPage() {
                       type="primary" 
                       icon={<PlusOutlined />} 
                       onClick={handleAddStaff}
-                      style={{ width: '90px', backgroundColor: '#1f2937', borderColor: '#1f2937' }}
+                      style={{ width: '90px', backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)' }}
                     >
                       เพิ่ม
                     </Button>
@@ -161,45 +156,58 @@ export default function WorkCycleDetailPage() {
 
                 <Divider style={{ margin: '16px 0' }} />
 
-                <div style={{ maxHeight: '350px', overflowY: 'auto', paddingRight: '4px' }}>
+                <div style={{ maxHeight: '460px', overflowY: 'auto', paddingRight: '4px' }}>
                   {selectedStaffs.length === 0 ? (
-                    <div style={{ textAlign: 'center', color: '#999', padding: '30px 0' }}>
+                    <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '30px 0' }}>
                       ยังไม่ได้เลือกเจ้าหน้าที่
                     </div>
                   ) : (
                     selectedStaffs.map(staff => (
-                      <div 
-                        key={staff.id} 
-                        style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'space-between',
-                          background: '#fff', 
-                          padding: '12px 16px', 
-                          marginBottom: '10px', 
-                          borderRadius: '8px', 
-                          border: '1px solid #e5e7eb',
-                          boxShadow: '0 1px 2px rgba(0,0,0,0.02)',
+                      <div
+                        key={staff.id}
+                        style={{
+                          background: 'var(--surface)',
+                          padding: '12px 16px',
+                          marginBottom: '10px',
+                          borderRadius: '8px',
+                          border: '1px solid var(--border)',
+                          boxShadow: '0 1px 2px rgba(12,27,58,0.02)',
                           textAlign: 'left'
                         }}
                       >
-                        <Space size="middle">
-                          <Avatar size={44} icon={<UserOutlined />} style={{ backgroundColor: '#f0f2f5', color: '#595959' }} />
-                          <div>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px', display: 'block', textAlign: 'left' }}>
-                              {staff.name} ({staff.id})
-                            </Text>
-                            <Text type="secondary" style={{ fontSize: '12px', textAlign: 'left' }}>
-                              {staff.role}
-                            </Text>
-                          </div>
-                        </Space>
-                        <Button 
-                          type="text" 
-                          danger 
-                          icon={<DeleteOutlined />} 
-                          onClick={() => handleRemoveStaff(staff.id)}
-                        />
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <Space size="middle">
+                            <Avatar size={44} icon={<UserOutlined />} style={{ backgroundColor: 'var(--bg)', color: 'var(--text-muted)' }} />
+                            <div>
+                              <Text style={{ fontWeight: 'bold', fontSize: '14px', display: 'block', textAlign: 'left' }}>
+                                {staff.name} ({staff.id})
+                              </Text>
+                              <Text type="secondary" style={{ fontSize: '12px', textAlign: 'left' }}>
+                                {staff.role}
+                              </Text>
+                            </div>
+                          </Space>
+                          <Button
+                            type="text"
+                            danger
+                            icon={<DeleteOutlined />}
+                            onClick={() => handleRemoveStaff(staff.id)}
+                          />
+                        </div>
+
+                        {/* รหัสเวลาการทำงานของเจ้าหน้าที่แต่ละท่าน */}
+                        <Form.Item
+                          label="รหัสเวลาการทำงาน"
+                          name={['workTimeCodes', staff.id]}
+                          rules={[{ required: true, message: 'กรุณาเลือกรหัสเวลาการทำงาน' }]}
+                          preserve={false}
+                          style={{ margin: '12px 0 0' }}
+                        >
+                          <Select
+                            placeholder="เลือกรหัสเวลาการทำงาน"
+                            options={workTimeCodes.map(code => ({ value: code, label: code }))}
+                          />
+                        </Form.Item>
                       </div>
                     ))
                   )}
@@ -214,7 +222,7 @@ export default function WorkCycleDetailPage() {
                 type="primary" 
                 icon={<SaveOutlined />} 
                 onClick={handleSave}
-                style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 32px', height: 38 }}
+                style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 32px', height: 38 }}
               >
                 บันทึก
               </Button>

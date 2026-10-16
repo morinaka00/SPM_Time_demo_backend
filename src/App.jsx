@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Layout, Menu, Space, Card, Typography } from 'antd';
+import { Layout, Menu, ConfigProvider } from 'antd';
 import th_TH from 'antd/locale/th_TH'; // นำเข้าภาษาไทยของ Ant Design
+import './App.css';
+import BrandHeader from './components/BrandHeader';
+import HeaderActions from './components/HeaderActions';
+import { getOpmTheme } from './theme/opmTheme';
+import useThemeMode from './theme/useThemeMode';
 
 // ตั้งค่า Day.js ให้รองรับภาษาไทยและปี พ.ศ. (Buddhist Era) ทั่วทั้งแอป
 import dayjs from 'dayjs';
@@ -15,9 +20,6 @@ import {
   DashboardOutlined, 
   ClockCircleOutlined, 
   CalendarOutlined, 
-  FileTextOutlined, 
-  TeamOutlined, 
-  UserOutlined,
   SnippetsOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -71,21 +73,13 @@ import TermsConditionPage from './pages/setting/TermsConditionPage';
 
 
 
+
 const { Header, Content, Sider } = Layout;
-const { Title } = Typography; 
 
-// คอมโพเนนต์สำหรับหน้าตั้งค่า (ประกาศไว้ด้านนอกเพื่อป้องกัน Error)
-function SettingsPlaceholder({ title }) {
-  return (
-    <Card style={{ borderRadius: 8 }}>
-      <Title level={4}>{title}</Title>
-      <p>ระบบกำลังพัฒนาส่วนของการตั้งค่านี้...</p>
-    </Card>
-  );
-}
 
-function MainLayout() {
-  const [collapsed, setCollapsed] = useState(false);
+function MainLayout({ isDark, onToggleTheme }) {
+  // จอแคบกว่า md ให้เริ่มแบบย่อเมนู (onBreakpoint จะทำงานเฉพาะตอนขนาดจอเปลี่ยน)
+  const [collapsed, setCollapsed] = useState(() => window.matchMedia('(max-width: 767.98px)').matches);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -161,49 +155,34 @@ children: [
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      {/* CSS บังคับให้เมนูหลัก เมนูย่อย และข้อความภายในชิดซ้ายทั้งหมด */}
-      <style>{`
-        .ant-menu-item, .ant-menu-submenu-title, .ant-menu-sub .ant-menu-item {
-          text-align: left !important;
-        }
-        .ant-menu-item .ant-menu-title-content, 
-        .ant-menu-submenu-title .ant-menu-title-content, 
-        .ant-menu-sub .ant-menu-item .ant-menu-title-content {
-          text-align: left !important;
-          display: inline-block;
-          width: 100%;
-        }
-      `}</style>
 
-      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} theme="dark">
-        <div style={{ 
-          height: 64, 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          padding: '0 12px',
-          background: '#002140',
-          color: '#fff',
-          overflow: 'hidden',
-          whiteSpace: 'nowrap'
-        }}>
+      <Sider
+        className="app-sider"
+        width={232}
+        breakpoint="md"
+        onBreakpoint={(broken) => setCollapsed(broken)}
+        collapsible
+        trigger={null}
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        theme="dark"
+      >
+        <div className="brand" style={{ justifyContent: collapsed ? 'center' : 'flex-start' }}>
           {/* ปุ่มคลิกเพื่อเปิด/ปิดเมนู */}
-          <span 
-            onClick={() => setCollapsed(!collapsed)} 
-            style={{ fontSize: '18px', cursor: 'pointer', marginRight: 8, minWidth: '24px', textAlign: 'center', color: '#d4af37' }}
+          <span
+            className="brand-toggle"
+            onClick={() => setCollapsed(!collapsed)}
             title={collapsed ? "ขยายเมนู" : "ย่อเมนู"}
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </span>
-          <img 
-            src="/logo_spm.png" 
-            alt="Logo" 
-            style={{ width: 32, height: 32, objectFit: 'contain', minWidth: '32px' }} 
-          />
           {!collapsed && (
-            <span style={{ marginLeft: 10, fontSize: '13px', fontWeight: 'bold', lineHeight: '1.2' }}>
-              สำนักเลขาธิการ<br/>นายกรัฐมนตรี
-            </span>
+            <>
+              <span className="brand-name">
+                ระบบลงเวลา
+                <small>ปฏิบัติราชการ</small>
+              </span>
+            </>
           )}
         </div>
 
@@ -217,15 +196,15 @@ children: [
       </Sider>
 
       <Layout>
-        <Header style={{ background: '#001529', padding: '0 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#fff', boxShadow: '0 1px 4px rgba(0,21,41,.08)' }}>
-          <h2 style={{ margin: 0, fontSize: '16px', color: '#fff' }}>ระบบลงเวลาปฏิบัติราชการ</h2>
-          <Space>
-            <UserOutlined /> <span>เจ้าหน้าที่: สมชาย ใจดี (Developer)</span>
-          </Space>
+        <Header className="app-header">
+          <div className="app-header-left">
+            <BrandHeader size="sm" />
+          </div>
+          <HeaderActions isDark={isDark} onToggleTheme={onToggleTheme} />
         </Header>
 
-        <Content style={{ margin: '24px 16px' }}>
-          <div style={{ padding: 24, minHeight: 380, background: '#f5f5f5', borderRadius: 8 }}>
+        <Content className="app-content">
+          <div>
             <Routes>
               {/* สั่งให้เปิดหน้าเว็บมาแล้ว Redirect ไปที่หน้า Dashboard ทันที */}
               <Route path="/" element={<Navigate to="/DashboardPage" replace />} />
@@ -273,9 +252,12 @@ children: [
 }
 
 export default function App() {
+  const [isDark, toggleTheme] = useThemeMode();
   return (
-    <BrowserRouter>
-      <MainLayout />
-    </BrowserRouter>
+    <ConfigProvider theme={getOpmTheme(isDark)} locale={th_TH}>
+      <BrowserRouter>
+        <MainLayout isDark={isDark} onToggleTheme={toggleTheme} />
+      </BrowserRouter>
+    </ConfigProvider>
   );
 }

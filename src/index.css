@@ -1,111 +1,178 @@
+/* =========================================================
+   Design tokens — ธีม "กรมเข้ม ริบบิ้นทอง" (ดู Design.md)
+   ========================================================= */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* สีหลัก */
+  --navy-0: #081531;
+  --navy-1: #0c1b3a;
+  --navy-2: #152a55;
+  --navy-3: #26418a;
+  --navy-4: #1d3568;
+  --gold: #c9982c;
+  --gold-light: #e2bd5f;
+  --gold-pale: #f0d99a;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* พื้นหลังและเส้น */
+  --bg: #fbfaf7;
+  --white: #ffffff;
+  --surface: #ffffff; /* พื้นการ์ด/panel — เปลี่ยนตามโหมด ส่วน --white คงเป็นขาวเสมอ (ตัวอักษรบนพื้นกรม) */
+  --border: #e7e4dc;
+  --border-soft: #f1efe9;
+  --navy-tint: #eef1f8;
+  --navy-tint-border: #cfd8ec;
+  --gold-tint: #fdf8ea;
+  --row-hover: #f6f4ee;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
+  /* ตัวอักษร */
+  --text-dark: #0c1b3a;
+  --text-muted: #7c7a70;
+
+  /* สถานะ */
+  --ok: #1e6b48;
+  --ok-solid: #1e6b48; /* พื้นทึบของการ์ดสถิติ — ไม่เปลี่ยนตามโหมด */
+  --ok-bg: #f2fbf5;
+  --ok-border: #bfe3cb;
+  --warn: #b5460f;
+  --warn-bg: #fdf5ee;
+  --warn-border: #f3d3ba;
+  --danger: #c0392b;
+  --danger-bg: #fdf1ef;
+  --danger-border: #f2c6c0;
+  --idle: #a09c8e;
+
+  /* Gradient มาตรฐาน */
+  --grad-header: linear-gradient(105deg, #081531 0%, #0c1b3a 38%, #1d3568 100%);
+  --grad-sider: linear-gradient(180deg, #081531 0%, #0c1b3a 45%, #152a55 100%);
+  --grad-bar: linear-gradient(100deg, #0a1733 0%, #0f2246 55%, #1d3568 100%);
+  --grad-ribbon: linear-gradient(90deg, var(--gold), var(--gold-pale) 45%, rgba(240, 217, 154, 0));
+  --grad-gold: linear-gradient(180deg, var(--gold-light), var(--gold));
+  --grad-gold-hover: linear-gradient(180deg, #d3ab45, #ac7f1e);
+
+  /* เงา / รูปทรง / การเคลื่อนไหว */
+  --shadow-soft: 0 4px 12px rgba(12, 27, 58, 0.06);
+  --shadow-card: 0 10px 24px rgba(12, 27, 58, 0.12);
+  --radius: 8px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* ฟอนต์ */
+  --sans: 'Prompt', 'Sarabun', sans-serif;
+  --body: 'Sarabun', sans-serif;
+
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-dark);
   background: var(--bg);
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
-/*
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}*/
+/* ---------- โหมดมืด (สลับจากปุ่มใน Header, ค่า antd อยู่ที่ src/theme/opmTheme.js) ---------- */
+:root[data-theme='dark'] {
+  --navy-3: #4a68c0;
+  --bg: #12172a;
+  --surface: #1c2338;
+  --border: #2b3247;
+  --border-soft: #242b40;
+  --navy-tint: #1a2440;
+  --navy-tint-border: #2b3a63;
+  --gold-tint: rgba(201, 152, 44, 0.12);
+  --row-hover: #222a42;
 
+  --text-dark: #eef0f4;
+  --text-muted: #aab1c0;
+
+  --ok: #5fbf8f;
+  --ok-bg: #16302a;
+  --ok-border: #285844;
+  --warn: #e0915a;
+  --warn-bg: #33281a;
+  --warn-border: #5c4524;
+  --danger: #e57366;
+  --danger-bg: #3a2020;
+  --danger-border: #5a2f2f;
+  --idle: #7c8494;
+
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 10px 24px rgba(0, 0, 0, 0.4);
+
+  color-scheme: dark;
+}
+
+:root,
 body {
-  margin: 0;
+  transition: background-color 220ms var(--ease), color 220ms var(--ease);
 }
 
-#root {
-  /*width: 1126px;*/
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--text-dark);
+  font-family: var(--sans);
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Base typography ---------- */
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--sans);
+  color: var(--text-dark);
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 16px;
 }
+
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
   margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
 }
+
+h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+a {
+  color: var(--navy-3);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+::selection {
+  background: rgba(240, 217, 154, 0.55);
+  color: var(--navy-1);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
 }

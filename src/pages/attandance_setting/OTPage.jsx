@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Card, Row, Col, Button, Select, Table, Space, Typography, 
   Tooltip, Popconfirm, message, DatePicker 
@@ -93,12 +93,12 @@ export default function OTPage() {
             <Button 
               type="link" 
               icon={<EditOutlined />} 
-              style={{ color: '#1890ff', padding: 0 }} 
+              style={{ color: 'var(--navy-3)', padding: 0 }} 
               onClick={() => navigate(`/settings/OTDetailPage?id=${record.key}`)}
             />
           </Tooltip>
           <Popconfirm title="คุณแน่ใจหรือไม่ที่จะลบรายการนี้?" onConfirm={() => handleDelete(record.key)} okText="ใช่" cancelText="ยกเลิก">
-            <Button type="link" icon={<DeleteOutlined />} style={{ color: '#ff4d4f', padding: 0 }} />
+            <Button type="link" icon={<DeleteOutlined />} style={{ color: 'var(--danger)', padding: 0 }} />
           </Popconfirm>
         </Space>
       ),
@@ -124,15 +124,14 @@ export default function OTPage() {
 
       {/* Card หลัก[cite: 2] */}
       <Card 
-        title={<Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>กำหนดผู้มีสิทธิทำงานล่วงเวลา</Text>}
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        title={<Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>กำหนดผู้มีสิทธิทำงานล่วงเวลา</Text>}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
         extra={
           /*[cite: 2] เปลี่ยนจาก message.info เป็น navigate ไปหน้า OTDetailPage สำหรับโหมดเพิ่มข้อมูล */
           <Button 
             type="primary" 
-            icon={<PlusOutlined />} 
-            style={{ backgroundColor: '#1890ff' }}
+            icon={<PlusOutlined />}
             onClick={() => navigate('/settings/OTDetailPage')}
           >
             เพิ่ม
@@ -140,7 +139,7 @@ export default function OTPage() {
         }
       >
         {/* ส่วน Filter[cite: 2] */}
-        <div style={{ padding: '24px 16px', marginBottom: 16, background: '#fff' }}>
+        <div style={{ padding: '24px 16px', marginBottom: 16, background: 'var(--surface)' }}>
           <Row gutter={[16, 16]} align="middle" justify="center">
             
             {/* หน่วยงาน Dropdown[cite: 2] */}
@@ -171,8 +170,7 @@ export default function OTPage() {
           <div style={{ textAlign: 'center', marginTop: 24 }}>
             <Button 
               type="primary" 
-              icon={<SearchOutlined />} 
-              style={{ backgroundColor: '#1890ff' }}
+              icon={<SearchOutlined />}
             >
               ค้นหา
             </Button>

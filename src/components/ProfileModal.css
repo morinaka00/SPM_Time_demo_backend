@@ -1,0 +1,380 @@
+/* ProfileModal — สีอ้างอิง token ใน src/index.css จึงรองรับโหมดมืดอัตโนมัติ */
+
+/* ---------- โครง Modal ---------- */
+.profile-modal .ant-modal-container,
+.profile-modal .ant-modal-content {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 20px;
+}
+.profile-modal .ant-modal-header {
+  margin: 0;
+  padding: 18px 28px;
+  background: var(--grad-bar);
+  border-bottom: 2px solid var(--gold);
+}
+.profile-modal .ant-modal-title {
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+}
+.profile-modal .ant-modal-close {
+  top: 16px;
+  inset-inline-end: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.profile-modal .ant-modal-close:hover {
+  color: var(--gold-pale);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-modal-body {
+  display: flex;
+  height: min(78vh, 760px);
+}
+
+.profile-modal-nav {
+  width: 250px;
+  flex: none;
+  padding: 16px 10px;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+}
+.profile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  margin-bottom: 2px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-dark);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 220ms var(--ease), color 220ms var(--ease);
+}
+.profile-nav-item .anticon {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+.profile-nav-item:hover {
+  background: var(--row-hover);
+}
+.profile-nav-item.active {
+  position: relative;
+  background: rgba(201, 152, 44, 0.14);
+  color: var(--text-dark);
+  font-weight: 700;
+}
+.profile-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--gold);
+}
+.profile-nav-item.active .anticon {
+  color: var(--gold);
+}
+
+.profile-modal-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 28px 34px 32px;
+  background: var(--surface);
+}
+.profile-content-title {
+  margin-bottom: 4px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.profile-content-sub {
+  margin-bottom: 20px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.profile-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- ข้อมูลส่วนตัว ---------- */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+}
+.avatar-lg {
+  position: relative;
+  flex: none;
+}
+.avatar-lg .ant-avatar {
+  background: var(--navy-1);
+  color: var(--gold-pale);
+  border: 2px solid var(--gold-pale);
+}
+.avatar-edit-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-dark);
+  font-size: 11px;
+  cursor: pointer;
+}
+.avatar-edit-badge:hover {
+  color: var(--gold);
+}
+.p-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.p-role {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.p-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.tag-pill {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.profile-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.profile-form .ant-form-item {
+  margin-bottom: 16px;
+}
+.profile-form .ant-form-item-label > label {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.form-section-label {
+  margin: 22px 0 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.profile-form-hint {
+  margin-top: 4px;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* ---------- รหัสผ่าน ---------- */
+.pwd-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+.pwd-card {
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.pwd-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.pwd-card-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--navy-tint);
+  color: var(--navy-3);
+  font-size: 17px;
+}
+.pwd-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.pwd-card-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.pwd-rules {
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+}
+.pwd-rules-title {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.pwd-rules ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text-muted);
+}
+/* ข้อที่ผ่านแล้วขณะพิมพ์รหัสผ่านใหม่ */
+.pwd-rules li.ok {
+  color: var(--ok);
+}
+.pwd-rules li.ok::marker {
+  content: '✓  ';
+}
+
+/* ---------- การแจ้งเตือน ---------- */
+.notif-settings-colhead,
+.notif-settings-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 70px 70px;
+  align-items: center;
+  gap: 14px;
+}
+.notif-settings-colhead {
+  padding: 4px 0;
+}
+.nsr-col-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-dark);
+}
+.notif-settings-section {
+  margin: 18px 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--gold);
+}
+.notif-settings-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+.nsr-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 16px;
+}
+.nsr-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.nsr-desc {
+  margin-top: 2px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.nsr-switch {
+  justify-self: center;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .pwd-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .profile-modal-body {
+    flex-direction: column;
+    height: auto;
+    max-height: 82vh;
+  }
+  .profile-modal-nav {
+    display: flex;
+    width: 100%;
+    gap: 4px;
+    padding: 8px;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .profile-nav-item {
+    width: auto;
+    flex: none;
+    white-space: nowrap;
+  }
+  .profile-nav-item.active::before {
+    left: 10px;
+    right: 10px;
+    top: auto;
+    bottom: 0;
+    width: auto;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+  }
+  .profile-modal-content {
+    padding: 20px 16px 24px;
+  }
+  .profile-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .notif-settings-colhead,
+  .notif-settings-row {
+    grid-template-columns: 1fr 52px 52px;
+    gap: 8px;
+  }
+  .nsr-icon,
+  .notif-settings-colhead > div:first-child {
+    display: none;
+  }
+}

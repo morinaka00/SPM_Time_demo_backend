@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Typography, Row, Col, Button } from 'antd';
 import { LeftOutlined, RightOutlined, EnvironmentOutlined } from '@ant-design/icons';
 
@@ -68,29 +68,29 @@ export default function CalendarPage() {
   const weekDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์'];
 
   return (
-    <div style={{ maxWidth: 420, margin: '0 auto', background: '#fff', borderRadius: 8, overflow: 'hidden', border: '1px solid #d9d9d9', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+    <div className="panel">
       
       {/* 1. หัวข้อหน้า */}
-      <div style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0' }}>
-        <Text strong style={{ fontSize: '16px' }}>ปฏิทินสรุปการทำงาน</Text>
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-soft)' }}>
+        <Text strong className="section-label">ปฏิทินสรุปการทำงาน</Text>
       </div>
 
       {/* 2. แถบเปลี่ยนเดือน */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', padding: '8px 16px', borderBottom: '1px solid #d9d9d9' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface)', padding: '8px 16px', borderBottom: '1px solid var(--border)' }}>
         <Button type="text" icon={<LeftOutlined />} size="small" />
         <Text strong style={{ fontSize: '15px' }}>สิงหาคม 2569</Text>
         <Button type="text" icon={<RightOutlined />} size="small" />
       </div>
 
       {/* 3. แถบหัววันในสัปดาห์ */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', background: '#1890ff', color: '#fff', textAlign: 'center', fontSize: '12px', padding: '6px 0', fontWeight: 'bold' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', background: 'var(--grad-bar)', color: 'var(--gold-pale)', borderBottom: '2px solid var(--gold)', textAlign: 'center', fontSize: '12px', padding: '8px 0', fontWeight: 600 }}>
         {weekDays.map((d, index) => (
           <div key={index}>{d}</div>
         ))}
       </div>
 
       {/* 4. ตาราง Grid วันที่และจุดสถานะ */}
-      <div style={{ padding: '8px 4px', background: '#fff', borderBottom: '1px solid #d9d9d9' }}>
+      <div style={{ padding: '8px 4px', background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
         {calendarWeeks.map((week, wIndex) => (
           <div key={wIndex} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 6 }}>
             {week.map((item, dIndex) => {
@@ -103,18 +103,18 @@ export default function CalendarPage() {
                     textAlign: 'center', 
                     cursor: item.month === 'current' ? 'pointer' : 'default',
                     padding: '4px 0',
-                    background: isSelected ? '#fffbe6' : 'transparent',
-                    border: isSelected ? '1px solid #ffe58f' : '1px solid transparent',
-                    borderRadius: 4,
+                    background: isSelected ? 'rgba(240,217,154,0.22)' : 'transparent',
+                    border: isSelected ? '1px solid var(--gold)' : '1px solid transparent',
+                    borderRadius: 6, transition: 'background 220ms var(--ease)',
                     opacity: item.month === 'current' ? 1 : 0.4
                   }}
                 >
-                  <div style={{ fontSize: '13px', color: '#262626', marginBottom: 2 }}>{item.day}</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text-dark)', marginBottom: 2 }}>{item.day}</div>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {item.type === 'complete' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #52c41a', display: 'inline-block' }} />}
-                    {item.type === 'holiday' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #1890ff', display: 'inline-block' }} />}
-                    {item.type === 'incomplete' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #ff4d4f', display: 'inline-block' }} />}
-                    {item.type === 'normal' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid #d9d9d9', display: 'inline-block' }} />}
+                    {item.type === 'complete' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid var(--ok)', display: 'inline-block' }} />}
+                    {item.type === 'holiday' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid var(--navy-3)', display: 'inline-block' }} />}
+                    {item.type === 'incomplete' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid var(--danger)', display: 'inline-block' }} />}
+                    {item.type === 'normal' && <span style={{ width: 6, height: 6, borderRadius: '50%', border: '1.5px solid var(--border)', display: 'inline-block' }} />}
                   </div>
                 </div>
               );
@@ -124,49 +124,49 @@ export default function CalendarPage() {
       </div>
 
       {/* 5. คำอธิบายสัญลักษณ์ (Legend) */}
-      <div style={{ padding: '8px 16px', background: '#fafafa', borderBottom: '1px solid #d9d9d9', fontSize: '12px' }}>
+      <div style={{ padding: '8px 16px', background: 'var(--bg)', borderBottom: '1px solid var(--border)', fontSize: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid #52c41a', display: 'inline-block' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid var(--ok)', display: 'inline-block' }} />
           <Text style={{ fontSize: '12px' }}>ข้อมูลครบถ้วน</Text>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 4 }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid #1890ff', display: 'inline-block' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid var(--navy-3)', display: 'inline-block' }} />
           <Text style={{ fontSize: '12px' }}>วันหยุด</Text>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid #ff4d4f', display: 'inline-block' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', border: '2px solid var(--danger)', display: 'inline-block' }} />
           <Text style={{ fontSize: '12px' }}>ข้อมูลไม่สมบูรณ์</Text>
         </div>
       </div>
 
       {/* 6. ส่วนแสดงการลงเวลาของวันที่ถูกเลือก */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #d9d9d9', padding: '12px 16px' }}>
+      <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: '12px 16px' }}>
         <Text strong style={{ fontSize: '15px', display: 'block', marginBottom: 8 }}>การลงเวลา</Text>
         <Row gutter={8}>
-          <Col span={12} style={{ borderRight: '1px solid #f0f0f0', paddingRight: 8 }}>
-            <div style={{ fontSize: '11px', color: '#595959', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Col span={12} style={{ borderRight: '1px solid var(--border-soft)', paddingRight: 8 }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
               <EnvironmentOutlined /> The Government House
             </div>
-            <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#262626', marginTop: 2 }}>ลงเวลาเข้า (08:30)</div>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#52c41a', marginTop: 2 }}>08:10</div>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-dark)', marginTop: 2 }}>ลงเวลาเข้า (08:30)</div>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--ok)', marginTop: 2 }}>08:10</div>
           </Col>
           <Col span={12} style={{ paddingLeft: 8 }}>
-            <div style={{ fontSize: '11px', color: '#595959', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
               <EnvironmentOutlined /> The Government House
             </div>
-            <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#262626', marginTop: 2 }}>ลงเวลาออก (16:30)</div>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ff4d4f', marginTop: 2 }}>13:10</div>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-dark)', marginTop: 2 }}>ลงเวลาออก (16:30)</div>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--danger)', marginTop: 2 }}>13:10</div>
           </Col>
         </Row>
       </div>
 
       {/* 7. ส่วนแสดงข้อมูลการลา */}
-      <div style={{ background: '#fff', padding: '12px 16px' }}>
+      <div style={{ background: 'var(--surface)', padding: '12px 16px' }}>
         <Text strong style={{ fontSize: '15px', display: 'block', marginBottom: 6 }}>การลา</Text>
-        <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#262626' }}>ลาป่วย</div>
-        <div style={{ fontSize: '12px', color: '#595959', marginTop: 2 }}>(19 ส.ค. 2569 13:00 - 16:30)</div>
+        <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-dark)' }}>ลาป่วย</div>
+        <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: 2 }}>(19 ส.ค. 2569 13:00 - 16:30)</div>
         <div style={{ fontSize: '13px', marginTop: '4px' }}>
-          สถานะ : <span style={{ color: '#faad14', fontWeight: 'bold' }}>รออนุมัติ</span>
+          สถานะ : <span style={{ color: 'var(--warn)', fontWeight: 'bold' }}>รออนุมัติ</span>
         </div>
       </div>
 

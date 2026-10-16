@@ -1,184 +1,557 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* =========================================================
+   Component styles — Sider, Header, ริบบิ้นทอง, panel, ปุ่มทอง, การ์ด
+   ใช้ค่าจาก src/index.css เท่านั้น
+   ========================================================= */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+/* ---------- Sider ---------- */
+.app-sider.ant-layout-sider {
+  background: var(--grad-sider) !important;
+  box-shadow: 2px 0 12px rgba(8, 21, 49, 0.18);
+  position: sticky !important;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  z-index: 20;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
-}
-
-#center {
+.app-sider .ant-layout-sider-children {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
+}
+
+.app-sider .ant-menu-dark,
+.app-sider .ant-menu-dark .ant-menu-sub {
+  background: transparent !important;
+}
+
+.app-sider .ant-layout-sider-trigger {
+  background: var(--navy-0) !important;
+  color: var(--gold-pale);
+  border-top: 1px solid rgba(240, 217, 154, 0.15);
+}
+
+.app-sider::-webkit-scrollbar {
+  width: 6px;
+}
+.app-sider::-webkit-scrollbar-thumb {
+  background: rgba(240, 217, 154, 0.25);
+  border-radius: 999px;
+}
+
+.brand {
+  height: 64px;
+  flex: 0 0 64px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  color: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(240, 217, 154, 0.16);
+}
+
+.brand-toggle {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+  color: var(--gold-pale);
+  cursor: pointer;
+  transition: transform 220ms var(--ease), color 220ms var(--ease);
+}
+.brand-toggle:hover {
+  color: #fff;
+}
+
+.brand-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+.brand-name small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(240, 217, 154, 0.85);
+}
+
+.seal-sm {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  border: 1.6px solid rgba(240, 217, 154, 0.75);
+  background: radial-gradient(circle at 35% 30%, #1d3568, #0a1733);
+  display: grid;
   place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  overflow: hidden;
+}
+.seal-sm img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
+/* เมนู: ชิดซ้าย + แถบทองด้านซ้ายเมื่อเลือก */
+.app-sider .ant-menu-item,
+.app-sider .ant-menu-submenu-title {
   text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  font-family: var(--sans);
+  transition: background 220ms var(--ease), color 220ms var(--ease);
 }
-
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.app-sider .ant-menu-title-content {
+  white-space: normal;
+  line-height: 1.35;
 }
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
+.app-sider .ant-menu-dark .ant-menu-item-selected {
   position: relative;
+  font-weight: 500;
+}
+.app-sider .ant-menu-dark .ant-menu-item-selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--gold);
+}
+.app-sider .ant-menu-dark .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: var(--gold-pale) !important;
+}
+
+/* ---------- Header ---------- */
+.app-header.ant-layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+  padding: 0 24px;
+  background: var(--grad-header);
+  color: #fff;
+  line-height: 1.4;
+}
+
+/* ริบบิ้นทอง 3px ใต้ header */
+.app-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  background: var(--grad-ribbon);
+  pointer-events: none;
+}
+
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+/* ---------- Header actions: ธีม / แจ้งเตือน / ผู้ใช้ ---------- */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+}
+
+.icon-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 220ms var(--ease), color 220ms var(--ease);
+}
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--gold-pale);
+}
+
+/* ตัวเลขบนกระดิ่ง */
+.icon-btn-badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  min-width: 16px;
+  padding: 1px 4px;
+  border-radius: 8px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--navy-1);
+}
+:root[data-theme='dark'] .icon-btn-badge {
+  background: #c0392b;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: background 220ms var(--ease);
+}
+.header-user:hover,
+.header-user.ant-dropdown-open {
+  background: rgba(255, 255, 255, 0.08);
+}
+.header-user-text {
+  text-align: right;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.header-user-name {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.header-user-role {
+  display: block;
+  font-size: 11.5px;
+  color: var(--gold-pale);
+}
+.header-user .ant-avatar {
+  background: #fff;
+  color: var(--navy-1);
+  border: 2px solid var(--gold-pale);
+}
+
+/* ---------- Profile dropdown ---------- */
+.profile-menu {
+  width: 300px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 20px 44px rgba(10, 26, 60, 0.22);
+}
+.profile-menu-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--grad-bar);
+  border-bottom: 2px solid var(--gold);
+  color: #fff;
+}
+.profile-menu-head .ant-avatar {
+  background: #fff;
+  color: var(--navy-1);
+  border: 2px solid var(--gold-pale);
+}
+.profile-menu-name {
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.profile-menu-email {
+  font-size: 12px;
+  color: var(--gold-pale);
+}
+/* เมนูของ antd ภายใน dropdown — ตัดเงาซ้อนและปรับระยะให้เหมือนต้นแบบ */
+.profile-menu .ant-dropdown-menu {
+  max-height: min(60vh, 520px);
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.profile-menu .ant-dropdown-menu-item {
+  gap: 4px;
+  padding: 9px 12px !important;
+  border-radius: 10px !important;
+  font-size: 13.5px;
+}
+.profile-menu .ant-dropdown-menu-item .anticon {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+.profile-menu .ant-dropdown-menu-item-danger .anticon {
+  color: inherit;
+}
+.profile-menu .ant-dropdown-menu-item-group-title {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+}
+
+/* ---------- Notification drawer ---------- */
+.notif-drawer .ant-drawer-header {
+  background: var(--grad-bar);
+  border-bottom: 2px solid var(--gold);
+}
+.notif-drawer .ant-drawer-title,
+.notif-drawer .ant-drawer-close,
+.notif-drawer .ant-drawer-extra .ant-btn {
+  color: #fff;
+}
+.notif-drawer .ant-drawer-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.notif-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--gold-pale);
+}
+
+.notif-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.notif-chip {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text-dark);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 220ms var(--ease), border-color 220ms var(--ease);
+}
+.notif-chip.active {
+  background: var(--navy-1);
+  border-color: var(--navy-1);
+  color: #fff;
+}
+:root[data-theme='dark'] .notif-chip.active {
+  background: var(--navy-3);
+  border-color: var(--navy-3);
+}
+
+.notif-icon-filter {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  font-size: 15px;
+  cursor: pointer;
+}
+.notif-icon-filter.active {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.notif-icon-filter .cnt {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 14px;
+  padding: 1px 4px;
+  border-radius: 8px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.notif-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.notif-item {
+  display: flex;
+  gap: 14px;
   width: 100%;
+  padding: 14px 22px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  font-family: var(--sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background 220ms var(--ease);
+}
+.notif-item:hover {
+  background: var(--row-hover);
+}
+.notif-item-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-size: 16px;
+}
+.notif-item-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.notif-item-meta {
+  margin-top: 2px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.notif-empty {
+  padding: 40px 22px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+/* สีประจำหมวดการแจ้งเตือน */
+.tone-time { background: var(--ok-bg); color: var(--ok); }
+.tone-leave { background: var(--warn-bg); color: var(--warn); }
+.tone-ot { background: var(--gold-tint); color: var(--gold); }
+.tone-request { background: var(--navy-tint); color: var(--navy-3); }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+/* ---------- Content ---------- */
+.app-content.ant-layout-content {
+  padding: 28px 24px;
+  background: var(--bg);
+  min-height: calc(100vh - 64px);
+}
+
+@media (max-width: 560px) {
+  .app-content.ant-layout-content {
+    padding: 20px 12px;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+  .app-header.ant-layout-header {
+    padding: 0 12px;
   }
+  .header-user-text {
+    display: none;
+  }
+  .header-actions {
+    gap: 8px;
+  }
+}
+
+/* ---------- Section label ---------- */
+.section-label {
+  display: inline-block;
+  font-weight: 700 !important;
+  font-size: 16px;
+  color: var(--text-dark) !important;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--gold);
+}
+
+/* ---------- Panel (mobile card) ---------- */
+.panel {
+  max-width: 420px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+/* ---------- ปุ่มทอง ---------- */
+.ant-btn.btn-gold,
+.ant-btn.btn-gold:not(:disabled) {
+  background: var(--grad-gold);
+  border: 1px solid var(--gold);
+  color: #241a02;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(201, 152, 44, 0.3);
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), background 220ms var(--ease);
+}
+.ant-btn.btn-gold:not(:disabled):hover,
+.ant-btn.btn-gold:not(:disabled):focus-visible {
+  background: var(--grad-gold-hover) !important;
+  border-color: #ac7f1e !important;
+  color: #241a02 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(201, 152, 44, 0.38);
+}
+.ant-btn.btn-gold:not(:disabled):active {
+  transform: translateY(0);
+}
+
+/* ---------- การ์ดรายการ ---------- */
+.lift-card.ant-card {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease);
+}
+.lift-card.ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- Ant Design global polish ---------- */
+.app-content .ant-card {
+  border-color: var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+/* หัวการ์ดที่หน้าเดิมตั้งเป็นพื้นเข้ม → แถบกรมทึบ + เส้นทอง */
+.app-content .ant-card-head.card-head-navy,
+.app-content .ant-card-head[style*='--navy-1'] {
+  background: var(--grad-bar) !important;
+  border-bottom: 2px solid var(--gold);
+  color: #fff;
+}
+.app-content .ant-card-head[style*='--navy-1'] .ant-card-head-title,
+.app-content .ant-card-head[style*='--navy-1'] .ant-card-head-title .ant-typography {
+  color: #fff !important;
+}
+
+/* หัวตาราง */
+.app-content .ant-table-wrapper .ant-table-thead > tr > th {
+  background: var(--bg);
+  color: var(--text-dark);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+.app-content .ant-table-wrapper .ant-table-tbody > tr:hover > td {
+  background: var(--row-hover);
+}
+
+/* ปฏิทิน: วันที่ถูกเลือก */
+.app-content .ant-picker-calendar .ant-picker-cell-selected .ant-picker-calendar-date {
+  background: rgba(240, 217, 154, 0.22) !important;
+  border-color: var(--gold) !important;
 }

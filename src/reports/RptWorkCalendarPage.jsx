@@ -1,18 +1,14 @@
-import React, { useState } from 'react';
 import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, Popover } from 'antd';
 import { 
-  ArrowLeftOutlined, 
   SearchOutlined, 
   LeftOutlined, 
   RightOutlined 
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 export default function RptWorkCalendarPage() {
-  const navigate = useNavigate();
 
   // ข้อมูลจำลองพนักงานและสถานะการทำงานรายวัน (สิงหาคม 2026 มี 31 วัน)
   const staffData = [
@@ -92,29 +88,29 @@ export default function RptWorkCalendarPage() {
 
   // ฟังก์ชันเรนเดอร์สัญลักษณ์สถานะในแต่ละวัน พร้อม Popover รายละเอียด
   const renderStatusCell = (status) => {
-    let content = null;
+    let content;
     let popoverContent = null;
 
     switch (status) {
       case 'absent':
-        content = <span style={{ color: '#ff4d4f', fontSize: '16px', fontWeight: 'bold' }}>✕</span>;
+        content = <span style={{ color: 'var(--danger)', fontSize: '16px', fontWeight: 'bold' }}>✕</span>;
         popoverContent = (
 
           <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid #f0f0f0', paddingBottom: 4, textAlign: 'center' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
               ขาดงาน
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid #f0f0f0', paddingRight: 4 }}>
+              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
                 
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>-</div>
-                <div style={{ color: '#595959' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: '#c41a28', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>-</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
+                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
               </div>
               <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>-</div>
-                <div style={{ color: '#595959' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: '#c41a28', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>-</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
+                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
               </div>
             </div>
           </div>
@@ -123,23 +119,23 @@ export default function RptWorkCalendarPage() {
         );
         break;
       case 'incomplete':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#8c8c8c' }}></span>;
+        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--text-muted)' }}></span>;
         popoverContent = (
           <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid #f0f0f0', paddingBottom: 4, textAlign: 'center' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
               ยังไม่สมบูรณ์
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid #f0f0f0', paddingRight: 4 }}>
+              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
                 
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>The Government House</div>
-                <div style={{ color: '#595959' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: '#52c41a', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
+                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
               </div>
               <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>-</div>
-                <div style={{ color: '#595959' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: '#c41a28', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>-</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
+                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
               </div>
             </div>
           </div>
@@ -147,23 +143,23 @@ export default function RptWorkCalendarPage() {
         );
         break;
       case 'late':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#fa8c16' }}></span>;
+        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--warn)' }}></span>;
         popoverContent = (
           <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid #f0f0f0', paddingBottom: 4, textAlign: 'center' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
               เข้างานสาย/ออกงานก่อนเวลา
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid #f0f0f0', paddingRight: 4 }}>
+              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
                 
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>The Government House</div>
-                <div style={{ color: '#595959' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: '#52c41a', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
+                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
               </div>
               <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>The Government House</div>
-                <div style={{ color: '#595959' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: '#c41a28', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>16:10</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
+                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>16:10</div>
               </div>
             </div>
           </div>
@@ -171,33 +167,33 @@ export default function RptWorkCalendarPage() {
         );
         break;
       case 'leave':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#1890ff' }}></span>;
+        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--navy-3)' }}></span>;
         popoverContent = (
           <div style={{ textAlign: 'center', padding: '4px' }}>
             <Text strong style={{ fontSize: '12px' }}>ลาป่วย 08:30-16.30 </Text>
-            <div style={{ fontSize: '12px', color: '#595959', marginTop: 2 }}>มีไข้ มีน้ำมูก เจ็บคอ</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: 2 }}>มีไข้ มีน้ำมูก เจ็บคอ</div>
           </div>
         );
         break;
       case 'normal':
       case 'ontime':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#52c41a' }}></span>;
+        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--ok)' }}></span>;
         popoverContent = (
           <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid #f0f0f0', paddingBottom: 4, textAlign: 'center' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
               ลงเวลาปกติ
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid #f0f0f0', paddingRight: 4 }}>
+              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
                 
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>The Government House</div>
-                <div style={{ color: '#595959' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: '#52c41a', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
+                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
               </div>
               <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: '#595959' }}>The Government House</div>
-                <div style={{ color: '#595959' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: '#52c41a', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>16:31</div>
+                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
+                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
+                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>16:31</div>
               </div>
             </div>
           </div>
@@ -236,7 +232,7 @@ export default function RptWorkCalendarPage() {
       title: (
         <div style={{ textAlign: 'center', lineHeight: '1.2' }}>
           <div style={{ fontSize: '12px', fontWeight: 'bold' }}>{item.day}</div>
-          <div style={{ fontSize: '10px', color: '#8c8c8c' }}>{item.dow}</div>
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{item.dow}</div>
         </div>
       ),
       dataIndex: ['statuses', item.day],
@@ -246,7 +242,7 @@ export default function RptWorkCalendarPage() {
       onCell: (record) => {
         const st = record.statuses[item.day];
         if (st === 'holiday') {
-          return { style: { backgroundColor: '#e4e4e4', padding: 0 } };
+          return { style: { backgroundColor: 'var(--border)', padding: 0 } };
         }
         return { style: { padding: 0 } };
       },
@@ -268,23 +264,23 @@ export default function RptWorkCalendarPage() {
       <Card 
         title={
           <Space>
-            <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
+            <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
               ปฏิทินการเข้าทำงาน สิงหาคม 2026
             </Text>
           </Space>
         }
         extra={
           <Space>
-            <Button size="small" style={{ backgroundColor: '#fff', color: '#333' }}>เดือนปัจจุบัน</Button>
-            <Button size="small" icon={<LeftOutlined />} style={{ backgroundColor: '#fff', color: '#333' }} />
-            <Button size="small" icon={<RightOutlined />} style={{ backgroundColor: '#fff', color: '#333' }} />
+            <Button size="small" style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }}>เดือนปัจจุบัน</Button>
+            <Button size="small" icon={<LeftOutlined />} style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }} />
+            <Button size="small" icon={<RightOutlined />} style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }} />
           </Space>
         }
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบน */}
-        <div style={{ padding: '16px', marginBottom: 20, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '16px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
               <Row gutter={8} align="middle" style={{ marginBottom: 12 }}>
@@ -325,33 +321,33 @@ export default function RptWorkCalendarPage() {
           </Row>
 
           <div style={{ textAlign: 'center', marginTop: 16 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1890ff', padding: '0 32px' }}>
+            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-3)', padding: '0 32px' }}>
               ค้นหา
             </Button>
           </div>
         </div>
 
         {/* ส่วนคำอธิบายความหมายของสี (Legend) */}
-        <div style={{ marginBottom: 16, padding: '12px 16px', background: '#fff', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ marginBottom: 16, padding: '12px 16px', background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Text strong style={{ display: 'block', marginBottom: 8 }}>ความหมายของสี :</Text>
           <Row gutter={[16, 8]}>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: '#8c8c8c', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ยังไม่สมบูรณ์</Text></Space>
+              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--text-muted)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ยังไม่สมบูรณ์</Text></Space>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: '#52c41a', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ลงเวลาปกติ</Text></Space>
+              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--ok)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ลงเวลาปกติ</Text></Space>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: '#fa8c16', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= เข้างานสาย/ออกงานก่อนเวลา</Text></Space>
+              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--warn)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= เข้างานสาย/ออกงานก่อนเวลา</Text></Space>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: '#1890ff', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ลา</Text></Space>
+              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--navy-3)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ลา</Text></Space>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, background: '#e4e4e4', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์</Text></Space>
+              <Space><span style={{ width: 10, height: 10, background: 'var(--border)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์</Text></Space>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ color: '#ff4d4f', fontWeight: 'bold' }}>✕</span> <Text style={{ fontSize: '12px' }}>= ขาดงาน</Text></Space>
+              <Space><span style={{ color: 'var(--danger)', fontWeight: 'bold' }}>✕</span> <Text style={{ fontSize: '12px' }}>= ขาดงาน</Text></Space>
             </Col>
           </Row>
         </div>

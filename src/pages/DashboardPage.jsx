@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Row, Col, Statistic, Button, Select, Input, Space, Tag, Avatar, Typography, Segmented, Popover } from 'antd';
 import { 
   TeamOutlined, 
@@ -7,9 +7,7 @@ import {
   RightOutlined,
   SearchOutlined,
   UnorderedListOutlined,
-  EnvironmentOutlined,
-  UserOutlined
-} from '@ant-design/icons';
+  EnvironmentOutlined} from '@ant-design/icons';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -40,12 +38,13 @@ export default function DashboardPage() {
           text-align: left !important;
         }
         .map-container {
-          background: #e5e7eb;
+          background: var(--navy-tint);
           border-radius: 8px;
+          border: 1px solid var(--border);
           height: 380px;
           position: relative;
           overflow: hidden;
-          background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+          background-image: radial-gradient(var(--navy-tint-border) 1px, transparent 1px);
           background-size: 20px 20px;
           display: flex;
           align-items: center;
@@ -54,7 +53,7 @@ export default function DashboardPage() {
         .map-pin {
           position: absolute;
           cursor: pointer;
-          transition: transform 0.2s;
+          transition: transform 220ms var(--ease);
         }
         .map-pin:hover {
           transform: scale(1.15);
@@ -65,29 +64,29 @@ export default function DashboardPage() {
       {/* 1. การ์ดสถิติด้านบนสุด 4 ช่อง */}
       <Row gutter={[12, 12]} style={{ marginBottom: 20 }}>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#262626', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#d9d9d9' }}>เจ้าหน้าที่ทั้งหมด</span>} value={271} valueStyle={{ color: '#fff', fontWeight: 'bold' }} prefix={<TeamOutlined />} />
+          <Card variant={false} style={{ background: 'var(--grad-bar)', color: 'var(--white)', borderRadius: 8, borderBottom: '3px solid var(--gold)' }}>
+            <Statistic title={<span style={{ color: 'var(--gold-pale)' }}>เจ้าหน้าที่ทั้งหมด</span>} value={271} valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} prefix={<TeamOutlined />} />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#1890ff', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#e6f7ff' }}>ลงเวลาแล้ว</span>} value="126 / 213" valueStyle={{ color: '#fff', fontWeight: 'bold' }} />
+          <Card variant={false} style={{ background: 'var(--navy-3)', color: 'var(--white)', borderRadius: 8 }}>
+            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ลงเวลาแล้ว</span>} value="126 / 213" valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#13c2c2', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#e6fffb' }}>ลาวันนี้</span>} value={13} valueStyle={{ color: '#fff', fontWeight: 'bold' }} suffix="" />
+          <Card variant={false} style={{ background: 'var(--navy-3)', color: 'var(--white)', borderRadius: 8 }}>
+            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ลาวันนี้</span>} value={13} valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} suffix="" />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
-          <Card variant={false} style={{ background: '#52c41a', color: '#fff', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: '#f6ffed' }}>ปฏิบัติงานล่วงเวลา</span>} value={0} valueStyle={{ color: '#fff', fontWeight: 'bold' }} suffix="" />
+          <Card variant={false} style={{ background: 'var(--ok-solid)', color: 'var(--white)', borderRadius: 8 }}>
+            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ปฏิบัติงานล่วงเวลา</span>} value={0} valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} suffix="" />
           </Card>
         </Col>
       </Row>
 
       {/* 2. แถบควบคุมวันที่และปุ่มส่งออก */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10, background: '#fff', padding: '12px 16px', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10, background: 'var(--surface)', padding: '12px 16px', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
         <Text strong style={{ fontSize: '16px' }}>วันจันทร์ ที่ 24 สิงหาคม 2569</Text>
         <Space wrap>
           <Input style={{ width: 130 }} defaultValue="24/08/2026" suffix={<CalendarOutlined />} />
@@ -124,7 +123,7 @@ export default function DashboardPage() {
                 ]}
                 value={viewMode}
                 onChange={setViewMode}
-                style={{ backgroundColor: '#f0f0f0' }}
+                style={{ backgroundColor: 'var(--border-soft)' }}
               />
             </div>
 
@@ -137,15 +136,15 @@ export default function DashboardPage() {
             </Row>
 
             <div style={{ textAlign: 'right', marginBottom: 16 }}>
-              <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: '#1890ff' }}>ค้นหา</Button>
+              <Button type="primary" icon={<SearchOutlined />}>ค้นหา</Button>
             </div>
 
             {/* แสดงผลตาม View Mode ที่เลือก */}
             {viewMode === 'table' ? (
               /* 1. มุมมองแบบตาราง/รายการ */
-              <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 12 }}>
+              <div style={{ borderTop: '1px solid var(--border-soft)', paddingTop: 12 }}>
                 {attendanceList.map((item, index) => (
-                  <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
+                  <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--border-soft)' }}>
                     <Space size={12}>
                       <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} size={44} />
                       <div>
@@ -164,8 +163,8 @@ export default function DashboardPage() {
             ) : (
               /* 2. มุมมองแบบแผนที่ (Map View) */
               <div className="map-container">
-                <div style={{ position: 'absolute', top: 12, left: 16, background: 'rgba(255,255,255,0.9)', padding: '6px 12px', borderRadius: 6, border: '1px solid #d9d9d9', fontSize: '12px', fontWeight: 'bold', color: '#1f2937' }}>
-                  <EnvironmentOutlined style={{ color: '#ff4d4f', marginRight: 6 }} />
+                <div style={{ position: 'absolute', top: 12, left: 16, background: 'rgba(255,255,255,0.9)', padding: '6px 12px', borderRadius: 6, border: '1px solid var(--border)', fontSize: '12px', fontWeight: 'bold', color: 'var(--navy-1)' }}>
+                  <EnvironmentOutlined style={{ color: 'var(--danger)', marginRight: 6 }} />
                   แผนที่แสดงจุดลงเวลาพนักงาน (ทำเนียบรัฐบาล)
                 </div>
 
@@ -197,7 +196,7 @@ export default function DashboardPage() {
                   return (
                     <Popover key={index} content={popoverContent} title="รายละเอียดการลงเวลา" trigger="click">
                       <div className="map-pin" style={{ top: pos.top, left: pos.left }}>
-                        <div style={{ background: '#1890ff', color: '#fff', borderRadius: '20px', padding: '4px 10px', boxShadow: '0 2px 8px rgba(0,0,0,0.25)', display: 'flex', alignItems: 'center', gap: 6, border: '2px solid #fff' }}>
+                        <div style={{ background: 'var(--navy-3)', color: 'var(--white)', borderRadius: '20px', padding: '4px 10px', boxShadow: '0 2px 8px rgba(12,27,58,0.25)', display: 'flex', alignItems: 'center', gap: 6, border: '2px solid var(--white)' }}>
                           <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`} size={22} />
                           <span style={{ fontSize: '12px', fontWeight: 'bold' }}>{item.name.split(' ')[1]}</span>
                           <Tag color="success" style={{ margin: 0, fontSize: '10px', padding: '0 4px', lineHeight: '16px' }}>{item.timeIn}</Tag>
@@ -217,7 +216,7 @@ export default function DashboardPage() {
           <Card title={<Text strong style={{ fontSize: '16px' }}>การลา</Text>} style={{ borderRadius: 8, height: '100%' }}>
             <Space direction="vertical" size={16} style={{ width: '100%' }}>
               {leaveList.map((leave, index) => (
-                <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottom: index < leaveList.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
+                <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottom: index < leaveList.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
                   <Space size={12} align="start">
                     <Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=leave-${index}`} size={44} />
                     <div>
@@ -227,7 +226,7 @@ export default function DashboardPage() {
                       <br />
                       <Text type="secondary" style={{ fontSize: '13px' }}>เหตุผล : {leave.reason}</Text>
                       <br />
-                      <Text style={{ fontSize: '12px', color: '#8c8c8c' }}>{leave.time}</Text>
+                      <Text style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{leave.time}</Text>
                     </div>
                   </Space>
                   <Tag color="success" style={{ margin: 0, fontWeight: 'bold' }}>อนุมัติแล้ว</Tag>

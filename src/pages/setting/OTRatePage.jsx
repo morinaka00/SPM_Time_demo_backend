@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Card, Row, Col, Button, Select, Input, Table, Space, Typography, 
   Tooltip, Popconfirm, message, Modal, Form, Tag, InputNumber, Switch, Divider, Radio 
@@ -56,7 +56,6 @@ export default function OTRatePage() {
     },
   ]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [currentKey, setCurrentKey] = useState(null);
@@ -133,7 +132,7 @@ export default function OTRatePage() {
       dataIndex: 'ot_rate_name', 
       key: 'ot_rate_name', 
       render: (text, record) => (
-        <a onClick={() => handleEditClick(record)} style={{ color: '#1890ff', fontWeight: '500' }}>
+        <a onClick={() => handleEditClick(record)} style={{ color: 'var(--navy-3)', fontWeight: '500' }}>
           {text}
         </a>
       ) 
@@ -187,12 +186,12 @@ export default function OTRatePage() {
             <Button 
               type="link" 
               icon={<EditOutlined />} 
-              style={{ color: '#1890ff', padding: 0 }} 
+              style={{ color: 'var(--navy-3)', padding: 0 }} 
               onClick={() => handleEditClick(record)}
             />
           </Tooltip>
           <Popconfirm title="คุณแน่ใจหรือไม่ที่จะลบรายการนี้?" onConfirm={() => handleDelete(record.key)} okText="ใช่" cancelText="ยกเลิก">
-            <Button type="link" icon={<DeleteOutlined />} style={{ color: '#ff4d4f', padding: 0 }} />
+            <Button type="link" icon={<DeleteOutlined />} style={{ color: 'var(--danger)', padding: 0 }} />
           </Popconfirm>
         </Space>
       ),
@@ -223,18 +222,18 @@ export default function OTRatePage() {
 
       {/* Card หลัก */}
       <Card 
-        title={<Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>ตั้งค่าอัตราค่าล่วงเวลา </Text>}
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        title={<Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>ตั้งค่าอัตราค่าล่วงเวลา </Text>}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
         extra={
           <Space wrap>
-            <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: '#1890ff' }} onClick={handleAddClick}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={handleAddClick}>
               เพิ่ม
             </Button>
           </Space>
         }
       >
-        <div style={{ padding: '20px', marginBottom: 16, background: '#f9fafb', borderRadius: 8, border: '1px solid #f0f0f0' }}>
+        <div style={{ padding: '20px', marginBottom: 16, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
           <Row gutter={[16, 16]} align="middle">
             <Col xs={24} md={12}>
               <Row gutter={8} align="middle">
@@ -267,7 +266,7 @@ export default function OTRatePage() {
             <Button 
               type="primary" 
               icon={<SearchOutlined />} 
-              style={{ backgroundColor: '#1890ff', borderColor: '#1890ff', padding: '0 36px', height: '38px' }}
+              style={{ backgroundColor: 'var(--navy-3)', borderColor: 'var(--navy-3)', padding: '0 36px', height: '38px' }}
             >
               ค้นหา
             </Button>
@@ -353,8 +352,8 @@ export default function OTRatePage() {
 
               {/* Column 1 (Left): อัตราค่าล่วงเวลา - ปรับขยายส่วน Label และบีบช่อง Input ให้เหลือ 30-40% */}
               <Col xs={24} md={12}>
-                <div style={{ background: '#f9fafb', padding: '16px', borderRadius: 8, border: '1px solid #f0f0f0', height: '100%' }}>
-                  <Text strong style={{ fontSize: '15px', color: '#1f2937', display: 'block', marginBottom: 16, borderBottom: '2px solid #1890ff', paddingBottom: 6 }}>
+                <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: 8, border: '1px solid var(--border-soft)', height: '100%' }}>
+                  <Text strong style={{ fontSize: '15px', color: 'var(--navy-1)', display: 'block', marginBottom: 16, borderBottom: '2px solid var(--navy-3)', paddingBottom: 6 }}>
                     1. อัตราค่าล่วงเวลา
                   </Text>
 
@@ -390,8 +389,8 @@ export default function OTRatePage() {
 
               {/* Column 2 (Right): รูปแบบการคำนวน */}
               <Col xs={24} md={12}>
-                <div style={{ background: '#f9fafb', padding: '16px', borderRadius: 8, border: '1px solid #f0f0f0', height: '100%' }}>
-                  <Text strong style={{ fontSize: '15px', color: '#1f2937', display: 'block', marginBottom: 16, borderBottom: '2px solid #1890ff', paddingBottom: 6 }}>
+                <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: 8, border: '1px solid var(--border-soft)', height: '100%' }}>
+                  <Text strong style={{ fontSize: '15px', color: 'var(--navy-1)', display: 'block', marginBottom: 16, borderBottom: '2px solid var(--navy-3)', paddingBottom: 6 }}>
                     2. รูปแบบการคำนวน
                   </Text>
 
@@ -415,12 +414,12 @@ export default function OTRatePage() {
             </Row>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: 20, paddingTop: 14, borderTop: '1px solid #f0f0f0' }}>
+          <div style={{ textAlign: 'center', marginTop: 20, paddingTop: 14, borderTop: '1px solid var(--border-soft)' }}>
             <Space size="middle">
               <Button 
                 type="primary" 
                 onClick={handleModalSubmit}
-                style={{ backgroundColor: '#1890ff', borderColor: '#1890ff', padding: '0 32px', height: 38 }}
+                style={{ backgroundColor: 'var(--navy-3)', borderColor: 'var(--navy-3)', padding: '0 32px', height: 38 }}
               >
                 บันทึก
               </Button>

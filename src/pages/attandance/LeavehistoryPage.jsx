@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Select, Row, Col, Tag, Space, Typography, Empty } from 'antd';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
@@ -30,7 +30,7 @@ export default function LeaveHistoryPage() {
       case 'approved':
         return <Tag color="success">อนุมัติแล้ว</Tag>;
       case 'pending':
-        return <Tag color="processing">รออนุมัติ</Tag>;
+        return <Tag color="warning">รออนุมัติ</Tag>;
       case 'rejected':
         return <Tag color="error">ไม่อนุมัติ</Tag>;
       default:
@@ -42,7 +42,7 @@ export default function LeaveHistoryPage() {
     <div>
       {/* ส่วนหัวข้อและฟิลเตอร์ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
-        <Title level={4} style={{ margin: 0 }}>ประวัติการขอลาหยุด (DPIS)</Title>
+        <Title level={4} className="section-label" style={{ margin: 0 }}>ประวัติการขอลาหยุด (DPIS)</Title>
         <Space>
           <Select value={year} onChange={value => setYear(value)} style={{ width: 110 }}>
             <Option value="all">ทุกปี</Option>
@@ -76,7 +76,7 @@ export default function LeaveHistoryPage() {
         <Row gutter={[16, 16]}>
           {filteredData.map(item => (
             <Col xs={24} sm={12} lg={8} key={item.id}>
-              <Card 
+              <Card className="lift-card"
                 title={item.type} 
                 extra={renderStatusTag(item.status)}
                 hoverable
@@ -84,7 +84,7 @@ export default function LeaveHistoryPage() {
               >
                 <Space direction="vertical" size={8} style={{ width: '100%' }}>
                   <Text>
-                    <CalendarOutlined style={{ marginRight: 8, color: '#1890ff' }} />
+                    <CalendarOutlined style={{ marginRight: 8, color: 'var(--navy-3)' }} />
                     <strong>ช่วงวันที่:</strong> {item.startDate} ถึง {item.endDate}
                   </Text>
                   <Text type="secondary">

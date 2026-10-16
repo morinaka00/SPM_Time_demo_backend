@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Select, Row, Col, Tag, Space, Typography, Empty, Button, Input, DatePicker, TimePicker } from 'antd';
 import { 
   CalendarOutlined, 
@@ -23,7 +23,7 @@ export default function AttendanceRequestPage() {
   const [reqOption, setReqOption] = useState('normal'); 
 
   // จำลองข้อมูลประวัติการขอลงเวลาทั้งหมด[cite: 11]
-  const [leaveData, setLeaveData] = useState([
+  const [leaveData] = useState([
     { id: 1, type: 'ขอลงเวลา', startDate: '2026-06-10', startTime: '08:30', endTime: '17:30', reason: 'ลืมลงเวลา', location: 'อาคาร สลน.', status: 'approved', year: '2026', month: '06' },
     { id: 2, type: 'ขอลงเวลาทั้งวัน', startDate: '2026-05-15', startTime: '08:30', endTime: '16:30', reason: 'ลืมลงเวลา', location: 'อาคาร สลน.', status: 'approved', year: '2026', month: '05' },
     { id: 3, type: 'ปฏิบัติงานนอกสถานที่', startDate: '2026-06-20', startTime: '08:30', endTime: '17:30', reason: 'ติดต่อกระทรวง xxx', location: 'กระทรวงพาณิชย์', status: 'pending', year: '2026', month: '06' },
@@ -44,7 +44,7 @@ export default function AttendanceRequestPage() {
         return <Tag color="success">อนุมัติแล้ว</Tag>;
       case 'processing':
       case 'pending':
-        return <Tag color="processing">รออนุมัติ</Tag>;
+        return <Tag color="warning">รออนุมัติ</Tag>;
       case 'rejected':
         return <Tag color="error">ไม่อนุมัติ</Tag>;
       default:
@@ -91,14 +91,14 @@ export default function AttendanceRequestPage() {
         <Card 
           title={
             <Space>
-              <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: '#fff' }} onClick={handleBackToList} />
-              <Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>
+              <Button icon={<ArrowLeftOutlined />} type="text" style={{ color: 'var(--white)' }} onClick={handleBackToList} />
+              <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
                 รายละเอียดคำขอลงเวลา
               </Text>
             </Space>
           }
-          headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-          style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+          styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+          style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
         >
           <div style={{ padding: '10px 20px' }}>
             {/* ส่วนเหตุผลการขอลงเวลา และสถานที่ */}
@@ -110,15 +110,15 @@ export default function AttendanceRequestPage() {
                 </Col>
                 <Col xs={24} md={12}>
                   <div style={{ 
-                    border: '1px solid #52c41a', 
+                    border: '1px solid var(--ok)', 
                     borderRadius: 6, 
                     padding: '6px 16px', 
                     display: 'inline-flex', 
                     alignItems: 'center',
                     gap: 8,
-                    color: '#52c41a', 
+                    color: 'var(--ok)', 
                     fontWeight: '500',
-                    backgroundColor: '#f6ffed'
+                    backgroundColor: 'var(--ok-bg)'
                   }}>
                     <EnvironmentOutlined />
                     <span>{selectedItem?.location || 'ปฏิบัติงานนอกสถานที่'}</span>
@@ -135,13 +135,13 @@ export default function AttendanceRequestPage() {
                   <div 
                     onClick={() => setReqOption('normal')}
                     style={{ 
-                      border: reqOption === 'normal' ? '1px solid #52c41a' : '1px solid #d9d9d9', 
+                      border: reqOption === 'normal' ? '1px solid var(--ok)' : '1px solid var(--border)', 
                       borderRadius: 6, 
                       padding: '8px 16px', 
                       textAlign: 'center',
                       cursor: 'pointer',
-                      color: reqOption === 'normal' ? '#52c41a' : 'rgba(0, 0, 0, 0.88)',
-                      backgroundColor: reqOption === 'normal' ? '#f6ffed' : '#fff',
+                      color: reqOption === 'normal' ? 'var(--ok)' : 'var(--text-dark)',
+                      backgroundColor: reqOption === 'normal' ? 'var(--ok-bg)' : 'var(--surface)',
                       fontWeight: reqOption === 'normal' ? '500' : 'normal'
                     }}
                   >
@@ -152,13 +152,13 @@ export default function AttendanceRequestPage() {
                   <div 
                     onClick={() => setReqOption('full')}
                     style={{ 
-                      border: reqOption === 'full' ? '1px solid #52c41a' : '1px solid #d9d9d9', 
+                      border: reqOption === 'full' ? '1px solid var(--ok)' : '1px solid var(--border)', 
                       borderRadius: 6, 
                       padding: '8px 16px', 
                       textAlign: 'center',
                       cursor: 'pointer',
-                      color: reqOption === 'full' ? '#52c41a' : 'rgba(0, 0, 0, 0.88)',
-                      backgroundColor: reqOption === 'full' ? '#f6ffed' : '#fff',
+                      color: reqOption === 'full' ? 'var(--ok)' : 'var(--text-dark)',
+                      backgroundColor: reqOption === 'full' ? 'var(--ok-bg)' : 'var(--surface)',
                       fontWeight: reqOption === 'full' ? '500' : 'normal'
                     }}
                   >
@@ -173,11 +173,11 @@ export default function AttendanceRequestPage() {
             
             <div style={{ marginBottom: 20 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <Text strong style={{ fontSize: '13px', color: '#52c41a' }}>รายวันที่ขอ · 1 วัน</Text>
+                <Text strong style={{ fontSize: '13px', color: 'var(--ok)' }}>รายวันที่ขอ · 1 วัน</Text>
                 <Text type="secondary" style={{ fontSize: '12px' }}>เวลาเริ่มต้นจากการตั้งค่า 09:00–18:00 น.</Text>
               </div>
 
-              <div style={{ border: '1px solid #d9d9d9', borderRadius: 8, padding: '16px', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+              <div style={{ border: '1px solid var(--border)', borderRadius: 8, padding: '16px', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
                 
                 <DatePicker 
                   value={selectedItem?.startDate ? dayjs(selectedItem.startDate) : dayjs()} 
@@ -221,8 +221,8 @@ export default function AttendanceRequestPage() {
                 type="primary" 
                 size="large"
                 style={{ 
-                  backgroundColor: '#006644', 
-                  borderColor: '#006644', 
+                  backgroundColor: 'var(--ok)', 
+                  borderColor: 'var(--ok)', 
                   width: '100%', 
                   maxWidth: '400px', 
                   height: '45px',
@@ -270,7 +270,7 @@ export default function AttendanceRequestPage() {
             type="primary" 
             icon={<PlusOutlined />} 
             onClick={handleAddNew}
-            style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', fontWeight: '500' }}
+            style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', fontWeight: '500' }}
           >
             เพิ่ม
           </Button>
@@ -294,7 +294,7 @@ export default function AttendanceRequestPage() {
               >
                 <Space orientation="vertical" size={8} style={{ width: '100%' }}>
                   <Text>
-                    <CalendarOutlined style={{ marginRight: 8, color: '#1890ff' }} />
+                    <CalendarOutlined style={{ marginRight: 8, color: 'var(--navy-3)' }} />
                     <strong>วันที่:</strong> {item.startDate} {item.startTime}
                   </Text>
                   <Text type="secondary">

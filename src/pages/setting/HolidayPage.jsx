@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Card, Row, Col, Button, Select, Input, Table, Space, Typography, 
   Tooltip, Popconfirm, message, Modal, Form, DatePicker 
@@ -8,7 +8,6 @@ import {
   SearchOutlined, 
   EditOutlined, 
   DeleteOutlined,
-  CloudDownloadOutlined,
   CalendarOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -97,23 +96,13 @@ export default function HolidayPage() {
     message.success('ลบรายการสำเร็จ');
   };
 
-  // ลบหลายรายการที่เลือก
-  const handleDeleteSelected = () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning('กรุณาเลือกรายการที่ต้องการลบ');
-      return;
-    }
-    setDataSource(dataSource.filter(item => !selectedRowKeys.includes(item.key)));
-    setSelectedRowKeys([]);
-    message.success('ลบรายการที่เลือกสำเร็จ');
-  };
 
   const columns = [
     { 
       title: 'ชื่อวันหยุด', 
       dataIndex: 'name', 
       key: 'name', 
-      render: (text) => <a style={{ color: '#1890ff' }}>{text}</a> 
+      render: (text) => <a style={{ color: 'var(--navy-3)' }}>{text}</a> 
     },
     { 
       title: 'กลุ่มวันหยุด', 
@@ -140,12 +129,12 @@ export default function HolidayPage() {
             <Button 
               type="link" 
               icon={<EditOutlined />} 
-              style={{ color: '#1890ff', padding: 0 }} 
+              style={{ color: 'var(--navy-3)', padding: 0 }} 
               onClick={() => handleEditClick(record)}
             />
           </Tooltip>
           <Popconfirm title="คุณแน่ใจหรือไม่ที่จะลบรายการนี้?" onConfirm={() => handleDelete(record.key)} okText="ใช่" cancelText="ยกเลิก">
-            <Button type="link" icon={<DeleteOutlined />} style={{ color: '#ff4d4f', padding: 0 }} />
+            <Button type="link" icon={<DeleteOutlined />} style={{ color: 'var(--danger)', padding: 0 }} />
           </Popconfirm>
         </Space>
       ),
@@ -171,12 +160,12 @@ export default function HolidayPage() {
 
       {/* Card หลัก */}
       <Card 
-        title={<Text style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold' }}>วันหยุดนักขัตฤกษ์</Text>}
-        headStyle={{ backgroundColor: '#1f2937', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
-        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        title={<Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>วันหยุดนักขัตฤกษ์</Text>}
+        styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
+        style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
         extra={
           <Space wrap>
-            <Button type="primary" icon={<PlusOutlined />} style={{ backgroundColor: '#1890ff' }} onClick={handleAddClick}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={handleAddClick}>
               เพิ่ม
             </Button>
             
@@ -184,7 +173,7 @@ export default function HolidayPage() {
         }
       >
         {/* ส่วนฟิลเตอร์การค้นหา */}
-        <div style={{ padding: '24px 16px', marginBottom: 16, background: '#fff' }}>
+        <div style={{ padding: '24px 16px', marginBottom: 16, background: 'var(--surface)' }}>
           <Row gutter={[16, 16]} align="middle" justify="left">
             <Col xs={24} md={4} style={{ textAlign: 'right' }}>
               <Text className="filter-label">ประจำปี :</Text>
@@ -217,7 +206,7 @@ export default function HolidayPage() {
           </Row>
 
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: '#1f2937', borderColor: '#1f2937' }}>
+            <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)' }}>
               ค้นหา
             </Button>
           </div>
@@ -278,7 +267,7 @@ export default function HolidayPage() {
                 type="primary" 
                 icon={<SearchOutlined />} 
                 onClick={handleModalSubmit}
-                style={{ backgroundColor: '#1f2937', borderColor: '#1f2937', padding: '0 24px', height: 36 }}
+                style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 24px', height: 36 }}
               >
                 บันทึก
               </Button>

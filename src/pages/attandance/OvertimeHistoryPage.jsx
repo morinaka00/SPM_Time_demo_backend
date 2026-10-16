@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, Select, Row, Col, Tag, Space, Typography, Empty } from 'antd';
 import { CalendarOutlined, ClockCircleOutlined, FieldTimeOutlined } from '@ant-design/icons';
 
@@ -32,7 +32,7 @@ export default function OvertimeHistoryPage() {
       case 'approved':
         return <Tag color="success">อนุมัติแล้ว</Tag>;
       case 'pending':
-        return <Tag color="processing">รออนุมัติ</Tag>;
+        return <Tag color="warning">รออนุมัติ</Tag>;
       case 'rejected':
         return <Tag color="error">ไม่อนุมัติ</Tag>;
       default:
@@ -44,7 +44,7 @@ export default function OvertimeHistoryPage() {
     <div style={{ width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
       {/* ส่วนหัวข้อและฟิลเตอร์ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
-        <Title level={4} style={{ margin: 0 }}>ประวัติการทำงานล่วงเวลา (OT)</Title>
+        <Title level={4} className="section-label" style={{ margin: 0 }}>ประวัติการทำงานล่วงเวลา (OT)</Title>
         <Space wrap>
           <Select value={year} onChange={value => setYear(value)} style={{ width: 110 }}>
             <Option value="all">ทุกปี</Option>
@@ -84,10 +84,10 @@ export default function OvertimeHistoryPage() {
         <Row gutter={[16, 16]}>
           {filteredData.map(item => (
             <Col xs={24} sm={12} lg={8} key={item.id}>
-              <Card 
+              <Card className="lift-card"
                 title={
                   <Space size={6}>
-                    <CalendarOutlined style={{ color: '#1890ff' }} />
+                    <CalendarOutlined style={{ color: 'var(--navy-3)' }} />
                     <span style={{ fontSize: '14px' }}>{item.date} ({item.timeRange})</span>
                   </Space>
                 } 
@@ -97,8 +97,8 @@ export default function OvertimeHistoryPage() {
               >
                 <Space orientation="vertical" size={8} style={{ width: '100%' }}>
                   <Text>
-                    <FieldTimeOutlined style={{ marginRight: 8, color: '#faad14' }} />
-                    <strong>จำนวนที่ทำ:</strong> <span style={{ color: '#faad14', fontWeight: 'bold' }}>{item.hours} ชั่วโมง</span>
+                    <FieldTimeOutlined style={{ marginRight: 8, color: 'var(--gold)' }} />
+                    <strong>จำนวนที่ทำ:</strong> <span style={{ color: 'var(--gold)', fontWeight: 'bold' }}>{item.hours} ชั่วโมง</span>
                   </Text>
                   <Text type="secondary">
                     <ClockCircleOutlined style={{ marginRight: 8 }} />
