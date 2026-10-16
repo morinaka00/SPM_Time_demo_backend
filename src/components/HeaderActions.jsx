@@ -4,7 +4,7 @@ import NotificationPanel from './NotificationPanel';
 import UserMenu from './UserMenu';
 
 // ปุ่มด้านขวาของ Header: สลับธีม · แจ้งเตือน · เมนูผู้ใช้
-export default function HeaderActions({ isDark, onToggleTheme }) {
+export default function HeaderActions({ isDark, onToggleTheme, onLogout }) {
   const themeLabel = isDark ? 'โหมดสว่าง' : 'โหมดกลางคืน';
   return (
     <div className="header-actions">
@@ -14,7 +14,7 @@ export default function HeaderActions({ isDark, onToggleTheme }) {
         </button>
       </Tooltip>
       <NotificationPanel />
-      <UserMenu isDark={isDark} onToggleTheme={onToggleTheme} />
+      <UserMenu isDark={isDark} onToggleTheme={onToggleTheme} onLogout={onLogout} />
     </div>
   );
 }

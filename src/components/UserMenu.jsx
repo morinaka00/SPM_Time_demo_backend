@@ -16,6 +16,7 @@ export default function UserMenu({
   email = 'somchai.j@opm.go.th',
   isDark,
   onToggleTheme,
+  onLogout,
 }) {
   const [profileTab, setProfileTab] = useState(null); // null = ปิด modal
 
@@ -30,7 +31,10 @@ export default function UserMenu({
 
   const onClick = ({ key }) => {
     if (key === 'theme') onToggleTheme?.();
-    else if (key === 'logout') message.info('ออกจากระบบ (ต้นแบบ)');
+    else if (key === 'logout') {
+      message.success('ออกจากระบบแล้ว');
+      onLogout?.();
+    }
     else setProfileTab(key); // info / password / notif
   };
 

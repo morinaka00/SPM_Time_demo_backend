@@ -7,6 +7,8 @@ import BrandHeader from './components/BrandHeader';
 import HeaderActions from './components/HeaderActions';
 import { getOpmTheme } from './theme/opmTheme';
 import useThemeMode from './theme/useThemeMode';
+import { readSession, writeSession } from './auth/session';
+import LoginPage from './pages/login/LoginPage';
 
 // ตั้งค่า Day.js ให้รองรับภาษาไทยและปี พ.ศ. (Buddhist Era) ทั่วทั้งแอป
 import dayjs from 'dayjs';
@@ -77,7 +79,7 @@ import TermsConditionPage from './pages/setting/TermsConditionPage';
 const { Header, Content, Sider } = Layout;
 
 
-function MainLayout({ isDark, onToggleTheme }) {
+function MainLayout({ isDark, onToggleTheme, onLogout }) {
   // จอแคบกว่า md ให้เริ่มแบบย่อเมนู (onBreakpoint จะทำงานเฉพาะตอนขนาดจอเปลี่ยน)
   const [collapsed, setCollapsed] = useState(() => window.matchMedia('(max-width: 767.98px)').matches);
   const navigate = useNavigate();
@@ -200,7 +202,7 @@ children: [
           <div className="app-header-left">
             <BrandHeader size="sm" />
           </div>
-          <HeaderActions isDark={isDark} onToggleTheme={onToggleTheme} />
+          <HeaderActions isDark={isDark} onToggleTheme={onToggleTheme} onLogout={onLogout} />
         </Header>
 
         <Content className="app-content">
@@ -251,12 +253,53 @@ children: [
   );
 }
 
+// ต้อง Login ก่อนเข้าทุกหน้า — ยังไม่ Login จะถูกพาไป /login แล้วกลับมาหน้าเดิมหลังเข้าสู่ระบบ
+function AppRoutes({ isDark, onToggleTheme }) {
+  const [session, setSession] = useState(readSession);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const login = (username, method) => {
+    const next = { username, method, loginAt: new Date().toISOString() };
+    writeSession(next);
+    setSession(next); // เส้นทาง /login จะพากลับหน้าเดิมเอง (ดู homePath ด้านล่าง)
+  };
+
+  const logout = () => {
+    writeSession(null);
+    setSession(null);
+    navigate('/login', { replace: true });
+  };
+
+  // หลัง Login กลับไปหน้าที่ตั้งใจเปิดไว้ก่อนถูกพามา /login (ถ้ามี)
+  const homePath = location.state?.from || '/DashboardPage';
+
+  return (
+    <Routes>
+      <Route
+        path="/login"
+        element={session ? <Navigate to={homePath} replace /> : <LoginPage onLogin={login} />}
+      />
+      <Route
+        path="/*"
+        element={
+          session ? (
+            <MainLayout isDark={isDark} onToggleTheme={onToggleTheme} onLogout={logout} />
+          ) : (
+            <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
+          )
+        }
+      />
+    </Routes>
+  );
+}
+
 export default function App() {
   const [isDark, toggleTheme] = useThemeMode();
   return (
     <ConfigProvider theme={getOpmTheme(isDark)} locale={th_TH}>
       <BrowserRouter>
-        <MainLayout isDark={isDark} onToggleTheme={toggleTheme} />
+        <AppRoutes isDark={isDark} onToggleTheme={toggleTheme} />
       </BrowserRouter>
     </ConfigProvider>
   );
