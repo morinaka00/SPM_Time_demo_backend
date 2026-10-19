@@ -1,0 +1,460 @@
+/* หน้า Login — โครงตามต้นแบบ login_system.html, สีอ้างอิง token ใน src/index.css */
+
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+  text-align: left;
+}
+
+/* ---------- แผงแบรนด์ด้านซ้าย ---------- */
+.login-brand {
+  position: relative;
+  flex: 0 0 42%;
+  display: flex;
+  flex-direction: column;
+  padding: 64px 64px 40px;
+  overflow: hidden;
+  background: var(--grad-sider);
+  color: #fff;
+}
+/* แสงทองจาง ๆ มุมขวาบน */
+.login-brand::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 152, 44, 0.14) 0%, rgba(201, 152, 44, 0) 70%);
+  pointer-events: none;
+}
+/* ริบบิ้นทองด้านขวาของแผง */
+.login-brand::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--gold), var(--gold-pale) 45%, rgba(240, 217, 154, 0));
+}
+
+/* ย่อแบรนด์ลงเล็กน้อยให้ชื่อหน่วยงานอยู่บรรทัดเดียว ไม่ตัดกลางคำ */
+.login-brand .brand-header__logo {
+  width: 96px;
+  height: 96px;
+}
+.login-brand .brand-header__org-th {
+  font-size: 22px;
+  white-space: nowrap;
+}
+
+.login-brand-title {
+  margin: 0 0 20px;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.32;
+  color: #fff;
+}
+.login-brand-desc {
+  max-width: 380px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.78);
+}
+.login-brand-footnote {
+  max-width: 420px;
+  margin: 28px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
+}
+/* ภาพอาคาร (เส้นสีขาวพื้นโปร่งใส) เต็มความกว้างแผง จางขอบบน-ล่าง ตามต้นแบบ */
+.login-brand-illustration {
+  position: relative;
+  flex: 1;
+  min-height: 240px;
+  margin: 22px -64px 8px;
+}
+.login-brand-illustration::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/bg-building.png') center / cover no-repeat;
+  opacity: 0.45;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 88%, transparent 100%);
+}
+.login-brand-contact {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(240, 217, 154, 0.6);
+}
+
+/* ---------- การ์ดด้านขวา ---------- */
+.login-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+}
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px 40px 34px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 24px 60px -20px rgba(15, 30, 64, 0.18), 0 2px 8px rgba(15, 30, 64, 0.04);
+  animation: login-in 260ms var(--ease);
+}
+@keyframes login-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .login-card {
+    animation: none;
+  }
+}
+
+.login-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--gold);
+}
+.login-title {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.login-sub {
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+.login-sub b {
+  color: var(--text-dark);
+}
+
+.login-card .ant-form-item-label > label {
+  width: 100%;
+  font-weight: 500;
+}
+.login-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+
+.login-submit.ant-btn {
+  height: 50px;
+  margin-top: 6px;
+  font-size: 16px;
+}
+.login-secondary.ant-btn {
+  height: 50px;
+  margin-top: 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* ลิงก์แบบปุ่ม */
+.login-link-sm,
+.login-link-lg,
+.login-legal button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  cursor: pointer;
+}
+.login-link-sm {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--navy-3);
+}
+.login-link-sm:hover:not(:disabled) {
+  color: var(--gold);
+  text-decoration: underline;
+}
+.login-link-sm:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+.login-link-lg {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy-3);
+}
+.login-link-lg:hover {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+.login-or {
+  margin: 22px 0 0;
+  font-size: 15px;
+  text-align: center;
+  color: var(--text-muted);
+}
+.login-note {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+  text-align: center;
+  color: var(--text-muted);
+}
+.login-note.left {
+  margin: 14px 0 18px;
+  text-align: left;
+}
+
+.login-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.login-back:hover {
+  color: var(--navy-3);
+}
+
+.login-user-row {
+  margin: 8px 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-dark);
+}
+.login-restart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--navy-3);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- ตัวเลือกยืนยันตัวตน ---------- */
+.login-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: inherit;
+  font-family: var(--sans);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 220ms var(--ease), box-shadow 220ms var(--ease), transform 220ms var(--ease);
+}
+.login-opt:hover,
+.login-opt:focus-visible {
+  border-color: var(--gold);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+.login-opt-icon {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  font-size: 18px;
+}
+.tone-mail .login-opt-icon { background: var(--navy-tint); color: var(--navy-3); }
+.tone-app .login-opt-icon { background: var(--ok-bg); color: var(--ok); }
+.tone-thaid .login-opt-icon { background: var(--gold-tint); color: var(--gold); }
+.login-opt-text {
+  flex: 1;
+  min-width: 0;
+}
+.login-opt-title {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.login-opt-desc {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.login-opt-arrow {
+  align-self: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ---------- OTP ---------- */
+.login-ref-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.login-ref-badge {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--text-dark);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.login-otp.ant-otp {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+.login-otp.ant-otp .ant-otp-input {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  height: 54px;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.login-status {
+  min-height: 20px;
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ok);
+}
+.login-timer-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.login-legal {
+  margin: 26px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  line-height: 1.7;
+  text-align: center;
+  color: var(--text-muted);
+}
+.login-legal button {
+  font-size: inherit;
+  color: var(--text-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.login-legal button:hover {
+  color: var(--navy-3);
+}
+
+/* ---------- Responsive ---------- */
+@media (min-width: 1500px) {
+  .login-brand-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 960px) {
+  .login-page {
+    flex-direction: column;
+  }
+  .login-brand {
+    flex: none;
+    padding: 36px 32px 28px;
+  }
+  .login-brand::after {
+    top: auto;
+    left: 0;
+    width: auto;
+    height: 3px;
+    background: var(--grad-ribbon);
+  }
+  .login-brand .brand-header__logo {
+    width: 72px;
+    height: 72px;
+  }
+  .login-brand .brand-header__org-th {
+    font-size: 20px;
+  }
+  .login-brand .brand-header__divider {
+    margin: 22px 0 18px;
+  }
+  .login-brand-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .login-brand-desc,
+  .login-brand-footnote {
+    max-width: none;
+  }
+  .login-brand-footnote,
+  .login-brand-illustration,
+  .login-brand-contact {
+    display: none;
+  }
+  .login-main {
+    padding: 28px 16px 48px;
+  }
+}
+
+@media (max-width: 420px) {
+  .login-brand .brand-header__org-th {
+    white-space: normal;
+  }
+  .login-card {
+    padding: 30px 22px 26px;
+  }
+  .login-brand {
+    padding: 28px 22px 22px;
+  }
+  .login-otp.ant-otp {
+    gap: 6px;
+  }
+  .login-otp.ant-otp .ant-otp-input {
+    height: 46px;
+  }
+}
