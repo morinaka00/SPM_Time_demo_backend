@@ -71,6 +71,8 @@ import RptOvertimePage from './reports/RptOvertimePage';
 
 //user && permission
 import TermsConditionPage from './pages/setting/TermsConditionPage';
+import UserPage from './pages/users/UserPage';
+import UserDetailPage from './pages/users/UserDetailPage';
 
 
 
@@ -242,6 +244,9 @@ children: [
               <Route path="/settings/OTDetailPage" element={<OTDetailPage title="Add/Edit ผู้มีสิทธิทำงานล่วงเวลา" />} />
               <Route path="/settings/WFAPage" element={<WFAPage title="กำหนดผู้มีสิทธิลงเวลานอกสถานที่" />} />
               <Route path="/settings/WFADetailPage" element={<WFADetailPage title="Add/Edit ผู้มีสิทธิลงเวลานอกสถานที่" />} />
+
+              <Route path="/users/UserPage" element={<UserPage />} />
+              <Route path="/users/UserDetailPage" element={<UserDetailPage />} />
 
               <Route path="/settings/TermsConditionPage" element={<TermsConditionPage title="ตั้งค่าข้อกำหนดและเงื่อนไขการใช้งาน" />} />
               

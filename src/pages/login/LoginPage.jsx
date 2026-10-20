@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -10,6 +10,9 @@ import {
   RightOutlined,
 } from '@ant-design/icons';
 import BrandHeader from '../../components/BrandHeader';
+import ForgotPasswordModal from './ForgotPasswordModal';
+import OtpCodeInput from './OtpCodeInput';
+import { maskEmail } from './otp';
 import './LoginPage.css';
 
 // ขั้นตอนเข้าสู่ระบบตามต้นแบบ artifact (login_system → login → login_sso_lv2.0 → login_sso_lv2.1)
@@ -37,9 +40,6 @@ const PANELS = {
 
 const prototypeNotice = (what) => () => message.info(`${what} (ต้นแบบ)`);
 
-// อีเมลแบบปิดบางส่วน เช่น s••••@opm.go.th
-const maskEmail = (username) => `${(username || 'u').slice(0, 1)}••••@opm.go.th`;
-
 /* ---------------- ชิ้นส่วนที่ใช้ร่วมกัน ---------------- */
 function BackLink({ onClick, children = 'กลับ' }) {
   return (
@@ -62,34 +62,51 @@ function UserRow({ username, onRestart }) {
 
 // ฟอร์มชื่อผู้ใช้ + รหัสผ่าน (ใช้ทั้ง User local และ SSO ขั้นที่ 1)
 function CredentialForm({ submitText, onSubmit, extra }) {
+  const [form] = Form.useForm();
+  const [forgotOpen, setForgotOpen] = useState(false);
+
   return (
-    <Form layout="vertical" requiredMark={false} onFinish={({ username }) => onSubmit(username.trim())}>
-      <Form.Item
-        label="ชื่อผู้ใช้งาน"
-        name="username"
-        rules={[{ required: true, whitespace: true, message: 'กรุณากรอกชื่อผู้ใช้งาน' }]}
-      >
-        <Input size="large" placeholder="ชื่อผู้ใช้งานของท่าน" autoComplete="username" autoFocus />
-      </Form.Item>
-      <Form.Item
-        label={
-          <span className="login-label-row">
-            รหัสผ่าน
-            <button type="button" className="login-link-sm" onClick={prototypeNotice('ลืมรหัสผ่าน')}>
-              ลืมรหัสผ่าน?
-            </button>
-          </span>
-        }
-        name="password"
-        rules={[{ required: true, message: 'กรุณากรอกรหัสผ่าน' }]}
-      >
-        <Input.Password size="large" placeholder="••••••••" autoComplete="current-password" />
-      </Form.Item>
-      <Button htmlType="submit" size="large" block className="btn-gold login-submit">
-        {submitText}
-      </Button>
-      {extra}
-    </Form>
+    <>
+      <Form form={form} layout="vertical" requiredMark={false} onFinish={({ username }) => onSubmit(username.trim())}>
+        <Form.Item
+          label="ชื่อผู้ใช้งาน"
+          name="username"
+          rules={[{ required: true, whitespace: true, message: 'กรุณากรอกชื่อผู้ใช้งาน' }]}
+        >
+          <Input size="large" placeholder="ชื่อผู้ใช้งานของท่าน" autoComplete="username" autoFocus />
+        </Form.Item>
+        <Form.Item
+          label={
+            <span className="login-label-row">
+              รหัสผ่าน
+              <button
+                type="button"
+                className="login-link-sm"
+                onClick={(e) => {
+                  e.preventDefault(); // ไม่ให้คลิกที่ label ไปโฟกัสช่องรหัสผ่าน
+                  setForgotOpen(true);
+                }}
+              >
+                ลืมรหัสผ่าน?
+              </button>
+            </span>
+          }
+          name="password"
+          rules={[{ required: true, message: 'กรุณากรอกรหัสผ่าน' }]}
+        >
+          <Input.Password size="large" placeholder="••••••••" autoComplete="current-password" />
+        </Form.Item>
+        <Button htmlType="submit" size="large" block className="btn-gold login-submit">
+          {submitText}
+        </Button>
+        {extra}
+      </Form>
+      <ForgotPasswordModal
+        open={forgotOpen}
+        username={forgotOpen ? form.getFieldValue('username')?.trim() : ''}
+        onClose={() => setForgotOpen(false)}
+      />
+    </>
   );
 }
 
@@ -213,39 +230,8 @@ function VerifyStep({ goTo, username, setOtpMethod, onLogin }) {
   );
 }
 
-// เลขอ้างอิงสุ่ม 5 ตัว เหมือนต้นแบบ (เช่น 3M7D3)
-const makeRef = () => Math.random().toString(36).slice(2, 7).toUpperCase();
-const formatMmSs = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
-
 function OtpStep({ goTo, username, otpMethod, onLogin }) {
-  const [refCode] = useState(makeRef);
-  const [expireSec, setExpireSec] = useState(4 * 60 + 57);
-  const [resendSec, setResendSec] = useState(57);
-  const [verified, setVerified] = useState(false);
   const isEmail = otpMethod === 'email';
-
-  // นับถอยหลัง (แสดงผลอย่างเดียว)
-  useEffect(() => {
-    const t = setInterval(() => {
-      setExpireSec((s) => Math.max(0, s - 1));
-      setResendSec((s) => Math.max(0, s - 1));
-    }, 1000);
-    return () => clearInterval(t);
-  }, []);
-
-  // กรอกครบ 6 หลัก → ยืนยันอัตโนมัติ (ต้นแบบ: รหัสอะไรก็ผ่าน)
-  const onOtpChange = (value) => {
-    if (verified || !/^\d{6}$/.test(value || '')) return;
-    setVerified(true);
-    setTimeout(() => onLogin(username, `sso-${otpMethod}`), 700);
-  };
-
-  const resend = () => {
-    if (resendSec > 0) return;
-    setResendSec(60);
-    setExpireSec(5 * 60);
-    message.success(isEmail ? `ส่งรหัสใหม่ไปที่ ${maskEmail(username)} แล้ว (จำลอง)` : 'รีเซ็ตเวลาแล้ว');
-  };
 
   return (
     <>
@@ -263,35 +249,11 @@ function OtpStep({ goTo, username, otpMethod, onLogin }) {
         )}
       </p>
 
-      {isEmail && (
-        <div className="login-ref-row">
-          <span>รหัสอ้างอิง</span>
-          <span className="login-ref-badge">{refCode}</span>
-        </div>
-      )}
-
-      <Input.OTP
-        length={6}
-        size="large"
-        autoFocus
-        disabled={verified}
-        formatter={(v) => v.replace(/\D/g, '')}
-        onChange={onOtpChange}
-        className="login-otp"
+      <OtpCodeInput
+        email={isEmail ? maskEmail(username) : null}
+        successText="ยืนยันสำเร็จ กำลังนำท่านเข้าสู่ระบบ..."
+        onVerified={() => onLogin(username, `sso-${otpMethod}`)}
       />
-      <div className="login-status" role="status">
-        {verified ? 'ยืนยันสำเร็จ กำลังนำท่านเข้าสู่ระบบ...' : ''}
-      </div>
-      <p className="login-note left">ระบบจะยืนยันรหัสให้อัตโนมัติเมื่อกรอกครบ 6 หลัก</p>
-
-      {isEmail && (
-        <div className="login-timer-row">
-          <span>รหัสหมดอายุใน {formatMmSs(expireSec)} นาที</span>
-          <button type="button" className="login-link-sm" disabled={resendSec > 0} onClick={resend}>
-            {resendSec > 0 ? `ส่งรหัสใหม่ได้ในอีก ${resendSec} วินาที` : 'ส่งรหัสอีกครั้ง'}
-          </button>
-        </div>
-      )}
 
       <BackLink onClick={() => goTo('verify')}>เลือกวิธียืนยันอื่น</BackLink>
     </>
