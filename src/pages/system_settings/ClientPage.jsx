@@ -164,7 +164,7 @@ export default function ClientPage() {
             max={31}
             hint="วันที่ 1–31 ของเดือน"
           />
-          <NumberWithHint name="leaveBackDays" label="พนักงานลาย้อนหลังไม่เกิน (วัน)" hint={BACK_DAYS_HINT} max={365} />
+         
           <NumberWithHint name="requestBackDays" label="พนักงานขอลงเวลาย้อนหลังไม่เกิน (วัน)" hint={BACK_DAYS_HINT} max={365} />
 
           <div style={{ textAlign: 'center', marginTop: 32 }}>
