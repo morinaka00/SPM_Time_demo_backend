@@ -466,6 +466,34 @@
   }
 }
 
+/* ---------- ส่วนค้นหา/กรองข้อมูล (components/FilterPanel.jsx) ---------- */
+.filter-panel {
+  margin: 0 0 20px;
+  text-align: left;
+}
+.filter-panel-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+/* ช่องกรองทุกชนิดเต็มความกว้างคอลัมน์ */
+.filter-panel .ant-select,
+.filter-panel .ant-picker,
+.filter-panel .ant-input-affix-wrapper,
+.filter-panel .ant-input {
+  width: 100%;
+}
+.filter-panel-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
 /* ---------- Section label ---------- */
 .section-label {
   display: inline-block;

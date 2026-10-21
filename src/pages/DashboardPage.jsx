@@ -5,9 +5,9 @@ import {
   CalendarOutlined, 
   LeftOutlined, 
   RightOutlined,
-  SearchOutlined,
   UnorderedListOutlined,
   EnvironmentOutlined} from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -65,22 +65,22 @@ export default function DashboardPage() {
       <Row gutter={[12, 12]} style={{ marginBottom: 20 }}>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
           <Card variant={false} style={{ background: 'var(--grad-bar)', color: 'var(--white)', borderRadius: 8, borderBottom: '3px solid var(--gold)' }}>
-            <Statistic title={<span style={{ color: 'var(--gold-pale)' }}>เจ้าหน้าที่ทั้งหมด</span>} value={271} valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} prefix={<TeamOutlined />} />
+            <Statistic title={<span style={{ color: 'var(--gold-pale)' }}>เจ้าหน้าที่ทั้งหมด</span>} value={271} styles={{ content: { color: 'var(--white)', fontWeight: 'bold' } }} prefix={<TeamOutlined />} />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
           <Card variant={false} style={{ background: 'var(--navy-3)', color: 'var(--white)', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ลงเวลาแล้ว</span>} value="126 / 213" valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} />
+            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ลงเวลาแล้ว</span>} value="126 / 213" styles={{ content: { color: 'var(--white)', fontWeight: 'bold' } }} />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
           <Card variant={false} style={{ background: 'var(--navy-3)', color: 'var(--white)', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ลาวันนี้</span>} value={13} valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} suffix="" />
+            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ลาวันนี้</span>} value={13} styles={{ content: { color: 'var(--white)', fontWeight: 'bold' } }} suffix="" />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8} lg={4.8} style={{ flex: 1 }}>
           <Card variant={false} style={{ background: 'var(--ok-solid)', color: 'var(--white)', borderRadius: 8 }}>
-            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ปฏิบัติงานล่วงเวลา</span>} value={0} valueStyle={{ color: 'var(--white)', fontWeight: 'bold' }} suffix="" />
+            <Statistic title={<span style={{ color: 'rgba(255,255,255,0.78)' }}>ปฏิบัติงานล่วงเวลา</span>} value={0} styles={{ content: { color: 'var(--white)', fontWeight: 'bold' } }} suffix="" />
           </Card>
         </Col>
       </Row>
@@ -128,16 +128,12 @@ export default function DashboardPage() {
             </div>
 
             {/* ฟิลเตอร์ค้นหา */}
-            <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
-              <Col xs={24} sm={12}><Select defaultValue="dept" style={{ width: '100%', textAlign: 'left' }}><Option value="dept">หน่วยงาน</Option></Select></Col>
-              <Col xs={24} sm={12}><Select defaultValue="pos" style={{ width: '100%', textAlign: 'left' }}><Option value="pos">ตำแหน่ง</Option></Select></Col>
-              <Col xs={24} sm={12}><Select defaultValue="level" style={{ width: '100%', textAlign: 'left' }}><Option value="level">ระดับตำแหน่ง</Option></Select></Col>
-              <Col xs={24} sm={12}><Input placeholder="ชื่อ, รหัส" /></Col>
-            </Row>
-
-            <div style={{ textAlign: 'right', marginBottom: 16 }}>
-              <Button type="primary" icon={<SearchOutlined />}>ค้นหา</Button>
-            </div>
+            <FilterPanel>
+              <FilterField label="หน่วยงาน" span={12}><Select defaultValue="dept" style={{ width: '100%', textAlign: 'left' }}><Option value="dept">หน่วยงาน</Option></Select></FilterField>
+              <FilterField label="ตำแหน่ง" span={12}><Select defaultValue="pos" style={{ width: '100%', textAlign: 'left' }}><Option value="pos">ตำแหน่ง</Option></Select></FilterField>
+              <FilterField label="ระดับตำแหน่ง" span={12}><Select defaultValue="level" style={{ width: '100%', textAlign: 'left' }}><Option value="level">ระดับตำแหน่ง</Option></Select></FilterField>
+              <FilterField label="ชื่อ/รหัส" span={12}><Input placeholder="ชื่อ, รหัส" /></FilterField>
+            </FilterPanel>
 
             {/* แสดงผลตาม View Mode ที่เลือก */}
             {viewMode === 'table' ? (
@@ -214,7 +210,7 @@ export default function DashboardPage() {
         {/* ฝั่งขวา: การลา */}
         <Col xs={24} lg={10}>
           <Card title={<Text strong style={{ fontSize: '16px' }}>การลา</Text>} style={{ borderRadius: 8, height: '100%' }}>
-            <Space direction="vertical" size={16} style={{ width: '100%' }}>
+            <Space orientation="vertical" size={16} style={{ width: '100%' }}>
               {leaveList.map((leave, index) => (
                 <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: 12, borderBottom: index < leaveList.length - 1 ? '1px solid var(--border-soft)' : 'none' }}>
                   <Space size={12} align="start">

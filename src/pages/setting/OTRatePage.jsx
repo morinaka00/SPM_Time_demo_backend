@@ -4,11 +4,11 @@ import {
   Tooltip, Popconfirm, message, Modal, Form, Tag, InputNumber, Switch, Divider, Radio 
 } from 'antd';
 import { 
-  PlusOutlined, 
-  SearchOutlined, 
-  EditOutlined, 
+  PlusOutlined,
+  EditOutlined,
   DeleteOutlined
 } from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -59,8 +59,12 @@ export default function OTRatePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [currentKey, setCurrentKey] = useState(null);
+  // ค่าที่ใช้กรองจริง (กดค้นหาแล้ว)
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  // ค่าที่กำลังกรอก
+  const [draftSearch, setDraftSearch] = useState('');
+  const [draftStatus, setDraftStatus] = useState('all');
   const [form] = Form.useForm();
 
   const handleAddClick = () => {
@@ -205,11 +209,6 @@ export default function OTRatePage() {
         .ant-select, .ant-input-affix-wrapper, .ant-input {
           width: 100% !important;
         }
-        .filter-label {
-          text-align: right !important;
-          display: block !important;
-          padding-right: 8px;
-        }
         .ant-table-thead > tr > th {
           text-align: center !important;
         }
@@ -233,45 +232,34 @@ export default function OTRatePage() {
           </Space>
         }
       >
-        <div style={{ padding: '20px', marginBottom: 16, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
-          <Row gutter={[16, 16]} align="middle">
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>สถานะ :</Text></Col>
-                <Col span={18}>
-                  <Select value={statusFilter} onChange={val => setStatusFilter(val)} style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                    <Option value="active">ใช้งาน</Option>
-                    <Option value="inactive">ไม่ใช้งาน</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ค้นหา :</Text></Col>
-                <Col span={18}>
-                  <Input 
-                    placeholder="ค้นหาชื่ออัตราค่าล่วงเวลา" 
-                    value={searchText}
-                    onChange={e => setSearchText(e.target.value)}
-                    allowClear 
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button 
-              type="primary" 
-              icon={<SearchOutlined />} 
-              style={{ backgroundColor: 'var(--navy-3)', borderColor: 'var(--navy-3)', padding: '0 36px', height: '38px' }}
-            >
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel
+          onSearch={() => {
+            setStatusFilter(draftStatus);
+            setSearchText(draftSearch);
+          }}
+          onReset={() => {
+            setDraftStatus('all');
+            setDraftSearch('');
+            setStatusFilter('all');
+            setSearchText('');
+          }}
+        >
+          <FilterField label="สถานะ" span={8}>
+            <Select value={draftStatus} onChange={val => setDraftStatus(val)} style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="active">ใช้งาน</Option>
+              <Option value="inactive">ไม่ใช้งาน</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ค้นหา" span={8}>
+            <Input
+              placeholder="ค้นหาชื่ออัตราค่าล่วงเวลา"
+              value={draftSearch}
+              onChange={e => setDraftSearch(e.target.value)}
+              allowClear
+            />
+          </FilterField>
+        </FilterPanel>
 
         <Table 
           dataSource={filteredData} 

@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
-import { 
-  ArrowLeftOutlined, 
-  SearchOutlined, 
+import { Card, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
+import {
+  ArrowLeftOutlined,
   FileExcelOutlined,
   FilePdfOutlined,
   PrinterOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import FilterPanel, { FilterField } from '../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -136,116 +136,67 @@ export default function RptOvertimePage() {
             </Text>
           </Space>
         }
-        extra={
-          <Space>
-            <Button 
-              icon={<FileExcelOutlined />} 
-              style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
-            >
-              Export Excel
-            </Button>
-            <Button 
-              icon={<FilePdfOutlined />} 
-              style={{ backgroundColor: 'var(--danger-bg)', borderColor: 'var(--danger-border)', color: 'var(--danger)', fontWeight: '500' }}
-            >
-              Export PDF
-            </Button>
-            <Button 
-              icon={<PrinterOutlined />} 
-              style={{ backgroundColor: 'var(--navy-tint)', borderColor: 'var(--navy-tint-border)', color: 'var(--navy-3)', fontWeight: '500' }}
-            >
-              พิมพ์รายงาน
-            </Button>
-          </Space>
-        }
         styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
         style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบน */}
-        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
-          <Row gutter={[16, 12]}>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตั้งแต่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker defaultValue={dayjs('2026-08-01')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ถึงวันที่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker defaultValue={dayjs('2026-08-31')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>หน่วยงาน :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                    <Option value="sec">สำนักเลขาธิการ</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ระดับตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>เจ้าหน้าที่ :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด...</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-
-            
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ค้นหา :</Text></Col>
-                <Col span={18}>
-                  <Input placeholder="ค้นหาชื่อพนักงาน..." />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button 
-              type="primary" 
-              icon={<SearchOutlined />} 
-              onClick={handleSearch}
-              style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}
-            >
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel
+          onSearch={handleSearch}
+          onReset={() => setSearched(false)}
+          extra={
+            <>
+              <Button
+                icon={<FileExcelOutlined />}
+                style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
+              >
+                Export Excel
+              </Button>
+              <Button
+                icon={<FilePdfOutlined />}
+                style={{ backgroundColor: 'var(--danger-bg)', borderColor: 'var(--danger-border)', color: 'var(--danger)', fontWeight: '500' }}
+              >
+                Export PDF
+              </Button>
+              <Button
+                icon={<PrinterOutlined />}
+                style={{ backgroundColor: 'var(--navy-tint)', borderColor: 'var(--navy-tint-border)', color: 'var(--navy-3)', fontWeight: '500' }}
+              >
+                พิมพ์รายงาน
+              </Button>
+            </>
+          }
+        >
+          <FilterField label="ตั้งแต่">
+            <DatePicker defaultValue={dayjs('2026-08-01')} format="DD/MM/YYYY" style={{ width: '100%' }} />
+          </FilterField>
+          <FilterField label="ถึงวันที่">
+            <DatePicker defaultValue={dayjs('2026-08-31')} format="DD/MM/YYYY" style={{ width: '100%' }} />
+          </FilterField>
+          <FilterField label="หน่วยงาน">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="sec">สำนักเลขาธิการ</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ระดับตำแหน่ง">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ตำแหน่ง">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="เจ้าหน้าที่">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด...</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ค้นหา">
+            <Input placeholder="ค้นหาชื่อพนักงาน..." />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงผลเฉพาะเมื่อกดปุ่มค้นหาแล้ว */}
         {searched ? (

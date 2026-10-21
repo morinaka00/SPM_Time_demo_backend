@@ -4,13 +4,13 @@ import {
   Tooltip, Popconfirm, message, Modal, Form, Checkbox, Divider 
 } from 'antd';
 import { 
-  PlusOutlined, 
-  SearchOutlined, 
-  ClockCircleOutlined, 
+  PlusOutlined,
+  ClockCircleOutlined,
   EditOutlined, 
   DeleteOutlined,
   DownOutlined
 } from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -224,11 +224,6 @@ export default function WorkTimePage() {
         .ant-select-selection-item, .ant-select-selection-search-input {
           text-align: left !important;
         }
-        .filter-label {
-          text-align: left !important;
-          display: block !important;
-          width: 100%;
-        }
         .ant-table-thead > tr > th {
           text-align: center !important;
         }
@@ -246,48 +241,26 @@ export default function WorkTimePage() {
         }
       >
         {/* ส่วนฟิลเตอร์ค้นหา */}
-        <div style={{ padding: '16px 0', marginBottom: 16 }}>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} md={8}>
-              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
-                <Text className="filter-label">หน่วยงาน :</Text>
-                <Select defaultValue="all">
-                  <Option value="all">ทั้งหมด</Option>
-                  <Option value="sec">สำนักเลขาธิการ</Option>
-                  <Option value="general">กองบริหารงานทั่วไป</Option>
-                  <Option value="central">กองกลาง</Option>
-                  <Option value="it">กองสารสนเทศ</Option>
-                </Select>
-              </Space>
-            </Col>
-            <Col xs={24} md={8}>
-              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
-                <Text className="filter-label">เข้างาน :</Text>
-                <Input placeholder="เลือกเวลาเข้างาน" suffix={<ClockCircleOutlined style={{ color: 'var(--text-muted)' }} />} />
-              </Space>
-            </Col>
-            <Col xs={24} md={8}>
-              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
-                <Text className="filter-label">ออกงาน :</Text>
-                <Input placeholder="เลือกเวลาออกงาน" suffix={<ClockCircleOutlined style={{ color: 'var(--text-muted)' }} />} />
-              </Space>
-            </Col>
-
-            <Col xs={24} md={8}>
-              <Space orientation="vertical" style={{ width: '100%', alignItems: 'flex-start' }}>
-                <Text className="filter-label">ค้นหา :</Text>
-                <Input placeholder="รหัสตารางการทำงาน, ชื่อตารางการทำงาน" />
-              </Space>
-            </Col>
-            <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: 'var(--navy-3)' }}>
-              ค้นหา
-            </Button>
-          </div>
-          </Row>
-
-          
-        </div>
+        <FilterPanel>
+          <FilterField label="หน่วยงาน">
+            <Select defaultValue="all">
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="sec">สำนักเลขาธิการ</Option>
+              <Option value="general">กองบริหารงานทั่วไป</Option>
+              <Option value="central">กองกลาง</Option>
+              <Option value="it">กองสารสนเทศ</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="เข้างาน">
+            <Input placeholder="เลือกเวลาเข้างาน" suffix={<ClockCircleOutlined style={{ color: 'var(--text-muted)' }} />} />
+          </FilterField>
+          <FilterField label="ออกงาน">
+            <Input placeholder="เลือกเวลาออกงาน" suffix={<ClockCircleOutlined style={{ color: 'var(--text-muted)' }} />} />
+          </FilterField>
+          <FilterField label="ค้นหา">
+            <Input placeholder="รหัสตารางการทำงาน, ชื่อตารางการทำงาน" />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงผล */}
         <Table 
@@ -411,7 +384,7 @@ export default function WorkTimePage() {
             <Col xs={24} md={10}>
               <div style={{ background: 'var(--bg)', padding: 16, borderRadius: 8, border: '1px solid var(--border-soft)' }}>
                 <Text strong style={{ display: 'block', marginBottom: 12 }}>วันทำงานประจำสัปดาห์ :</Text>
-                <Space direction="vertical" size={10}>
+                <Space orientation="vertical" size={10}>
                   <Checkbox defaultChecked>อาทิตย์</Checkbox>
                   <Checkbox defaultChecked>จันทร์</Checkbox>
                   <Checkbox defaultChecked>อังคาร</Checkbox>

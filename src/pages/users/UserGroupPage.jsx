@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import {
-  Card, Row, Col, Button, Select, Input, Table, Space, Typography, Tag, Tooltip, Popconfirm, message,
+  Card, Button, Select, Input, Table, Space, Typography, Tag, Tooltip, Popconfirm, message,
 } from 'antd';
-import { PlusOutlined, SearchOutlined, ReloadOutlined, EditOutlined, DeleteOutlined, TeamOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, TeamOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 import { getRoles, deleteRole, countUsersInRole, MENU_LEAVES } from './userData';
 import RoleMembersModal from './RoleMembersModal';
 
@@ -127,8 +128,6 @@ export default function UserGroupPage() {
         .role-code { font-size: 12.5px; padding: 2px 8px; border-radius: 5px; background: var(--bg); border: 1px solid var(--border); color: var(--text-dark); }
         .count-badge { display: inline-flex; align-items: center; gap: 6px; min-width: 64px; justify-content: center; padding: 3px 12px; border: 1px solid var(--navy-tint-border); border-radius: 999px; background: var(--navy-tint); color: var(--navy-3); font-family: var(--sans); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: background 220ms var(--ease), border-color 220ms var(--ease), color 220ms var(--ease); }
         .count-badge:hover, .count-badge:focus-visible { border-color: var(--gold); background: var(--gold-tint); color: var(--text-dark); }
-        .role-filter label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--text-dark); }
-        .role-filter .ant-select { width: 100%; }
       `}</style>
 
       <Card
@@ -141,22 +140,25 @@ export default function UserGroupPage() {
           </Button>
         }
       >
-        <Text type="secondary">กำหนดกลุ่มสิทธิ์และเมนูที่เข้าถึงได้ สำหรับระบบลงเวลาปฏิบัติราชการ</Text>
+        <Text type="secondary" style={{ display: 'block', marginBottom: 20 }}>กำหนดกลุ่มสิทธิ์และเมนูที่เข้าถึงได้ สำหรับระบบลงเวลาปฏิบัติราชการ</Text>
 
-        <Row gutter={[16, 16]} align="bottom" className="role-filter" style={{ marginTop: 20 }}>
-          <Col xs={24} md={10}>
-            <label htmlFor="rf-name">ชื่อสิทธิ์การใช้งาน</label>
+        <FilterPanel
+          onSearch={() => setFilter(draft)}
+          onReset={() => {
+            setDraft(EMPTY_FILTER);
+            setFilter(EMPTY_FILTER);
+          }}
+        >
+          <FilterField label="ชื่อสิทธิ์การใช้งาน" htmlFor="rf-name" span={8}>
             <Input
               id="rf-name"
               placeholder="ค้นหาชื่อสิทธิ์การใช้งาน"
               value={draft.name}
               onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
-              onPressEnter={() => setFilter(draft)}
               allowClear
             />
-          </Col>
-          <Col xs={24} md={6}>
-            <label htmlFor="rf-status">สถานะการใช้งาน</label>
+          </FilterField>
+          <FilterField label="สถานะการใช้งาน" htmlFor="rf-status" span={8}>
             <Select
               id="rf-status"
               value={draft.status}
@@ -167,22 +169,8 @@ export default function UserGroupPage() {
                 { value: 'inactive', label: 'ไม่ใช้งาน' },
               ]}
             />
-          </Col>
-          <Col xs={24} md={8}>
-            <Space wrap>
-              <Button type="primary" icon={<SearchOutlined />} onClick={() => setFilter(draft)}>ค้นหา</Button>
-              <Button
-                icon={<ReloadOutlined />}
-                onClick={() => {
-                  setDraft(EMPTY_FILTER);
-                  setFilter(EMPTY_FILTER);
-                }}
-              >
-                ล้างค่า
-              </Button>
-            </Space>
-          </Col>
-        </Row>
+          </FilterField>
+        </FilterPanel>
 
         <Table
           rowKey="id"
@@ -191,7 +179,6 @@ export default function UserGroupPage() {
           bordered
           size="middle"
           scroll={{ x: 800 }}
-          style={{ marginTop: 20 }}
           pagination={{ pageSize: 10, showTotal: (total) => `ทั้งหมด ${total} รายการ` }}
           locale={{ emptyText: 'ไม่พบสิทธิ์การใช้งานตามเงื่อนไขที่ค้นหา' }}
         />

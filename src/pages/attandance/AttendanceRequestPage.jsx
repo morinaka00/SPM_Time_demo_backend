@@ -8,19 +8,62 @@ import {
   ArrowLeftOutlined 
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
 const { TextArea } = Input;
 
+const INITIAL_FILTER = { year: '2026', month: 'all' };
+
+// ประเภทคำขอลงเวลา (เลือกก่อนกรอกเหตุผล)
+const REQUEST_TYPES = [
+  { value: 'forgot', label: 'ลืมลงเวลา', icon: <ClockCircleOutlined /> },
+  { value: 'offsite', label: 'ปฏิบัติงานนอกสถานที่', icon: <EnvironmentOutlined /> },
+];
+const typeOf = (item) => (item?.type === 'ปฏิบัติงานนอกสถานที่' ? 'offsite' : 'forgot');
+
+// ปุ่มตัวเลือกแบบการ์ด เลือกได้ทีละหนึ่ง (หน้าตาเดียวกับตัวเลือก "การขอลงเวลา")
+function OptionCard({ selected, onClick, icon, children }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onClick}
+      style={{
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        border: selected ? '1px solid var(--ok)' : '1px solid var(--border)',
+        borderRadius: 6,
+        padding: '8px 16px',
+        cursor: 'pointer',
+        fontFamily: 'var(--sans)',
+        fontSize: 14,
+        color: selected ? 'var(--ok)' : 'var(--text-dark)',
+        backgroundColor: selected ? 'var(--ok-bg)' : 'var(--surface)',
+        fontWeight: selected ? 500 : 'normal',
+      }}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+}
+
 export default function AttendanceRequestPage() {
-  const [year, setYear] = useState('2026');
-  const [month, setMonth] = useState('all');
+  const [draft, setDraft] = useState(INITIAL_FILTER); // ค่าที่กำลังเลือก
+  const [filter, setFilter] = useState(INITIAL_FILTER); // ค่าที่ใช้กรองจริง (กดค้นหาแล้ว)
+  const { year, month } = filter;
   const [viewMode, setViewMode] = useState('list'); // 'list' หรือ 'detail'
   const [selectedItem, setSelectedItem] = useState(null);
   
   // สถานะประเภทการขอลงเวลาในหน้าฟอร์ม: 'normal' = ขอลงเวลา (1 ช่อง), 'full' = ขอลงเวลาทั้งวัน (2 ช่อง)
-  const [reqOption, setReqOption] = useState('normal'); 
+  const [reqOption, setReqOption] = useState('normal');
+  // ประเภทคำขอ: 'forgot' = ลืมลงเวลา, 'offsite' = ปฏิบัติงานนอกสถานที่
+  const [requestType, setRequestType] = useState('forgot');
 
   // จำลองข้อมูลประวัติการขอลงเวลาทั้งหมด[cite: 11]
   const [leaveData] = useState([
@@ -60,6 +103,7 @@ export default function AttendanceRequestPage() {
     } else {
       setReqOption('normal');
     }
+    setRequestType(typeOf(item));
     setViewMode('detail');
   };
 
@@ -76,6 +120,7 @@ export default function AttendanceRequestPage() {
       status: 'pending'
     });
     setReqOption('normal');
+    setRequestType('forgot');
     setViewMode('detail');
   };
 
@@ -100,29 +145,59 @@ export default function AttendanceRequestPage() {
           styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
           style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
         >
-          <div style={{ padding: '10px 20px' }}>
-            {/* ส่วนเหตุผลการขอลงเวลา และสถานที่ */}
+          {/* ระยะขอบด้านในของฟอร์ม: จอแคบตัดออกให้ช่องกรอกกว้างขึ้น */}
+          <style>{`
+            .req-form { padding: 10px 20px; }
+            @media (max-width: 575.98px) { .req-form { padding: 0; } }
+          `}</style>
+          <div className="req-form">
+            {/* ประเภทคำขอ: ลืมลงเวลา / ปฏิบัติงานนอกสถานที่ (เลือกก่อนกรอกเหตุผล) */}
             <div style={{ marginBottom: 20 }}>
-              <Text strong style={{ fontSize: '13px', display: 'block', marginBottom: 8 }}>เหตุผลการขอลงเวลา</Text>
-              <Row gutter={16}>
+              <Text strong style={{ fontSize: '13px', display: 'block', marginBottom: 8 }}>ประเภทคำขอ</Text>
+              <Row gutter={[16, 8]}>
+                {REQUEST_TYPES.map((t) => (
+                  <Col xs={24} sm={12} md={6} key={t.value}>
+                    <OptionCard selected={requestType === t.value} onClick={() => setRequestType(t.value)} icon={t.icon}>
+                      {t.label}
+                    </OptionCard>
+                  </Col>
+                ))}
+              </Row>
+            </div>
+
+            {/* ส่วนเหตุผลการขอลงเวลา และสถานที่ (เปลี่ยนตามประเภทคำขอ) */}
+            <div style={{ marginBottom: 20 }}>
+              <Text strong style={{ fontSize: '13px', display: 'block', marginBottom: 8 }}>สถาที่ลงเวลา</Text>
+              <Row gutter={[16, 8]}>
+                
                 <Col xs={24} md={12}>
-                  <Input value={selectedItem?.reason || 'ลืมลงเวลา'} readOnly style={{ borderRadius: 6 }} />
-                </Col>
-                <Col xs={24} md={12}>
-                  <div style={{ 
-                    border: '1px solid var(--ok)', 
-                    borderRadius: 6, 
-                    padding: '6px 16px', 
-                    display: 'inline-flex', 
-                    alignItems: 'center',
-                    gap: 8,
-                    color: 'var(--ok)', 
-                    fontWeight: '500',
-                    backgroundColor: 'var(--ok-bg)'
-                  }}>
-                    <EnvironmentOutlined />
-                    <span>{selectedItem?.location || 'ปฏิบัติงานนอกสถานที่'}</span>
-                  </div>
+                  {requestType === 'offsite' ? (
+                    // ปฏิบัติงานนอกสถานที่: ระบุสถานที่เอง
+                    <Input
+                      key={`location-${selectedItem?.id}`}
+                      prefix={<EnvironmentOutlined style={{ color: 'var(--text-muted)' }} />}
+                      defaultValue={typeOf(selectedItem) === 'offsite' ? selectedItem?.location : ''}
+                      placeholder="ระบุสถานที่ปฏิบัติงาน"
+                      aria-label="สถานที่ปฏิบัติงาน"
+                      style={{ borderRadius: 6 }}
+                    />
+                  ) : (
+                    // ลืมลงเวลา: ใช้สถานที่ลงเวลาปกติ
+                    <div style={{
+                      border: '1px solid var(--ok)',
+                      borderRadius: 6,
+                      padding: '6px 16px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      color: 'var(--ok)',
+                      fontWeight: '500',
+                      backgroundColor: 'var(--ok-bg)'
+                    }}>
+                      <EnvironmentOutlined />
+                      <span>{typeOf(selectedItem) === 'forgot' && selectedItem?.location ? selectedItem.location : 'อาคาร สลน.'}</span>
+                    </div>
+                  )}
                 </Col>
               </Row>
             </div>
@@ -245,13 +320,32 @@ export default function AttendanceRequestPage() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
         <Title level={4} style={{ margin: 0 }}>ประวัติการลงเวลา</Title>
-        <Space>
-          <Select value={year} onChange={value => setYear(value)} style={{ width: 110 }}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={handleAddNew}
+          style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', fontWeight: '500' }}
+        >
+          เพิ่ม
+        </Button>
+      </div>
+
+      <FilterPanel
+        onSearch={() => setFilter(draft)}
+        onReset={() => {
+          setDraft(INITIAL_FILTER);
+          setFilter(INITIAL_FILTER);
+        }}
+      >
+        <FilterField label="ปี">
+          <Select value={draft.year} onChange={value => setDraft(d => ({ ...d, year: value }))}>
             <Option value="all">ทุกปี</Option>
             <Option value="2026">2026</Option>
             <Option value="2025">2025</Option>
           </Select>
-          <Select value={month} onChange={value => setMonth(value)} style={{ width: 130 }}>
+        </FilterField>
+        <FilterField label="เดือน">
+          <Select value={draft.month} onChange={value => setDraft(d => ({ ...d, month: value }))}>
             <Option value="all">ทุกเดือน</Option>
             <Option value="01">มกราคม</Option>
             <Option value="02">กุมภาพันธ์</Option>
@@ -266,16 +360,8 @@ export default function AttendanceRequestPage() {
             <Option value="11">พฤศจิกายน</Option>
             <Option value="12">ธันวาคม</Option>
           </Select>
-          <Button 
-            type="primary" 
-            icon={<PlusOutlined />} 
-            onClick={handleAddNew}
-            style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', fontWeight: '500' }}
-          >
-            เพิ่ม
-          </Button>
-        </Space>
-      </div>
+        </FilterField>
+      </FilterPanel>
 
       {filteredData.length === 0 ? (
         <Card>

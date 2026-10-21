@@ -1,9 +1,9 @@
 import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, Popover } from 'antd';
-import { 
-  SearchOutlined, 
-  LeftOutlined, 
-  RightOutlined 
+import {
+  LeftOutlined,
+  RightOutlined
 } from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -280,52 +280,27 @@ export default function RptWorkCalendarPage() {
         style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบน */}
-        <div style={{ padding: '16px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle" style={{ marginBottom: 12 }}>
-                <Col span={6} style={{ textAlign: 'right' }}><Text>หน่วยงาน :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                    <Option value="sec">สำนักเลขาธิการ</Option>
-                  </Select>
-                </Col>
-              </Row>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle" style={{ marginBottom: 12 }}>
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ระดับตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ค้นหา :</Text></Col>
-                <Col span={18}>
-                  <Input placeholder="ชื่อ, รหัส" />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 16 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-3)', padding: '0 32px' }}>
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel>
+          <FilterField label="หน่วยงาน">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="sec">สำนักเลขาธิการ</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ระดับตำแหน่ง">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ตำแหน่ง">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ค้นหา">
+            <Input placeholder="ชื่อ, รหัส" />
+          </FilterField>
+        </FilterPanel>
 
         {/* ส่วนคำอธิบายความหมายของสี (Legend) */}
         <div style={{ marginBottom: 16, padding: '12px 16px', background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>

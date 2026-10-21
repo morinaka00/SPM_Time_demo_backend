@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { 
-  Card, Row, Col, Button, Select, Input, Table, Space, Typography, 
+  Card, Button, Select, Input, Table, Space, Typography, 
   Tooltip, Popconfirm, message, Modal, Form, DatePicker 
 } from 'antd';
 import { 
@@ -11,6 +11,7 @@ import {
   CalendarOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -148,11 +149,6 @@ export default function HolidayPage() {
         .ant-select, .ant-input-affix-wrapper, .ant-input {
           width: 100% !important;
         }
-        .filter-label {
-          text-align: right !important;
-          display: block !important;
-          padding-right: 8px;
-        }
         .ant-table-thead > tr > th {
           text-align: center !important;
         }
@@ -173,44 +169,22 @@ export default function HolidayPage() {
         }
       >
         {/* ส่วนฟิลเตอร์การค้นหา */}
-        <div style={{ padding: '24px 16px', marginBottom: 16, background: 'var(--surface)' }}>
-          <Row gutter={[16, 16]} align="middle" justify="left">
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">ประจำปี :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <Select defaultValue="2026">
-                <Option value="2026">2569</Option>
-                <Option value="2025">2568</Option>
-              </Select>
-            </Col>
-            <Col xs={24} md={10}></Col>
-
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">กลุ่มวันหยุด :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <Select defaultValue="typical">
-                <Option value="typical">วันหยุดพื้นฐาน / Typical Holiday Schedule</Option>
-              </Select>
-            </Col>
-            <Col xs={24} md={10}></Col>
-
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">ค้นหา :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <Input placeholder="ค้นหา" />
-            </Col>
-            <Col xs={24} md={10}></Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)' }}>
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel>
+          <FilterField label="ประจำปี" span={8}>
+            <Select defaultValue="2026">
+              <Option value="2026">2569</Option>
+              <Option value="2025">2568</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="กลุ่มวันหยุด" span={8}>
+            <Select defaultValue="typical">
+              <Option value="typical">วันหยุดพื้นฐาน / Typical Holiday Schedule</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ค้นหา" span={8}>
+            <Input placeholder="ค้นหา" />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงผล */}
         <Table 

@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { Card, Select, Row, Col, Tag, Space, Typography, Empty } from 'antd';
 import { CalendarOutlined, ClockCircleOutlined, FieldTimeOutlined } from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
 
+const INITIAL_FILTER = { year: '2026', month: 'all', status: 'all' };
+
 export default function OvertimeHistoryPage() {
-  const [year, setYear] = useState('2026');
-  const [month, setMonth] = useState('all');
-  const [status, setStatus] = useState('all');
+  const [draft, setDraft] = useState(INITIAL_FILTER); // ค่าที่กำลังเลือก
+  const [filter, setFilter] = useState(INITIAL_FILTER); // ค่าที่ใช้กรองจริง (กดค้นหาแล้ว)
+  const { year, month, status } = filter;
+  const set = (key) => (value) => setDraft(d => ({ ...d, [key]: value }));
 
   // จำลองข้อมูลประวัติการทำงานล่วงเวลา (OT)
   const otData = [
@@ -45,13 +49,24 @@ export default function OvertimeHistoryPage() {
       {/* ส่วนหัวข้อและฟิลเตอร์ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
         <Title level={4} className="section-label" style={{ margin: 0 }}>ประวัติการทำงานล่วงเวลา (OT)</Title>
-        <Space wrap>
-          <Select value={year} onChange={value => setYear(value)} style={{ width: 110 }}>
+      </div>
+
+      <FilterPanel
+        onSearch={() => setFilter(draft)}
+        onReset={() => {
+          setDraft(INITIAL_FILTER);
+          setFilter(INITIAL_FILTER);
+        }}
+      >
+        <FilterField label="ปี">
+          <Select value={draft.year} onChange={set('year')}>
             <Option value="all">ทุกปี</Option>
             <Option value="2026">2026</Option>
             <Option value="2025">2025</Option>
           </Select>
-          <Select value={month} onChange={value => setMonth(value)} style={{ width: 130 }}>
+        </FilterField>
+        <FilterField label="เดือน">
+          <Select value={draft.month} onChange={set('month')}>
             <Option value="all">ทุกเดือน</Option>
             <Option value="01">มกราคม</Option>
             <Option value="02">กุมภาพันธ์</Option>
@@ -66,14 +81,16 @@ export default function OvertimeHistoryPage() {
             <Option value="11">พฤศจิกายน</Option>
             <Option value="12">ธันวาคม</Option>
           </Select>
-          <Select value={status} onChange={value => setStatus(value)} style={{ width: 130 }}>
+        </FilterField>
+        <FilterField label="สถานะ">
+          <Select value={draft.status} onChange={set('status')}>
             <Option value="all">ทุกสถานะ</Option>
             <Option value="approved">อนุมัติแล้ว</Option>
             <Option value="pending">รออนุมัติ</Option>
             <Option value="rejected">ไม่อนุมัติ</Option>
           </Select>
-        </Space>
-      </div>
+        </FilterField>
+      </FilterPanel>
 
       {/* แสดงรายการ Card */}
       {filteredData.length === 0 ? (

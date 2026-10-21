@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { 
-  Card, Row, Col, Button, Select, Table, Space, Typography, 
+  Card, Button, Select, Table, Space, Typography,
   Tooltip, Popconfirm, message, DatePicker 
 } from 'antd';
 import { 
-  PlusOutlined, 
-  SearchOutlined, 
+  PlusOutlined,
   EditOutlined, 
   DeleteOutlined 
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom'; //[cite: 2] เพิ่มการ import useNavigate
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -112,11 +112,6 @@ export default function WFAPage() {
         .ant-select, .ant-picker {
           width: 100% !important;
         }
-        .filter-label {
-          text-align: right !important;
-          display: block !important;
-          padding-right: 8px;
-        }
         .ant-table-thead > tr > th {
           text-align: center !important;
         }
@@ -139,43 +134,19 @@ export default function WFAPage() {
         }
       >
         {/* ส่วน Filter[cite: 2] */}
-        <div style={{ padding: '24px 16px', marginBottom: 16, background: 'var(--surface)' }}>
-          <Row gutter={[16, 16]} align="middle" justify="center">
-            
-            {/* หน่วยงาน Dropdown[cite: 2] */}
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">หน่วยงาน :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <Select defaultValue="all" placeholder="เลือกหน่วยงาน">
-                <Option value="all">ทั้งหมด</Option>
-                <Option value="sec">สำนักเลขาธิการ</Option>
-                <Option value="general">กองบริหารงานทั่วไป</Option>
-                <Option value="it">กองสารสนเทศ</Option>
-              </Select>
-            </Col>
-            <Col xs={24} md={10}></Col>
-
-            {/* ช่วงวันที่ From - To DatePicker[cite: 2] */}
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">ช่วงวันที่ :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <RangePicker placeholder={['วันที่เริ่มต้น', 'วันที่สิ้นสุด']} format="DD/MM/YYYY" />
-            </Col>
-            
-            <Col xs={24} md={10}></Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Button 
-              type="primary" 
-              icon={<SearchOutlined />}
-            >
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel>
+          <FilterField label="หน่วยงาน" span={8}>
+            <Select defaultValue="all" placeholder="เลือกหน่วยงาน">
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="sec">สำนักเลขาธิการ</Option>
+              <Option value="general">กองบริหารงานทั่วไป</Option>
+              <Option value="it">กองสารสนเทศ</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ช่วงวันที่" span={8}>
+            <RangePicker placeholder={['วันที่เริ่มต้น', 'วันที่สิ้นสุด']} format="DD/MM/YYYY" />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงผล Grid[cite: 2] */}
         <Table 

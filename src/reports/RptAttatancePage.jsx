@@ -1,12 +1,12 @@
-import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, DatePicker } from 'antd';
-import { 
-  ArrowLeftOutlined, 
-  SearchOutlined, 
-  FileExcelOutlined, 
-  ReloadOutlined 
+import { Card, Button, Select, Input, Table, Typography, Space, DatePicker } from 'antd';
+import {
+  ArrowLeftOutlined,
+  FileExcelOutlined,
+  ReloadOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import FilterPanel, { FilterField } from '../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -288,123 +288,73 @@ export default function RptAttatancePage() {
             </Text>
           </Space>
         }
-        extra={
-          <Button 
-            icon={<FileExcelOutlined />} 
-            style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
-          >
-            Export Excel
-          </Button>
-        }
         styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
         style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบน */}
-        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
-          <Row gutter={[16, 12]}>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตั้งแต่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker defaultValue={dayjs('2026-08-01')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ถึงวันที่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker defaultValue={dayjs('2026-08-31')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>หน่วยงาน :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ระดับตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>เจ้าหน้าที่ :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด...</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>สถานะการลงเวลา :</Text></Col>
-                <Col span={18}>
-                  <Select 
-                    mode="multiple" 
-                    defaultValue={[
-                      'incomplete', 
-                      'normal', 
-                      'late', 
-                      'leave', 
-                      'holiday', 
-                      'absent'
-                    ]} 
-                    style={{ width: '100%' }}
-                    placeholder="เลือกสถานะการลงเวลา"
-                    maxTagCount="responsive"
-                  >
-                    <Option value="incomplete">ยังไม่สมบูรณ์</Option>
-                    <Option value="normal">ลงเวลาปกติ</Option>
-                    <Option value="late">เข้างานสาย/ออกงานก่อนเวลา</Option>
-                    <Option value="leave">ลา</Option>
-                    <Option value="holiday">วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์</Option>
-                    <Option value="absent">ขาดงาน</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ค้นหา :</Text></Col>
-                <Col span={18}>
-                  <Input defaultValue="" />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}>
-              ค้นหา
+        <FilterPanel
+          extra={
+            <Button
+              icon={<FileExcelOutlined />}
+              style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
+            >
+              Export Excel
             </Button>
-          </div>
-        </div>
+          }
+        >
+          <FilterField label="ตั้งแต่">
+            <DatePicker defaultValue={dayjs('2026-08-01')} format="DD/MM/YYYY" style={{ width: '100%' }} />
+          </FilterField>
+          <FilterField label="ถึงวันที่">
+            <DatePicker defaultValue={dayjs('2026-08-31')} format="DD/MM/YYYY" style={{ width: '100%' }} />
+          </FilterField>
+          <FilterField label="หน่วยงาน">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ระดับตำแหน่ง">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ตำแหน่ง">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="เจ้าหน้าที่">
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด...</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="สถานะการลงเวลา">
+            <Select
+              mode="multiple"
+              defaultValue={[
+                'incomplete',
+                'normal',
+                'late',
+                'leave',
+                'holiday',
+                'absent'
+              ]}
+              style={{ width: '100%' }}
+              placeholder="เลือกสถานะการลงเวลา"
+              maxTagCount="responsive"
+            >
+              <Option value="incomplete">ยังไม่สมบูรณ์</Option>
+              <Option value="normal">ลงเวลาปกติ</Option>
+              <Option value="late">เข้างานสาย/ออกงานก่อนเวลา</Option>
+              <Option value="leave">ลา</Option>
+              <Option value="holiday">วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์</Option>
+              <Option value="absent">ขาดงาน</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ค้นหา">
+            <Input defaultValue="" />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงรายละเอียดการทำงาน */}
         <Table 

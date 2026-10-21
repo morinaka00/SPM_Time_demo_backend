@@ -1,11 +1,25 @@
 import { useState } from 'react';
 import {
-  Card, Row, Col, Button, Select, Input, Table, Space, Typography, Tag, Tooltip, Popconfirm, message,
+  Card,
+  Button,
+  Select,
+  Input,
+  Table,
+  Space,
+  Typography,
+  Tag,
+  Tooltip,
+  Popconfirm,
+  message,
 } from 'antd';
 import {
-  PlusOutlined, SearchOutlined, ReloadOutlined, EditOutlined, DeleteOutlined, DownloadOutlined,
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 import {
   getUsers, deleteUser, userFullName, roleName, getRoles, STATUS_LABEL, STATUS_TAG,
 } from './userData';
@@ -160,8 +174,6 @@ export default function UserPage() {
       <style>{`
         .user-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
         .role-chip.ant-tag { margin: 0; background: var(--navy-tint); border-color: var(--navy-tint-border); color: var(--navy-3); }
-        .user-filter label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--text-dark); }
-        .user-filter .ant-select { width: 100%; }
       `}</style>
 
       <Card
@@ -174,58 +186,45 @@ export default function UserPage() {
           </Button>
         }
       >
-        <Text type="secondary">
-          รายชื่อผู้ใช้งานทั้งหมด {users.length} คน ในระบบ พร้อมระบบที่ได้รับสิทธิ์ใช้งาน
-        </Text>
+        
 
         {/* ส่วนค้นหา */}
-        <Row gutter={[16, 16]} className="user-filter" style={{ marginTop: 20 }}>
-          <Col xs={24} sm={12} lg={6}>
-            <label htmlFor="uf-name">ชื่อ-นามสกุล</label>
-            <Input id="uf-name" placeholder="ค้นหาชื่อผู้ใช้" value={draft.name} onChange={set('name')} onPressEnter={() => setFilter(draft)} allowClear />
-          </Col>
-          <Col xs={24} sm={12} lg={6}>
-            <label htmlFor="uf-dept">หน่วยงาน</label>
-            <Input id="uf-dept" placeholder="ค้นหาหน่วยงาน/สังกัด" value={draft.dept} onChange={set('dept')} onPressEnter={() => setFilter(draft)} allowClear />
-          </Col>
-          <Col xs={24} sm={12} lg={6}>
-            <label htmlFor="uf-status">สถานะ</label>
+        <FilterPanel
+          onSearch={() => setFilter(draft)}
+          onReset={() => {
+            setDraft(EMPTY_FILTER);
+            setFilter(EMPTY_FILTER);
+          }}
+          extra={
+            <>
+              <Button icon={<DownloadOutlined />} onClick={() => exportCsv(rows)} disabled={!rows.length}>Export CSV</Button>
+              <Button icon={<DownloadOutlined />} onClick={() => exportXml(rows)} disabled={!rows.length}>Export XML</Button>
+            </>
+          }
+        >
+          <FilterField label="ชื่อ-นามสกุล" htmlFor="uf-name">
+            <Input id="uf-name" placeholder="ค้นหาชื่อผู้ใช้" value={draft.name} onChange={set('name')} allowClear />
+          </FilterField>
+          <FilterField label="หน่วยงาน" htmlFor="uf-dept">
+            <Input id="uf-dept" placeholder="ค้นหาหน่วยงาน/สังกัด" value={draft.dept} onChange={set('dept')} allowClear />
+          </FilterField>
+          <FilterField label="สถานะ" htmlFor="uf-status">
             <Select
               id="uf-status"
               value={draft.status}
               onChange={set('status')}
               options={[{ value: 'all', label: 'ทั้งหมด' }, ...Object.entries(STATUS_LABEL).map(([value, label]) => ({ value, label }))]}
             />
-          </Col>
-          <Col xs={24} sm={12} lg={6}>
-            <label htmlFor="uf-role">สิทธิ์การใช้งาน</label>
+          </FilterField>
+          <FilterField label="สิทธิ์การใช้งาน" htmlFor="uf-role">
             <Select
               id="uf-role"
               value={draft.role}
               onChange={set('role')}
               options={[{ value: 'all', label: 'ทุกสิทธิ์' }, ...getRoles().map((r) => ({ value: r.id, label: r.name }))]}
             />
-          </Col>
-        </Row>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, margin: '20px 0 16px' }}>
-          <Space wrap>
-            <Button type="primary" icon={<SearchOutlined />} onClick={() => setFilter(draft)}>ค้นหา</Button>
-            <Button
-              icon={<ReloadOutlined />}
-              onClick={() => {
-                setDraft(EMPTY_FILTER);
-                setFilter(EMPTY_FILTER);
-              }}
-            >
-              ล้างค่า
-            </Button>
-          </Space>
-          <Space wrap>
-            <Button icon={<DownloadOutlined />} onClick={() => exportCsv(rows)} disabled={!rows.length}>Export CSV</Button>
-            <Button icon={<DownloadOutlined />} onClick={() => exportXml(rows)} disabled={!rows.length}>Export XML</Button>
-          </Space>
-        </div>
+          </FilterField>
+        </FilterPanel>
 
         <Table
           rowKey="id"

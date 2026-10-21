@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { 
-  Card, Row, Col, Button, Input, Table, Space, Typography, 
+  Card, Button, Input, Table, Space, Typography, 
   Tooltip, Popconfirm, message, Modal,Radio, Form} from 'antd';
 import { 
   PlusOutlined, 
@@ -8,6 +8,7 @@ import {
   EditOutlined, 
   DeleteOutlined} from '@ant-design/icons';
 import dayjs from 'dayjs';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Text } = Typography;
 
@@ -126,11 +127,6 @@ export default function HolidayGroupPage() {
         .ant-select, .ant-input-affix-wrapper, .ant-input {
           width: 100% !important;
         }
-        .filter-label {
-          text-align: right !important;
-          display: block !important;
-          padding-right: 8px;
-        }
         .ant-table-thead > tr > th {
           text-align: center !important;
         }
@@ -151,25 +147,11 @@ export default function HolidayGroupPage() {
         }
       >
         {/* ส่วนฟิลเตอร์การค้นหา */}
-        <div style={{ padding: '24px 16px', marginBottom: 16, background: 'var(--surface)' }}>
-          <Row gutter={[16, 16]} align="middle" justify="left">
-            
-
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">ค้นหา :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <Input placeholder="ค้นหา" />
-            </Col>
-            <Col xs={24} md={10}></Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ padding: '0 32px', height: 38, backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)' }}>
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel>
+          <FilterField label="ค้นหา" span={8}>
+            <Input placeholder="ค้นหา" />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงผล */}
         <Table 

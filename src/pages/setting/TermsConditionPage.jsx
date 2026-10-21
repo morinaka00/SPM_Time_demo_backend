@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { Card, Row, Col, Button, Select, Input, Table, Switch, Typography, Space, Pagination, DatePicker } from 'antd';
-import { 
-  SearchOutlined, 
-  PlusOutlined, 
-  EditOutlined, 
+import { Card, Button, Select, Input, Table, Switch, Typography, Space, Pagination, DatePicker } from 'antd';
+import {
+  PlusOutlined,
+  EditOutlined,
   DeleteOutlined,
-  ArrowLeftOutlined,
-  ReloadOutlined
+  ArrowLeftOutlined
 } from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -183,46 +182,20 @@ export default function TermsConditionPage() {
           }
         `}</style>
 
-        {/* ส่วน Filter ค้นหาด้านบน (เพิ่มช่วงวันที่) */}
-        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
-          <Row gutter={[16, 12]}>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตั้งแต่วันที่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="เลือกวันที่เริ่มต้น" />
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ถึงวันที่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="เลือกวันที่สิ้นสุด" />
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ค้นหา :</Text></Col>
-                <Col span={18}>
-                  <Input placeholder="ชื่อ อีเมล หรือ IP Address" allowClear />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Space>
-              <Button icon={<ReloadOutlined />}>
-                ล้างเงื่อนไข
-              </Button>
-              <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}>
-                ค้นหา
-              </Button>
-            </Space>
-          </div>
-        </div>
+        {/* ส่วน Filter ค้นหาด้านบน (เพิ่มช่วงวันที่) — อยู่ในการ์ดเหมือนหน้าอื่น */}
+        <Card style={{ borderRadius: 8, marginBottom: 16 }} styles={{ body: { paddingBottom: 4 } }}>
+          <FilterPanel>
+            <FilterField label="ตั้งแต่วันที่" span={8}>
+              <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="เลือกวันที่เริ่มต้น" />
+            </FilterField>
+            <FilterField label="ถึงวันที่" span={8}>
+              <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="เลือกวันที่สิ้นสุด" />
+            </FilterField>
+            <FilterField label="ค้นหา" span={8}>
+              <Input placeholder="ชื่อ อีเมล หรือ IP Address" allowClear />
+            </FilterField>
+          </FilterPanel>
+        </Card>
 
         {/* ส่วนรายการข้อมูล */}
         <Card 
@@ -296,36 +269,18 @@ export default function TermsConditionPage() {
         styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
         style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
-        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>หัวข้อ :</Text></Col>
-                <Col span={18}>
-                  <Input placeholder="หัวข้อ หรือ version" allowClear />
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>สถานะการใช้งาน :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                    <Option value="active">เปิดใช้งาน</Option>
-                    <Option value="inactive">ปิดใช้งาน</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button type="primary" icon={<SearchOutlined />} style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}>
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel>
+          <FilterField label="หัวข้อ" span={8}>
+            <Input placeholder="หัวข้อ หรือ version" allowClear />
+          </FilterField>
+          <FilterField label="สถานะการใช้งาน" span={8}>
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="active">เปิดใช้งาน</Option>
+              <Option value="inactive">ปิดใช้งาน</Option>
+            </Select>
+          </FilterField>
+        </FilterPanel>
 
         <Table 
           dataSource={dataSource} 

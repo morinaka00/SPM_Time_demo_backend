@@ -67,6 +67,8 @@ import UserPage from './pages/users/UserPage';
 import UserDetailPage from './pages/users/UserDetailPage';
 import UserGroupPage from './pages/users/UserGroupPage';
 import UserGroupDetailPage from './pages/users/UserGroupDetailPage';
+import ClientPage from './pages/system_settings/ClientPage';
+import MailPage from './pages/system_settings/MailPage';
 
 
 
@@ -174,6 +176,8 @@ function MainLayout({ isDark, onToggleTheme, onLogout }) {
               <Route path="/users/UserDetailPage" element={<UserDetailPage />} />
               <Route path="/users/UserGroupPage" element={<UserGroupPage />} />
               <Route path="/users/UserGroupDetailPage" element={<UserGroupDetailPage />} />
+              <Route path="/system_settings/ClientPage" element={<ClientPage />} />
+              <Route path="/system_settings/MailPage" element={<MailPage />} />
 
               <Route path="/settings/TermsConditionPage" element={<TermsConditionPage title="ตั้งค่าข้อกำหนดและเงื่อนไขการใช้งาน" />} />
               

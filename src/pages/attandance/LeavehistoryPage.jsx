@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { Card, Select, Row, Col, Tag, Space, Typography, Empty } from 'antd';
 import { CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
 
+const INITIAL_FILTER = { year: '2026', month: 'all' };
+
 export default function LeaveHistoryPage() {
-  const [year, setYear] = useState('2026');
-  const [month, setMonth] = useState('all');
+  const [draft, setDraft] = useState(INITIAL_FILTER); // ค่าที่กำลังเลือก
+  const [filter, setFilter] = useState(INITIAL_FILTER); // ค่าที่ใช้กรองจริง (กดค้นหาแล้ว)
+  const { year, month } = filter;
 
   // จำลองข้อมูลประวัติการลาทั้งหมด
   const leaveData = [
@@ -43,13 +47,24 @@ export default function LeaveHistoryPage() {
       {/* ส่วนหัวข้อและฟิลเตอร์ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
         <Title level={4} className="section-label" style={{ margin: 0 }}>ประวัติการขอลาหยุด (DPIS)</Title>
-        <Space>
-          <Select value={year} onChange={value => setYear(value)} style={{ width: 110 }}>
+      </div>
+
+      <FilterPanel
+        onSearch={() => setFilter(draft)}
+        onReset={() => {
+          setDraft(INITIAL_FILTER);
+          setFilter(INITIAL_FILTER);
+        }}
+      >
+        <FilterField label="ปี">
+          <Select value={draft.year} onChange={value => setDraft(d => ({ ...d, year: value }))}>
             <Option value="all">ทุกปี</Option>
             <Option value="2026">2026</Option>
             <Option value="2025">2025</Option>
           </Select>
-          <Select value={month} onChange={value => setMonth(value)} style={{ width: 130 }}>
+        </FilterField>
+        <FilterField label="เดือน">
+          <Select value={draft.month} onChange={value => setDraft(d => ({ ...d, month: value }))}>
             <Option value="all">ทุกเดือน</Option>
             <Option value="01">มกราคม</Option>
             <Option value="02">กุมภาพันธ์</Option>
@@ -64,8 +79,8 @@ export default function LeaveHistoryPage() {
             <Option value="11">พฤศจิกายน</Option>
             <Option value="12">ธันวาคม</Option>
           </Select>
-        </Space>
-      </div>
+        </FilterField>
+      </FilterPanel>
 
       {/* แสดงรายการ Card */}
       {filteredData.length === 0 ? (
@@ -82,7 +97,7 @@ export default function LeaveHistoryPage() {
                 hoverable
                 style={{ height: '100%', borderRadius: 8 }}
               >
-                <Space direction="vertical" size={8} style={{ width: '100%' }}>
+                <Space orientation="vertical" size={8} style={{ width: '100%' }}>
                   <Text>
                     <CalendarOutlined style={{ marginRight: 8, color: 'var(--navy-3)' }} />
                     <strong>ช่วงวันที่:</strong> {item.startDate} ถึง {item.endDate}

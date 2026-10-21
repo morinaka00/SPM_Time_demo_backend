@@ -167,7 +167,7 @@ export default function ForgotPasswordModal({ open, username, onClose }) {
       width={520}
       centered
       destroyOnHidden
-      maskClosable={false}
+      mask={{ closable: false }}
       title={
         <span className="forgot-title">
           <LockOutlined /> ตั้งค่ารหัสผ่าน

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
-import { 
-  SearchOutlined, 
-  FileExcelOutlined 
+import { Card, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
+import {
+  FileExcelOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import FilterPanel, { FilterField } from '../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -38,7 +38,7 @@ export default function RptLeaveDetailPage() {
           </span>
         );
       },
-      onCell: () => ({
+      onCell: (rec) => (rec.isDeptHeader ? { colSpan: 0 } : {
         style: {
           // ทำไฮไลต์วันเสาร์-อาทิตย์จำลอง
           backgroundColor: (i === 6 || i === 7 || i === 13 || i === 14 || i === 20 || i === 21 || i === 27 || i === 28) ? 'var(--ok-bg)' : 'inherit',
@@ -46,9 +46,13 @@ export default function RptLeaveDetailPage() {
           padding: '2px 1px',
           textAlign: 'center'
         }
-      })
+      }),
     });
   }
+
+  // แถวหัวหน่วยงานใช้ช่องชื่อกินเต็มแถว: นับคอลัมน์ย่อยทั้งหมด (ชื่อ 1 + วันที่ 31 + สรุป 3×5 + หมายเหตุ 1)
+  const LEAF_COLUMN_COUNT = 1 + dayColumns.length + 15 + 1;
+  const hideOnDeptHeader = (rec) => (rec.isDeptHeader ? { colSpan: 0 } : {});
 
   // โครงสร้าง Columns ของตาราง
   const columns = [
@@ -58,15 +62,14 @@ export default function RptLeaveDetailPage() {
       key: 'name',
       fixed: 'left',
       width: 150,
+      // แถวหัวหน่วยงาน: ช่องชื่อกินเต็มแถว (คอลัมน์อื่นซ่อนด้วย colSpan 0)
+      onCell: (record) =>
+        record.isDeptHeader
+          ? { colSpan: LEAF_COLUMN_COUNT, style: { backgroundColor: 'var(--bg)', fontWeight: 'bold' } }
+          : {},
       render: (text, record) => {
         if (record.isDeptHeader) {
-          return {
-            props: {
-              colSpan: 38,
-              style: { backgroundColor: 'var(--bg)', fontWeight: 'bold' }
-            },
-            children: <Text strong style={{ color: 'var(--navy-1)', fontSize: '13px' }}>{text}</Text>
-          };
+          return <Text strong style={{ color: 'var(--navy-1)', fontSize: '13px' }}>{text}</Text>;
         }
         return (
           <div>
@@ -83,31 +86,31 @@ export default function RptLeaveDetailPage() {
     {
       title: 'ในเดือนนี้',
       children: [
-        { title: 'สาย', dataIndex: 'm_late', key: 'm_late', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'พักผ่อน', dataIndex: 'm_vacation', key: 'm_vacation', align: 'center', width: 50, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'คลอด', dataIndex: 'm_maternity', key: 'm_maternity', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'ป่วย', dataIndex: 'm_sick', key: 'm_sick', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'ครั้ง', dataIndex: 'm_times', key: 'm_times', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
+        { title: 'สาย', dataIndex: 'm_late', key: 'm_late', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'พักผ่อน', dataIndex: 'm_vacation', key: 'm_vacation', align: 'center', width: 50, onCell: hideOnDeptHeader },
+        { title: 'คลอด', dataIndex: 'm_maternity', key: 'm_maternity', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'ป่วย', dataIndex: 'm_sick', key: 'm_sick', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'ครั้ง', dataIndex: 'm_times', key: 'm_times', align: 'center', width: 42, onCell: hideOnDeptHeader },
       ]
     },
     {
       title: 'ลามาแล้ว',
       children: [
-        { title: 'สาย', dataIndex: 'p_late', key: 'p_late', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'พักผ่อน', dataIndex: 'p_vacation', key: 'p_vacation', align: 'center', width: 50, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'คลอด', dataIndex: 'p_maternity', key: 'p_maternity', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'ป่วย', dataIndex: 'p_sick', key: 'p_sick', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'ครั้ง', dataIndex: 'p_times', key: 'p_times', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
+        { title: 'สาย', dataIndex: 'p_late', key: 'p_late', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'พักผ่อน', dataIndex: 'p_vacation', key: 'p_vacation', align: 'center', width: 50, onCell: hideOnDeptHeader },
+        { title: 'คลอด', dataIndex: 'p_maternity', key: 'p_maternity', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'ป่วย', dataIndex: 'p_sick', key: 'p_sick', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'ครั้ง', dataIndex: 'p_times', key: 'p_times', align: 'center', width: 42, onCell: hideOnDeptHeader },
       ]
     },
     {
       title: 'รวม',
       children: [
-        { title: 'สาย', dataIndex: 't_late', key: 't_late', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'พักผ่อน', dataIndex: 't_vacation', key: 't_vacation', align: 'center', width: 50, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'คลอด', dataIndex: 't_maternity', key: 't_maternity', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'ป่วย', dataIndex: 't_sick', key: 't_sick', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
-        { title: 'ครั้ง', dataIndex: 't_times', key: 't_times', align: 'center', width: 42, render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val },
+        { title: 'สาย', dataIndex: 't_late', key: 't_late', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'พักผ่อน', dataIndex: 't_vacation', key: 't_vacation', align: 'center', width: 50, onCell: hideOnDeptHeader },
+        { title: 'คลอด', dataIndex: 't_maternity', key: 't_maternity', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'ป่วย', dataIndex: 't_sick', key: 't_sick', align: 'center', width: 42, onCell: hideOnDeptHeader },
+        { title: 'ครั้ง', dataIndex: 't_times', key: 't_times', align: 'center', width: 42, onCell: hideOnDeptHeader },
       ]
     },
     {
@@ -116,7 +119,7 @@ export default function RptLeaveDetailPage() {
       key: 'remark',
       align: 'center',
       width: 75,
-      render: (val, rec) => rec.isDeptHeader ? { props: { colSpan: 0 } } : val
+      onCell: hideOnDeptHeader
     }
   ];
 
@@ -184,95 +187,48 @@ export default function RptLeaveDetailPage() {
             </Text>
           </Space>
         }
-        extra={
-          <Button 
-            icon={<FileExcelOutlined />} 
-            style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
-          >
-            รายงานสรุปการลา
-          </Button>
-          
-        }
-        
         styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
         style={{ borderRadius: 8, boxShadow: '0 2px 8px rgba(12,27,58,0.08)' }}
       >
         {/* ส่วน Filter ด้านบนเหมือนหน้า RptAttatancePage */}
-        <div style={{ padding: '20px', marginBottom: 20, background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
-          <Row gutter={[16, 12]}>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตั้งแต่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker defaultValue={dayjs('2026-08-01')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ถึงวันที่ :</Text></Col>
-                <Col span={18}>
-                  <DatePicker defaultValue={dayjs('2026-08-31')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>หน่วยงาน :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                    <Option value="sec">สำนักเลขาธิการ</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ระดับตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ตำแหน่ง :</Text></Col>
-                <Col span={18}>
-                  <Select defaultValue="all" style={{ width: '100%' }}>
-                    <Option value="all">ทั้งหมด</Option>
-                  </Select>
-                </Col>
-              </Row>
-            </Col>
-            
-
-            
-            <Col xs={24} md={12}>
-              <Row gutter={8} align="middle">
-                <Col span={6} style={{ textAlign: 'right' }}><Text>ค้นหา :</Text></Col>
-                <Col span={18}>
-                  <Input placeholder="ค้นหาชื่อเจ้าหน้าที่..." />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
-            <Button 
-              type="primary" 
-              icon={<SearchOutlined />} 
-              onClick={handleSearch}
-              style={{ backgroundColor: 'var(--navy-1)', borderColor: 'var(--navy-1)', padding: '0 36px', height: '38px' }}
+        <FilterPanel
+          onSearch={handleSearch}
+          onReset={() => setSearched(false)}
+          extra={
+            <Button
+              icon={<FileExcelOutlined />}
+              style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
             >
-              ค้นหา
+              รายงานสรุปการลา
             </Button>
-          </div>
-        </div>
+          }
+        >
+          <FilterField label="ตั้งแต่" span={8}>
+            <DatePicker defaultValue={dayjs('2026-08-01')} format="DD/MM/YYYY" style={{ width: '100%' }} />
+          </FilterField>
+          <FilterField label="ถึงวันที่" span={8}>
+            <DatePicker defaultValue={dayjs('2026-08-31')} format="DD/MM/YYYY" style={{ width: '100%' }} />
+          </FilterField>
+          <FilterField label="หน่วยงาน" span={8}>
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="sec">สำนักเลขาธิการ</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ระดับตำแหน่ง" span={8}>
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ตำแหน่ง" span={8}>
+            <Select defaultValue="all" style={{ width: '100%' }}>
+              <Option value="all">ทั้งหมด</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ค้นหา" span={8}>
+            <Input placeholder="ค้นหาชื่อเจ้าหน้าที่..." />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงผลเฉพาะเมื่อกดปุ่มค้นหาแล้ว */}
         {searched ? (

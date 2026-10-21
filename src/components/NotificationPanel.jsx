@@ -58,7 +58,7 @@ export default function NotificationPanel() {
       <Drawer
         className="notif-drawer"
         placement="right"
-        width={400}
+        size={400}
         open={open}
         onClose={() => setOpen(false)}
         title={

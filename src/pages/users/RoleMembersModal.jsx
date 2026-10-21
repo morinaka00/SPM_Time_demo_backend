@@ -114,7 +114,7 @@ export default function RoleMembersModal({ role, sessionKey, onClose, onSaved })
       width={640}
       centered
       destroyOnHidden
-      maskClosable={false}
+      mask={{ closable: false }}
       title={
         <span className="rm-title">
           รายชื่อผู้ใช้งาน

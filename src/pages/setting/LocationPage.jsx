@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { 
-  Card, Row, Col, Button, Select, Input, Table, Space, Typography, 
+  Card, Button, Select, Input, Table, Space, Typography, 
   Tooltip, Popconfirm, message, Modal, Form, Radio, Tag 
 } from 'antd';
 import { 
-  PlusOutlined, 
-  SearchOutlined, 
-  EditOutlined, 
+  PlusOutlined,
+  EditOutlined,
   DeleteOutlined,
   EnvironmentOutlined
 } from '@ant-design/icons';
+import FilterPanel, { FilterField } from '../../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -166,11 +166,6 @@ export default function LocationPage() {
         .ant-select, .ant-input-affix-wrapper, .ant-input {
           width: 100% !important;
         }
-        .filter-label {
-          text-align: right !important;
-          display: block !important;
-          padding-right: 8px;
-        }
         .ant-table-thead > tr > th {
           text-align: center !important;
         }
@@ -188,35 +183,18 @@ export default function LocationPage() {
         }
       >
         {/* ส่วน Filter */}
-        <div style={{ padding: '24px 16px', marginBottom: 16, background: 'var(--surface)' }}>
-          <Row gutter={[16, 16]} align="middle" justify="center">
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">สถานะ :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <Select defaultValue="all" placeholder="เลือกสถานะ">
-                <Option value="all">ทั้งหมด</Option>
-                <Option value="active">ใช้งาน</Option>
-                <Option value="inactive">ไม่ใช้งาน</Option>
-              </Select>
-            </Col>
-            <Col xs={24} md={10}></Col>
-
-            <Col xs={24} md={4} style={{ textAlign: 'right' }}>
-              <Text className="filter-label">ค้นหา :</Text>
-            </Col>
-            <Col xs={24} md={10}>
-              <Input placeholder="ค้นหาชื่อสถานที่" />
-            </Col>
-            <Col xs={24} md={10}></Col>
-          </Row>
-
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Button type="primary" icon={<SearchOutlined />}>
-              ค้นหา
-            </Button>
-          </div>
-        </div>
+        <FilterPanel>
+          <FilterField label="สถานะ" span={8}>
+            <Select defaultValue="all" placeholder="เลือกสถานะ">
+              <Option value="all">ทั้งหมด</Option>
+              <Option value="active">ใช้งาน</Option>
+              <Option value="inactive">ไม่ใช้งาน</Option>
+            </Select>
+          </FilterField>
+          <FilterField label="ค้นหา" span={8}>
+            <Input placeholder="ค้นหาชื่อสถานที่" />
+          </FilterField>
+        </FilterPanel>
 
         {/* ตารางแสดงผล Grid */}
         <Table 
