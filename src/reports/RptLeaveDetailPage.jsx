@@ -195,11 +195,14 @@ export default function RptLeaveDetailPage() {
           onSearch={handleSearch}
           onReset={() => setSearched(false)}
           extra={
+            // ต้นแบบ: ดาวน์โหลดไฟล์ตัวอย่างใน public/files (ยังไม่สร้างจากข้อมูลที่ค้นหา)
             <Button
               icon={<FileExcelOutlined />}
+              href="/files/RptLeaveReport.xlsx"
+              download="RptLeaveReport.xlsx"
               style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
             >
-              รายงานสรุปการลา
+              Export Excel
             </Button>
           }
         >

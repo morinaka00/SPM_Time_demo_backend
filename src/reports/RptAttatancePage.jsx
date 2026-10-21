@@ -294,8 +294,11 @@ export default function RptAttatancePage() {
         {/* ส่วน Filter ด้านบน */}
         <FilterPanel
           extra={
+            // ต้นแบบ: ดาวน์โหลดไฟล์ตัวอย่างใน public/files (ยังไม่สร้างจากข้อมูลที่ค้นหา)
             <Button
               icon={<FileExcelOutlined />}
+              href="/files/RptAttatancePage.xlsx"
+              download="RptAttatancePage.xlsx"
               style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
             >
               Export Excel
