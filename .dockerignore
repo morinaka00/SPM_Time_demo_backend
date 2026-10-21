@@ -1,0 +1,24 @@
+node_modules
+dist
+dist-ssr
+
+.git
+.gitignore
+
+# ผลลัพธ์ของ build-docker.ps1 เอง — กันไม่ให้วนกลับเข้า context รอบถัดไป
+*.tar
+*.zip
+__MACOSX
+
+.DS_Store
+*.log
+*.local
+.vscode
+.idea
+
+README.md
+
+Dockerfile
+.dockerignore
+docker-compose.yml
+build-docker.ps1

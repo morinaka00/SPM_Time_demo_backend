@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import {
-  getUser, saveUser, isUsernameTaken, userFullName, ROLES, PREFIXES, LEVELS, STATUS_LABEL, STATUS_TAG,
+  getUser, saveUser, isUsernameTaken, userFullName, getRoles, PREFIXES, LEVELS, STATUS_LABEL, STATUS_TAG,
 } from './userData';
 
 const { Text } = Typography;
@@ -39,7 +39,7 @@ export default function UserDetailPage() {
   );
 
   // สิทธิ์ที่ปิดใช้งานแล้วจะเลือกใหม่ไม่ได้ แต่ถ้าผู้ใช้มีอยู่เดิมยังแสดงไว้ (เหมือนต้นแบบ)
-  const roleOptions = ROLES.filter((r) => r.active || user?.roleIds.includes(r.id)).map((r) => ({
+  const roleOptions = getRoles().filter((r) => r.active || user?.roleIds.includes(r.id)).map((r) => ({
     value: r.id,
     label: r.active ? r.name : `${r.name} (ไม่ใช้งาน)`,
   }));
@@ -243,11 +243,11 @@ export default function UserDetailPage() {
           </Row>
 
           <div style={{ textAlign: 'center', marginTop: 32 }}>
-            <Space size="middle">
-              <Button type="primary" icon={<SaveOutlined />} onClick={handleSave} style={{ padding: '0 32px', height: 38 }}>
+            <Space size="middle" wrap style={{ justifyContent: 'center' }}>
+              <Button type="primary" icon={<SaveOutlined />} onClick={handleSave} style={{ minWidth: 140, height: 38 }}>
                 บันทึกข้อมูล
               </Button>
-              <Button onClick={goBack} style={{ padding: '0 32px', height: 38 }}>
+              <Button onClick={goBack} style={{ minWidth: 140, height: 38 }}>
                 ยกเลิก
               </Button>
             </Space>

@@ -41,14 +41,13 @@
   background: linear-gradient(180deg, var(--gold), var(--gold-pale) 45%, rgba(240, 217, 154, 0));
 }
 
-/* ย่อแบรนด์ลงเล็กน้อยให้ชื่อหน่วยงานอยู่บรรทัดเดียว ไม่ตัดกลางคำ */
+/* ย่อแบรนด์ลงเล็กน้อย และให้ขนาดชื่อหน่วยงานปรับตามความกว้างจอ (ขึ้นบรรทัดใหม่ได้ถ้าแผงแคบ ไม่ล้นขอบ) */
 .login-brand .brand-header__logo {
   width: 96px;
   height: 96px;
 }
 .login-brand .brand-header__org-th {
-  font-size: 22px;
-  white-space: nowrap;
+  font-size: clamp(17px, 1.5vw, 22px);
 }
 
 .login-brand-title {
@@ -442,9 +441,6 @@
 }
 
 @media (max-width: 420px) {
-  .login-brand .brand-header__org-th {
-    white-space: normal;
-  }
   .login-card {
     padding: 30px 22px 26px;
   }

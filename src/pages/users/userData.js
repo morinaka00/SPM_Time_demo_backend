@@ -2,25 +2,91 @@
 // เก็บในหน่วยความจำของหน้าเว็บ: เพิ่ม/แก้ไข/ลบ แล้วเห็นผลทั้งหน้ารายการและหน้า Add/Edit
 // แต่ refresh หน้าแล้วจะกลับเป็นข้อมูลตั้งต้น (ยังไม่มี backend)
 
+import { MENU_ITEMS } from '../../config/menuItems';
+
 export const STATUS_LABEL = { connected: 'อนุมัติแล้ว', pending: 'รอการอนุมัติ', rejected: 'ไม่อนุมัติ' };
 export const STATUS_TAG = { connected: 'success', pending: 'warning', rejected: 'error' };
 
-// รายการสิทธิ์ (มาจากเมนู "จัดการสิทธิ์การใช้งาน" ของต้นแบบ)
-export const ROLES = [
-  { id: 'r1', name: 'ผู้ดูแลระบบสูงสุด', code: 'super-admin', active: true },
-  { id: 'r2', name: 'ผู้ดูแลระบบหน่วยงาน', code: 'admin', active: true },
-  { id: 'r3', name: 'ผู้บริหาร / หัวหน้ากลุ่มงาน', code: 'manager', active: true },
-  { id: 'r4', name: 'เจ้าหน้าที่ทั่วไป', code: 'staff', active: true },
-  { id: 'r5', name: 'ผู้ใช้งานภายนอก / ผู้ประสานงาน', code: 'external', active: false },
-  { id: 'r6', name: 'เจ้าหน้าที่ MIS', code: 'staff-mis', active: true },
-  { id: 'r7', name: 'เจ้าหน้าที่บันทึกเวลาปฏิบัติราชการ', code: 'staff-time', active: true },
-  { id: 'r8', name: 'เจ้าหน้าที่ลาออนไลน์', code: 'staff-leave', active: true },
-  { id: 'r9', name: 'เจ้าหน้าที่สารบรรณอิเล็กทรอนิกส์', code: 'staff-doc', active: true },
-  { id: 'r10', name: 'เจ้าหน้าที่งบประมาณ', code: 'staff-budget', active: true },
-  { id: 'r11', name: 'เจ้าหน้าที่บุคลากร', code: 'staff-hr', active: true },
-  { id: 'r12', name: 'เจ้าหน้าที่พัสดุและครุภัณฑ์', code: 'staff-asset', active: true },
-  { id: 'r13', name: 'เจ้าหน้าที่ e-PCOS', code: 'staff-epcos', active: true },
+// ---------- สิทธิ์การใช้งาน (มาจากเมนู "จัดการสิทธิ์การใช้งาน" ของต้นแบบ) ----------
+// perms = สิทธิ์ต่อเมนูของระบบนี้ (อ้างอิง MENU_ITEMS) รูปแบบ { [menuKey]: { view, add, edit, del, export } }
+
+export const PERM_ACTIONS = [
+  { key: 'view', label: 'แสดง' },
+  { key: 'add', label: 'เพิ่ม' },
+  { key: 'edit', label: 'แก้ไข' },
+  { key: 'del', label: 'ลบ' },
+  { key: 'export', label: 'ส่งออก' },
 ];
+
+// เมนูย่อยทั้งหมด (เมนูที่เปิดหน้าได้จริง ไม่รวมหัวกลุ่ม)
+export const MENU_LEAVES = MENU_ITEMS.flatMap((m) => m.children || [m]);
+
+const NONE = { view: false, add: false, edit: false, del: false, export: false };
+const FULL = { view: true, add: true, edit: true, del: true, export: true };
+
+// สร้างสิทธิ์ตั้งต้น: rule(menuKey) คืนค่าสิทธิ์ของเมนูนั้น (ไม่คืน = ไม่มีสิทธิ์)
+const buildPerms = (rule) => Object.fromEntries(MENU_LEAVES.map((m) => [m.key, { ...NONE, ...(rule(m.key) || {}) }]));
+export const emptyPerms = () => buildPerms(() => null);
+
+const inGroup = (key, ...prefixes) => prefixes.some((p) => key.startsWith(p));
+const STAFF_RULE = (k) => {
+  if (k === '/DashboardPage' || k === '/report/RptWorkCalendarPage') return { view: true };
+  if (k === '/attendance/AttendancePage' || k === '/attendance/AttendanceRequestPage') return { view: true, add: true };
+  if (inGroup(k, '/attendance/')) return { view: true };
+  return null;
+};
+const DASHBOARD_ONLY = (k) => (k === '/DashboardPage' ? { view: true } : null);
+
+const role = (id, name, code, active, rule) => ({ id, name, code, active, perms: buildPerms(rule) });
+
+let roles = [
+  role('r1', 'ผู้ดูแลระบบสูงสุด', 'super-admin', true, () => FULL),
+  role('r2', 'ผู้ดูแลระบบหน่วยงาน', 'admin', true, () => FULL),
+  role('r3', 'ผู้บริหาร / หัวหน้ากลุ่มงาน', 'manager', true, (k) =>
+    inGroup(k, '/users/', '/system_settings/', '/settings/TermsConditionPage') ? null : { view: true, export: true }),
+  role('r4', 'เจ้าหน้าที่ทั่วไป', 'staff', true, STAFF_RULE),
+  role('r5', 'ผู้ใช้งานภายนอก / ผู้ประสานงาน', 'external', false, DASHBOARD_ONLY),
+  role('r6', 'เจ้าหน้าที่ MIS', 'staff-mis', true, DASHBOARD_ONLY),
+  role('r7', 'เจ้าหน้าที่บันทึกเวลาปฏิบัติราชการ', 'staff-time', true, (k) => {
+    if (inGroup(k, '/settings/WorkTimePage', '/settings/WorkCyclePage', '/settings/OTPage', '/settings/WFAPage')) return FULL;
+    if (inGroup(k, '/report/')) return { view: true, export: true };
+    return STAFF_RULE(k);
+  }),
+  role('r8', 'เจ้าหน้าที่ลาออนไลน์', 'staff-leave', true, DASHBOARD_ONLY),
+  role('r9', 'เจ้าหน้าที่สารบรรณอิเล็กทรอนิกส์', 'staff-doc', true, DASHBOARD_ONLY),
+  role('r10', 'เจ้าหน้าที่งบประมาณ', 'staff-budget', true, DASHBOARD_ONLY),
+  role('r11', 'เจ้าหน้าที่บุคลากร', 'staff-hr', true, DASHBOARD_ONLY),
+  role('r12', 'เจ้าหน้าที่พัสดุและครุภัณฑ์', 'staff-asset', true, DASHBOARD_ONLY),
+  role('r13', 'เจ้าหน้าที่ e-PCOS', 'staff-epcos', true, DASHBOARD_ONLY),
+];
+
+export const getRoles = () => roles;
+export const getRole = (id) => roles.find((r) => r.id === id);
+
+// สร้างรหัสระดับสิทธิ์จากชื่อ (แบบเดียวกับต้นแบบ)
+const codeFromName = (name) =>
+  `role-${name.trim().toLowerCase().replace(/[^฀-๿a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '')}`;
+
+export const isRoleNameTaken = (name, exceptId) =>
+  roles.some((r) => r.id !== exceptId && r.name.trim() === name.trim());
+
+// บันทึกสิทธิ์: มี id = แก้ไข, ไม่มี = เพิ่มใหม่
+export function saveRole(id, { name, active, perms }) {
+  if (id && getRole(id)) {
+    roles = roles.map((r) => (r.id === id ? { ...r, name, active, perms } : r));
+    return id;
+  }
+  const newId = `role-${Date.now()}`;
+  roles = [...roles, { id: newId, name, code: codeFromName(name), active, perms }];
+  return newId;
+}
+
+// ลบได้เฉพาะสิทธิ์ที่ไม่มีผู้ใช้งานอยู่
+export function deleteRole(id) {
+  if (countUsersInRole(id) > 0) return false;
+  roles = roles.filter((r) => r.id !== id);
+  return true;
+}
 
 export const SYSTEMS = [
   'MIS — ระบบสารสนเทศเพื่อการจัดการ',
@@ -59,7 +125,20 @@ let users = [
 ];
 
 export const userFullName = (x) => `${x.prefix || ''}${x.firstTh} ${x.lastTh}`;
-export const roleName = (id) => ROLES.find((r) => r.id === id)?.name;
+export const roleName = (id) => getRole(id)?.name;
+export const countUsersInRole = (roleId) => users.filter((x) => x.roleIds.includes(roleId)).length;
+export const getUsersInRole = (roleId) => users.filter((x) => x.roleIds.includes(roleId));
+
+// กำหนดรายชื่อผู้ใช้ในสิทธิ์ใหม่ทั้งชุด: คนที่อยู่ในรายการได้สิทธิ์นี้ คนที่ไม่อยู่ถูกถอดสิทธิ์นี้ออก (สิทธิ์อื่นไม่เปลี่ยน)
+export function setRoleMembers(roleId, userIds) {
+  const keep = new Set(userIds);
+  users = users.map((x) => {
+    const has = x.roleIds.includes(roleId);
+    if (keep.has(x.id) && !has) return { ...x, roleIds: [...x.roleIds, roleId] };
+    if (!keep.has(x.id) && has) return { ...x, roleIds: x.roleIds.filter((r) => r !== roleId) };
+    return x;
+  });
+}
 
 export const getUsers = () => users;
 export const getUser = (id) => users.find((x) => x.id === id);

@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import {
-  getUsers, deleteUser, userFullName, roleName, ROLES, STATUS_LABEL, STATUS_TAG,
+  getUsers, deleteUser, userFullName, roleName, getRoles, STATUS_LABEL, STATUS_TAG,
 } from './userData';
 
 const { Text } = Typography;
@@ -203,7 +203,7 @@ export default function UserPage() {
               id="uf-role"
               value={draft.role}
               onChange={set('role')}
-              options={[{ value: 'all', label: 'ทุกสิทธิ์' }, ...ROLES.map((r) => ({ value: r.id, label: r.name }))]}
+              options={[{ value: 'all', label: 'ทุกสิทธิ์' }, ...getRoles().map((r) => ({ value: r.id, label: r.name }))]}
             />
           </Col>
         </Row>

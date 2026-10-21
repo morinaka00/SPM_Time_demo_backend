@@ -1,0 +1,31 @@
+# SPM Time Backend Demo — ฝั่งหลังบ้านของระบบบันทึกเวลาปฏิบัติราชการ (เดโม)
+# ตั้งค่าวันหยุด · สถานที่ · รอบทำงาน · เรท OT
+# คู่กับฝั่งผู้ใช้ที่ ../SPM_Time_Demo (พอร์ต 8931)
+#
+# วิธีใช้บน server (วางไฟล์นี้ไว้ข้าง .tar เช่นที่ /opt/spm-time-backend-demo/):
+#   docker load -i spm-time-backend-demo-0.1.0.tar
+#   docker compose up -d
+#   docker compose logs -f
+#
+# เข้าถึงที่ http://container.aitproject.com:8930
+#
+# ตัวนี้เป็น static SPA เสิร์ฟด้วย nginx จึง map ไป :80 (ไม่ใช่ :3000 แบบ Next.js)
+# แนวเดียวกับ ocpb-complaint-admin (8924->80) บน host เดียวกัน
+# ไม่มี environment เพราะโปรเจ็คไม่อ่าน import.meta.env ที่ไหนเลย — ค่าคอนฟิกฝังตอน build
+# ถ้าวันหนึ่งต้องต่อ API จริง ต้องใส่ VITE_* ตอน build ไม่ใช่ตอน run (Vite ฝังค่าลงไฟล์ตอน build)
+
+services:
+  time-backend-demo:
+    container_name: spm-time-backend-demo-app
+    image: spm-time-backend-demo:0.1.0
+    restart: always
+
+    ports:
+      - "8930:80"
+
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
