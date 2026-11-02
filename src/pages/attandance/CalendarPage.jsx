@@ -12,7 +12,7 @@ const WEEKDAYS = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
 const WORK_TIME = { in: '09:00', out: '18:00' };
 const LOCATION = 'The Government House';
 
-// สถานะรายวัน → ป้ายและโทนสีตามธีมระบบ
+// สถานะรายวัน → ป้ายและโทนสีตามธีมระบบ กหฟก
 const STATUS = {
   normal: { label: 'มาปกติ', tone: 'ok' },
   late: { label: 'มาสาย', tone: 'warn' },
