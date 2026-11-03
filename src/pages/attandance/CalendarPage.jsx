@@ -53,6 +53,52 @@ const timeAt = (key, salt, fromMin, toMin) => {
   return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
 };
 
+// ประเภทการลา → ไอคอนตัวอักษรในปฏิทิน
+const LEAVE_TYPES = {
+  sick: { label: 'ลาป่วย', short: 'ป' },
+  vacation: { label: 'ลาพักร้อน', short: 'พ' },
+};
+
+// ข้อมูลจำลองแบบกำหนดเอง เดือน พ.ย.–ธ.ค. 2569 (วันทำงานที่ไม่ได้ระบุ = มาปกติ)
+// sick/vacation = ลาทั้งวัน, ต่อท้าย -half = ลาครึ่งวันบ่าย
+const MOCK_MONTHS = {
+  '2026-11': {
+    4: 'late', 9: 'sick', 10: 'sick', 13: 'absent', 17: 'late',
+    20: 'vacation-half', 24: 'late', 26: 'absent', 27: 'vacation',
+  },
+  '2026-12': {
+    2: 'late', 8: 'vacation', 9: 'vacation', 11: 'sick-half', 15: 'late',
+    18: 'absent', 22: 'late', 24: 'vacation', 25: 'vacation', 29: 'sick',
+  },
+};
+
+const normalRec = (rec) => ({ ...rec, status: 'normal', checkIn: timeAt(rec.key, 1, 7 * 60, 8 * 60 + 50), checkOut: timeAt(rec.key, 2, 18 * 60, 19 * 60 + 40) });
+const lateRec = (rec) => ({ ...rec, status: 'late', checkIn: timeAt(rec.key, 1, 9 * 60 + 1, 10 * 60), checkOut: timeAt(rec.key, 2, 18 * 60, 19 * 60) });
+const absentRec = (rec) => ({ ...rec, status: 'absent', wfh: null });
+const leaveRec = (rec, kind, half) => ({
+  ...rec,
+  status: 'leave',
+  wfh: null,
+  checkIn: half ? timeAt(rec.key, 1, 7 * 60 + 30, 8 * 60 + 50) : null,
+  checkOut: half ? '12:00' : null,
+  leave: {
+    kind,
+    type: LEAVE_TYPES[kind].label,
+    range: half ? '13:00 - 18:00' : 'ทั้งวัน',
+    status: seeded(rec.key, 6) < 0.7 ? 'approved' : 'pending',
+  },
+});
+
+function mockRecord(rec, code) {
+  if (code === 'late') return lateRec(rec);
+  if (code === 'absent') return absentRec(rec);
+  if (code?.startsWith('sick') || code?.startsWith('vacation')) {
+    const [kind, half] = code.split('-');
+    return leaveRec(rec, kind, Boolean(half));
+  }
+  return normalRec(rec);
+}
+
 // ข้อมูลจำลองของแต่ละวัน
 function dayRecord(d, today) {
   const key = d.format('YYYY-MM-DD');
@@ -67,6 +113,11 @@ function dayRecord(d, today) {
   }
   if (weekend) return rec;
   if (holidayName) return { ...rec, status: 'holiday' };
+
+  // เดือนที่มีข้อมูลจำลองกำหนดเอง แสดงครบทั้งเดือน
+  const mock = MOCK_MONTHS[d.format('YYYY-MM')];
+  if (mock) return mockRecord(rec, mock[d.date()]);
+
   if (d.isAfter(today, 'day')) return rec; // ยังไม่ถึง
 
   if (d.isSame(today, 'day')) {
@@ -74,26 +125,12 @@ function dayRecord(d, today) {
   }
 
   const r = seeded(key, 3);
-  if (r < 0.62) return { ...rec, status: 'normal', checkIn: timeAt(key, 1, 7 * 60, 8 * 60 + 50), checkOut: timeAt(key, 2, 18 * 60, 19 * 60 + 40) };
-  if (r < 0.72) return { ...rec, status: 'late', checkIn: timeAt(key, 1, 9 * 60 + 1, 10 * 60), checkOut: timeAt(key, 2, 18 * 60, 19 * 60) };
+  if (r < 0.62) return normalRec(rec);
+  if (r < 0.72) return lateRec(rec);
   if (r < 0.78) return { ...rec, status: 'early', checkIn: timeAt(key, 1, 7 * 60 + 30, 8 * 60 + 50), checkOut: timeAt(key, 2, 15 * 60, 17 * 60 + 50) };
   if (r < 0.84) return { ...rec, status: 'incomplete', checkIn: timeAt(key, 1, 7 * 60 + 30, 8 * 60 + 50) };
-  if (r < 0.92) {
-    const half = seeded(key, 4) < 0.5;
-    return {
-      ...rec,
-      status: 'leave',
-      wfh: null,
-      checkIn: half ? timeAt(key, 1, 7 * 60 + 30, 8 * 60 + 50) : null,
-      checkOut: half ? '12:00' : null,
-      leave: {
-        type: seeded(key, 5) < 0.5 ? 'ลาป่วย' : 'ลากิจส่วนตัว',
-        range: half ? '13:00 - 18:00' : 'ทั้งวัน',
-        status: seeded(key, 6) < 0.7 ? 'approved' : 'pending',
-      },
-    };
-  }
-  return { ...rec, status: 'absent', wfh: null };
+  if (r < 0.92) return leaveRec(rec, seeded(key, 5) < 0.5 ? 'sick' : 'vacation', seeded(key, 4) < 0.5);
+  return absentRec(rec);
 }
 
 function monthCells(month, today) {
@@ -106,16 +143,28 @@ function monthCells(month, today) {
 }
 
 /* ---------------- ชิ้นส่วนย่อย ---------------- */
-function StatusChip({ status, small }) {
+function StatusChip({ status, small, label }) {
   const s = STATUS[status];
-  return <span className={`cal-chip tone-${s.tone}${small ? ' small' : ''}`}>{s.label}</span>;
+  return <span className={`cal-chip tone-${s.tone}${small ? ' small' : ''}`}>{label || s.label}</span>;
+}
+
+// ไอคอนการลา: ป = ลาป่วย, พ = ลาพักร้อน
+function LeaveBadge({ kind, size = 26 }) {
+  const t = LEAVE_TYPES[kind];
+  return (
+    <Tooltip title={t.label}>
+      <span className={`cal-badge cal-leave ${kind}`} style={{ width: size, height: size, fontSize: Math.round(size * 0.5) }} aria-label={t.label}>
+        {t.short}
+      </span>
+    </Tooltip>
+  );
 }
 
 function WfhBadge({ state, size = 26 }) {
-  const label = state === 'approved' ? 'WFH อนุมัติแล้ว' : 'WFH รออนุมัติ';
+  const label = state === 'approved' ? 'ทำงานที่บ้าน (WFH)' : 'WFH รออนุมัติ';
   return (
     <Tooltip title={label}>
-      <span className={`cal-wfh ${state}`} style={{ width: size, height: size }} aria-label={label}>
+      <span className={`cal-badge cal-wfh ${state}`} style={{ width: size, height: size }} aria-label={label}>
         <HomeFilled />
       </span>
     </Tooltip>
@@ -126,7 +175,7 @@ function DayCell({ rec, selected, today, onSelect }) {
   if (!rec) return <div className="cal-cell empty" aria-hidden="true" />;
   const isToday = rec.date.isSame(today, 'day');
   const offDay = rec.weekend || rec.holidayName;
-  const future = rec.date.isAfter(today, 'day');
+  const future = rec.date.isAfter(today, 'day') && !rec.status;
   const times = rec.checkIn || rec.checkOut ? `${rec.checkIn || '--:--'} – ${rec.checkOut || '--:--'}` : null;
 
   const tint = rec.status === 'absent' ? 'tint-danger' : offDay ? 'tint-off' : '';
@@ -140,6 +189,7 @@ function DayCell({ rec, selected, today, onSelect }) {
     >
       <span className="cal-cell-top">
         <span className={`cal-day${isToday ? ' today' : ''}${offDay ? ' off' : ''}`}>{rec.date.date()}</span>
+        {rec.leave && <LeaveBadge kind={rec.leave.kind} />}
         {rec.wfh && <WfhBadge state={rec.wfh} />}
       </span>
       {rec.holidayName && <span className="cal-holiday">{rec.holidayName}</span>}
@@ -149,7 +199,7 @@ function DayCell({ rec, selected, today, onSelect }) {
           <span className={`cal-dot tone-${STATUS[rec.status].tone}`} />
           <span className="cal-cell-detail">
             {/* วันนี้ยังไม่จบวัน: ยังไม่ตัดสินสถานะ */}
-            {rec.todayOpen ? <span className="cal-chip small tone-idle">ยังไม่ครบวัน</span> : <StatusChip status={rec.status} small />}
+            {rec.todayOpen ? <span className="cal-chip small tone-idle">ยังไม่ครบวัน</span> : <StatusChip status={rec.status} label={rec.leave?.type} small />}
             {times && <span className="cal-time">{times}</span>}
           </span>
         </>
@@ -179,6 +229,8 @@ export default function CalendarPage() {
   const selected = records.find((r) => r.key === selectedKey) || null;
   const wfhApproved = records.filter((r) => r.wfh === 'approved').length;
   const wfhPending = records.filter((r) => r.wfh === 'pending').length;
+  const sickDays = records.filter((r) => r.leave?.kind === 'sick').length;
+  const vacationDays = records.filter((r) => r.leave?.kind === 'vacation').length;
 
   const goMonth = (m) => {
     setMonth(m);
@@ -214,7 +266,10 @@ export default function CalendarPage() {
         .cal-day.off { color: var(--danger); }
         .cal-day.today { border-radius: 50%; background: var(--ok); color: #fff; }
 
-        .cal-wfh { display: inline-grid; place-items: center; flex: none; border-radius: 50%; font-size: 13px; }
+        .cal-badge { display: inline-grid; place-items: center; flex: none; border-radius: 50%; font-size: 13px; }
+        .cal-leave { font-weight: 700; line-height: 1; }
+        .cal-leave.sick { background: var(--danger-bg); color: var(--danger); box-shadow: inset 0 0 0 1px var(--danger-border); }
+        .cal-leave.vacation { background: var(--navy-tint); color: var(--navy-3); box-shadow: inset 0 0 0 1px var(--navy-3); }
         .cal-wfh.approved { background: var(--navy-1); color: #fff; }
         .cal-wfh.pending { background: var(--gold); color: #241a02; }
         :root[data-theme='dark'] .cal-wfh.approved { background: var(--navy-3); }
@@ -265,7 +320,7 @@ export default function CalendarPage() {
           .cal-cell.selected { padding: 5px 3px; }
           .cal-cell-top { flex-direction: column; align-items: center; }
           .cal-day { font-size: 13px; min-width: 22px; height: 22px; }
-          .cal-wfh { width: 16px !important; height: 16px !important; font-size: 9px; }
+          .cal-badge { width: 16px !important; height: 16px !important; font-size: 9px !important; }
           .cal-cell-detail, .cal-holiday { display: none; }
           .cal-dot { display: block; }
           .cal-nav .cal-month { min-width: 96px; font-size: 14px; }
@@ -306,8 +361,10 @@ export default function CalendarPage() {
             </div>
 
             <div className="cal-foot">
-              <span className="cal-foot-item"><WfhBadge state="approved" size={22} /> WFH อนุมัติแล้ว {wfhApproved} วัน</span>
+              <span className="cal-foot-item"><WfhBadge state="approved" size={22} /> WFH {wfhApproved} วัน</span>
               <span className="cal-foot-item"><WfhBadge state="pending" size={22} /> WFH รออนุมัติ {wfhPending} วัน</span>
+              <span className="cal-foot-item"><LeaveBadge kind="sick" size={22} /> ลาป่วย {sickDays} วัน</span>
+              <span className="cal-foot-item"><LeaveBadge kind="vacation" size={22} /> ลาพักร้อน {vacationDays} วัน</span>
               <span>เวลาทำงานปกติ {WORK_TIME.in} – {WORK_TIME.out} น. · กดที่วันเพื่อดูรายละเอียด</span>
             </div>
             <div className="cal-legend">
@@ -346,7 +403,7 @@ export default function CalendarPage() {
                     <div>
                       <div className="cal-wfh-title">ทำงานที่บ้าน (WFH)</div>
                       <div className="cal-wfh-sub">
-                        {selected.wfh === 'approved' ? 'อนุมัติแล้ว · ลงเวลานอกเขตพื้นที่ได้' : 'รออนุมัติ · ยังลงเวลานอกเขตพื้นที่ไม่ได้'}
+                        {selected.wfh === 'approved' ? 'ลงเวลานอกเขตพื้นที่ได้' : 'รออนุมัติ · ยังลงเวลานอกเขตพื้นที่ไม่ได้'}
                       </div>
                     </div>
                   </div>
@@ -364,7 +421,10 @@ export default function CalendarPage() {
                   <div className="cal-section-title">การลา</div>
                   {selected.leave ? (
                     <>
-                      <div style={{ fontWeight: 700, fontSize: 15 }}>{selected.leave.type}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700, fontSize: 15 }}>
+                        <LeaveBadge kind={selected.leave.kind} size={28} />
+                        {selected.leave.type}
+                      </div>
                       <div className="cal-wfh-sub">({selected.date.format('D MMM BBBB')} {selected.leave.range})</div>
                       <div style={{ marginTop: 4 }}>
                         สถานะ :{' '}

@@ -30,6 +30,7 @@ import DashboardPage from './pages/DashboardPage';
 import AttendancePage from './pages/attandance/AttendancePage';
 import CalendarPage from './pages/attandance/CalendarPage';
 import AttendanceRequestPage from './pages/attandance/AttendanceRequestPage';
+import AttendanceApprovePage from './pages/attandance/AttendanceApprovePage';
 import LeavehistoryPage from './pages/attandance/LeavehistoryPage';
 import OvertimeHistoryPage from './pages/attandance/OvertimeHistoryPage';
 import AttendanceHistoryPage from './pages/attandance/AttendanceHistoryPage';
@@ -144,6 +145,7 @@ function MainLayout({ isDark, onToggleTheme, onLogout }) {
               
               <Route path="/attendance/AttendancePage" element={<AttendancePage />} />
                <Route path="/attendance/AttendanceRequestPage" element={<AttendanceRequestPage />} />
+              <Route path="/attendance/AttendanceApprovePage" element={<AttendanceApprovePage />} />
               <Route path="/attendance/CalendarPage" element={<CalendarPage />} />
               <Route path="/attendance/LeavehistoryPage" element={<LeavehistoryPage />} />
               <Route path="/attendance/OvertimeHistoryPage" element={<OvertimeHistoryPage />} />

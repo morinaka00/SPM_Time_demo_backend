@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
+import { Card, Button, Select, Input, Table, Typography, Space, DatePicker } from 'antd';
 import {
   FileExcelOutlined
 } from '@ant-design/icons';
@@ -10,11 +10,11 @@ const { Text } = Typography;
 const { Option } = Select;
 
 export default function RptLeaveDetailPage() {
-  const [searched, setSearched] = useState(false);
-
-  // กดปุ่มค้นหาเพื่อแสดงตาราง
-  const handleSearch = () => {
-    setSearched(true);
+  // เปิดหน้ามาแสดงตารางทันที — กดค้นหา/ล้างค่า แสดงสถานะโหลดสั้นๆ (ต้นแบบ: ข้อมูลชุดเดิม)
+  const [loading, setLoading] = useState(false);
+  const reload = () => {
+    setLoading(true);
+    setTimeout(() => setLoading(false), 400);
   };
 
   // สร้างคอลัมน์วันที่ 1 ถึง 31
@@ -192,8 +192,8 @@ export default function RptLeaveDetailPage() {
       >
         {/* ส่วน Filter ด้านบนเหมือนหน้า RptAttatancePage */}
         <FilterPanel
-          onSearch={handleSearch}
-          onReset={() => setSearched(false)}
+          onSearch={reload}
+          onReset={reload}
           extra={
             // ต้นแบบ: ดาวน์โหลดไฟล์ตัวอย่างใน public/files (ยังไม่สร้างจากข้อมูลที่ค้นหา)
             <Button
@@ -233,25 +233,16 @@ export default function RptLeaveDetailPage() {
           </FilterField>
         </FilterPanel>
 
-        {/* ตารางแสดงผลเฉพาะเมื่อกดปุ่มค้นหาแล้ว */}
-        {searched ? (
-          <div>
-           
-            <Table 
-              dataSource={dataSource} 
-              columns={columns} 
-              pagination={false} 
-              bordered
-              size="small"
-              scroll={{ x: 1400 }}
-              rowClassName={(record, index) => record.isDeptHeader ? 'table-dept-header' : (index % 2 === 0 ? 'table-row-light' : 'table-row-dark')}
-            />
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '60px 0', background: 'var(--bg)', borderRadius: 8, border: '1px dashed var(--border)' }}>
-            <Empty description={<Text type="secondary">กรุณากดปุ่ม "ค้นหา" ด้านบนเพื่อแสดงรายงานสรุปการลา</Text>} />
-          </div>
-        )}
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          loading={loading}
+          pagination={false}
+          bordered
+          size="small"
+          scroll={{ x: 1400 }}
+          rowClassName={(record, index) => record.isDeptHeader ? 'table-dept-header' : (index % 2 === 0 ? 'table-row-light' : 'table-row-dark')}
+        />
       </Card>
     </div>
   );

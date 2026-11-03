@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Button, Select, Input, Table, Typography, Space, DatePicker, Empty } from 'antd';
+import { Card, Button, Select, Input, Table, Typography, Space, DatePicker } from 'antd';
 import {
   ArrowLeftOutlined,
   FileExcelOutlined,
@@ -15,11 +15,11 @@ const { Option } = Select;
 
 export default function RptOvertimePage() {
   const navigate = useNavigate();
-  const [searched, setSearched] = useState(false);
-
-  // กดปุ่มค้นหาเพื่อแสดงตาราง
-  const handleSearch = () => {
-    setSearched(true);
+  // เปิดหน้ามาแสดงตารางทันที — กดค้นหา/ล้างค่า แสดงสถานะโหลดสั้นๆ (ต้นแบบ: ข้อมูลชุดเดิม)
+  const [loading, setLoading] = useState(false);
+  const reload = () => {
+    setLoading(true);
+    setTimeout(() => setLoading(false), 400);
   };
 
   // โครงสร้าง Columns ของตาราง
@@ -141,8 +141,8 @@ export default function RptOvertimePage() {
       >
         {/* ส่วน Filter ด้านบน */}
         <FilterPanel
-          onSearch={handleSearch}
-          onReset={() => setSearched(false)}
+          onSearch={reload}
+          onReset={reload}
           extra={
             <>
               <Button
@@ -198,26 +198,15 @@ export default function RptOvertimePage() {
           </FilterField>
         </FilterPanel>
 
-        {/* ตารางแสดงผลเฉพาะเมื่อกดปุ่มค้นหาแล้ว */}
-        {searched ? (
-          <div>
-            <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              
-            </div>
-            <Table 
-              dataSource={dataSource} 
-              columns={columns} 
-              pagination={false} 
-              bordered
-              size="small"
-              rowClassName={(record, index) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
-            />
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '60px 0', background: 'var(--bg)', borderRadius: 8, border: '1px dashed var(--border)' }}>
-            <Empty description={<Text type="secondary">กรุณากดปุ่ม "ค้นหา" ด้านบนเพื่อแสดงรายงานสรุปการทำงานล่วงเวลา</Text>} />
-          </div>
-        )}
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          loading={loading}
+          pagination={false}
+          bordered
+          size="small"
+          rowClassName={(record, index) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
+        />
       </Card>
     </div>
   );

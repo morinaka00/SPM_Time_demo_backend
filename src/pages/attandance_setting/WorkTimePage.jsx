@@ -11,73 +11,13 @@ import {
   DownOutlined
 } from '@ant-design/icons';
 import FilterPanel, { FilterField } from '../../components/FilterPanel';
+import { WORK_TIMES } from './workTimeData';
 
 const { Text } = Typography;
 const { Option } = Select;
 
 export default function WorkTimePage() {
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '1',
-      index: 1,
-      code: 'DH1',
-      name: 'ตารางการทำงาน 1',
-      department: 'สำนักเลขาธิการ',
-      workFormat: 'ตารางการทำงานปกติ',
-      timeIn: '07:30',
-      timeOut: '15:30',
-      breakStart: '12:00',
-      breakEnd: '13:00',
-      workDays: 'จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์',
-      allowedLate: '0',
-      allowedAbsence: '0',
-    },
-    {
-      key: '2',
-      index: 2,
-      code: 'DH2',
-      name: 'ตารางการทำงาน 2',
-      department: 'สำนักเลขาธิการ',
-      workFormat: 'ตารางการทำงานปกติ',
-      timeIn: '08:30',
-      timeOut: '16:30',
-     breakStart: '12:00',
-      breakEnd: '13:00',
-      workDays: 'จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์',
-      allowedLate: '0',
-      allowedAbsence: '0',
-    },
-    {
-      key: '3',
-      index: 3,
-      code: 'DH3',
-      name: 'ตารางการทำงาน 3',
-      department: 'สำนักเลขาธิการ',
-      workFormat: 'กำหนด ชม. การทำงาน',
-      timeIn: '8 ชม.',
-      timeOut: '-',
-      breakStart: '-',
-      breakEnd: '-',
-      workDays: 'จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์',
-      allowedLate: '-',
-      allowedAbsence: '0',
-    },
-    {
-      key: '4',
-      index: 4,
-      code: 'DH4',
-      name: 'กะดึก',
-      department: 'กองสารสนเทศ',
-      workFormat: 'กะงาน',
-      timeIn: '16:30',
-      timeOut: '00:30',
-      breakStart: '-',
-      breakEnd: '-',
-      workDays: 'ทุกวัน',
-      allowedLate: '0',
-      allowedAbsence: '0',
-    },
-  ]);
+  const [dataSource, setDataSource] = useState(WORK_TIMES);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add'); 

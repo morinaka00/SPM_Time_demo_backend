@@ -32,32 +32,26 @@ const inGroup = (key, ...prefixes) => prefixes.some((p) => key.startsWith(p));
 const STAFF_RULE = (k) => {
   if (k === '/DashboardPage' || k === '/report/RptWorkCalendarPage') return { view: true };
   if (k === '/attendance/AttendancePage' || k === '/attendance/AttendanceRequestPage') return { view: true, add: true };
+  if (k === '/attendance/AttendanceApprovePage') return null; // เมนูอนุมัติสำหรับผู้อนุมัติ ไม่ใช่เจ้าหน้าที่ทั่วไป
   if (inGroup(k, '/attendance/')) return { view: true };
   return null;
 };
-const DASHBOARD_ONLY = (k) => (k === '/DashboardPage' ? { view: true } : null);
+// ผู้ดูแลหน่วยงาน: จัดการงานของหน่วยงานได้ทั้งหมด ยกเว้นการตั้งค่าระบบ — สิทธิการใช้งานดูได้อย่างเดียว
+const DEPT_ADMIN_RULE = (k) => {
+  if (inGroup(k, '/system_settings/', '/settings/TermsConditionPage')) return null;
+  if (k === '/users/UserGroupPage') return { view: true };
+  return FULL;
+};
+// เจ้าหน้าที่ตรวจสอบรายงาน: ใช้งานแบบเจ้าหน้าที่ทั่วไป + ดู/ส่งออกรายงานทุกตัว
+const REPORT_RULE = (k) => (inGroup(k, '/report/') ? { view: true, export: true } : STAFF_RULE(k));
 
 const role = (id, name, code, active, rule) => ({ id, name, code, active, perms: buildPerms(rule) });
 
 let roles = [
   role('r1', 'ผู้ดูแลระบบสูงสุด', 'super-admin', true, () => FULL),
-  role('r2', 'ผู้ดูแลระบบหน่วยงาน', 'admin', true, () => FULL),
-  role('r3', 'ผู้บริหาร / หัวหน้ากลุ่มงาน', 'manager', true, (k) =>
-    inGroup(k, '/users/', '/system_settings/', '/settings/TermsConditionPage') ? null : { view: true, export: true }),
-  role('r4', 'เจ้าหน้าที่ทั่วไป', 'staff', true, STAFF_RULE),
-  role('r5', 'ผู้ใช้งานภายนอก / ผู้ประสานงาน', 'external', false, DASHBOARD_ONLY),
-  role('r6', 'เจ้าหน้าที่ MIS', 'staff-mis', true, DASHBOARD_ONLY),
-  role('r7', 'เจ้าหน้าที่บันทึกเวลาปฏิบัติราชการ', 'staff-time', true, (k) => {
-    if (inGroup(k, '/settings/WorkTimePage', '/settings/WorkCyclePage', '/settings/OTPage', '/settings/WFAPage')) return FULL;
-    if (inGroup(k, '/report/')) return { view: true, export: true };
-    return STAFF_RULE(k);
-  }),
-  role('r8', 'เจ้าหน้าที่ลาออนไลน์', 'staff-leave', true, DASHBOARD_ONLY),
-  role('r9', 'เจ้าหน้าที่สารบรรณอิเล็กทรอนิกส์', 'staff-doc', true, DASHBOARD_ONLY),
-  role('r10', 'เจ้าหน้าที่งบประมาณ', 'staff-budget', true, DASHBOARD_ONLY),
-  role('r11', 'เจ้าหน้าที่บุคลากร', 'staff-hr', true, DASHBOARD_ONLY),
-  role('r12', 'เจ้าหน้าที่พัสดุและครุภัณฑ์', 'staff-asset', true, DASHBOARD_ONLY),
-  role('r13', 'เจ้าหน้าที่ e-PCOS', 'staff-epcos', true, DASHBOARD_ONLY),
+  role('r2', 'ผู้ดูแลหน่วยงาน', 'dept-admin', true, DEPT_ADMIN_RULE),
+  role('r3', 'เจ้าหน้าที่ทั่วไป', 'staff', true, STAFF_RULE),
+  role('r4', 'เจ้าหน้าที่ตรวจสอบรายงาน', 'report-auditor', true, REPORT_RULE),
 ];
 
 export const getRoles = () => roles;
@@ -110,18 +104,22 @@ const blank = {
 const u = (id, fields) => ({ ...blank, id, status: 'connected', ...fields });
 
 let users = [
-  u('u1', { firstTh: 'สุภัสรา', lastTh: 'หอมตลบ', dept: 'กองงานนายกรัฐมนตรี', roleIds: ['r1'], systems: ['MIS — ระบบสารสนเทศเพื่อการจัดการ', 'ลาออนไลน์', 'งบประมาณ'] }),
-  u('u2', { firstTh: 'อาทิตย์', lastTh: 'ใจดี', roleIds: ['r4'], systems: ['MIS — ระบบสารสนเทศเพื่อการจัดการ', 'บันทึกเวลาปฏิบัติราชการ', 'ลาออนไลน์', 'งบประมาณ'] }),
-  u('u3', { prefix: 'นาย', firstTh: 'สุชาติ', lastTh: 'มีดี', dept: 'กองนโยบายและแผน', roleIds: ['r4'], systems: ['MIS — ระบบสารสนเทศเพื่อการจัดการ', 'บันทึกเวลาปฏิบัติราชการ', 'ลาออนไลน์', 'งบประมาณ', 'พัสดุและครุภัณฑ์'] }),
-  u('u4', { prefix: 'นาย', firstTh: 'นพลักษณ์', lastTh: 'มิบังอาจ', dept: 'กองกลาง', roleIds: ['r4'], systems: ['MIS — ระบบสารสนเทศเพื่อการจัดการ'] }),
-  u('u5', { prefix: 'นางสาว', firstTh: 'ปิยะดา', lastTh: 'ศรีสวัสดิ์', firstEn: 'Piyada', lastEn: 'Srisawat', position: 'นักทรัพยากรบุคคล', level: 'ชำนาญการ', dept: 'กองการเจ้าหน้าที่', email: 'piyada.s@opm.go.th', phone: '02-288-4101', worksite: 'ทำเนียบรัฐบาล', username: 'piyada.s', roleIds: ['r4', 'r11'], systems: ['บุคลากร', 'ลาออนไลน์', 'สารบรรณอิเล็กทรอนิกส์'] }),
-  u('u6', { prefix: 'นาย', firstTh: 'วีระ', lastTh: 'พงษ์เจริญ', firstEn: 'Veera', lastEn: 'Pongcharoen', position: 'นักวิชาการพัสดุ', level: 'ชำนาญการพิเศษ', dept: 'กองพัสดุและอาคารสถานที่', email: 'veera.p@opm.go.th', phone: '02-288-4102', worksite: 'ทำเนียบรัฐบาล', username: 'veera.p', roleIds: ['r2', 'r12'], systems: ['พัสดุและครุภัณฑ์', 'ลาออนไลน์'] }),
-  u('u7', { prefix: 'นางสาว', firstTh: 'สมหญิง', lastTh: 'รักงาน', firstEn: 'Somying', lastEn: 'Rakngan', position: 'ผู้อำนวยการกองคลัง', level: 'เชี่ยวชาญ', dept: 'กองคลัง', email: 'somying.r@opm.go.th', phone: '02-288-4103', worksite: 'ทำเนียบรัฐบาล', username: 'somying.r', roleIds: ['r3', 'r10'], systems: ['งบประมาณ', 'MIS — ระบบสารสนเทศเพื่อการจัดการ'] }),
-  u('u8', { prefix: 'นาย', firstTh: 'อนุเมธ', lastTh: 'หลอดบน', firstEn: 'Anumet', lastEn: 'Lodbon', position: 'นักวิเคราะห์นโยบายและแผน', level: 'ชำนาญการ', dept: 'กองแผนงานและงบประมาณ', email: 'anumet.l@opm.go.th', phone: '02-288-4104', worksite: 'ทำเนียบรัฐบาล', username: 'anumet.l', roleIds: ['r2', 'r8'], systems: ['ลาออนไลน์', 'งบประมาณ', 'บันทึกเวลาปฏิบัติราชการ'] }),
-  u('u9', { prefix: 'นางสาว', firstTh: 'กมลชนก', lastTh: 'แก้วมณี', firstEn: 'Kamonchanok', lastEn: 'Kaewmanee', position: 'นักวิชาการคอมพิวเตอร์', level: 'ปฏิบัติการ', dept: 'กลุ่มพัฒนาระบบบริหาร', email: 'kamonchanok.k@opm.go.th', phone: '02-288-4105', worksite: 'อาคารสำนักงาน 2', username: 'kamonchanok.k', roleIds: ['r6'], systems: ['MIS — ระบบสารสนเทศเพื่อการจัดการ', 'e-PCOS'] }),
-  u('u10', { prefix: 'นาย', firstTh: 'ธนกฤต', lastTh: 'สุขสวัสดิ์', firstEn: 'Thanakrit', lastEn: 'Suksawat', position: 'เจ้าพนักงานธุรการ', level: 'ปฏิบัติงาน', dept: 'กองกลาง', email: 'thanakrit.s@opm.go.th', phone: '02-288-4106', worksite: 'ทำเนียบรัฐบาล', username: 'thanakrit.s', status: 'pending' }),
-  u('u11', { prefix: 'นางสาว', firstTh: 'น้ำฝน', lastTh: 'ใจเย็น', firstEn: 'Namfon', lastEn: 'Jaiyen', position: 'เจ้าพนักงานธุรการ', level: 'ปฏิบัติงาน', dept: 'กองการเจ้าหน้าที่', email: 'namfon.j@opm.go.th', phone: '02-288-4107', worksite: 'ทำเนียบรัฐบาล', username: 'namfon.j', systems: ['สารบรรณอิเล็กทรอนิกส์'] }),
-  u('u12', { prefix: 'นาย', firstTh: 'ประเสริฐ', lastTh: 'วงศ์ดี', firstEn: 'Prasert', lastEn: 'Wongdee', position: 'นักวิชาการเงินและบัญชี', level: 'ปฏิบัติการ', dept: 'กองคลัง', email: 'prasert.w@opm.go.th', phone: '02-288-4108', worksite: 'ทำเนียบรัฐบาล', username: 'prasert.w', systems: ['งบประมาณ'] }),
+  // ผู้ดูแลระบบสูงสุด (r1)
+  u('u1', { prefix: 'นางสาว', firstTh: 'สุภัสรา', lastTh: 'หอมตลบ', firstEn: 'Supatsara', lastEn: 'Homtalob', position: 'นักวิชาการคอมพิวเตอร์', level: 'ชำนาญการพิเศษ', dept: 'ศูนย์เทคโนโลยีสารสนเทศ', email: 'supatsara.h@opm.go.th', phone: '02-288-4001', worksite: 'ทำเนียบรัฐบาล', username: 'supatsara.h', roleIds: ['r1'], systems: ['MIS — ระบบสารสนเทศเพื่อการจัดการ', 'บันทึกเวลาปฏิบัติราชการ'] }),
+  u('u9', { prefix: 'นางสาว', firstTh: 'กมลชนก', lastTh: 'แก้วมณี', firstEn: 'Kamonchanok', lastEn: 'Kaewmanee', position: 'นักวิชาการคอมพิวเตอร์', level: 'ปฏิบัติการ', dept: 'ศูนย์เทคโนโลยีสารสนเทศ', email: 'kamonchanok.k@opm.go.th', phone: '02-288-4105', worksite: 'อาคารสำนักงาน 2', username: 'kamonchanok.k', roleIds: ['r1'], systems: ['MIS — ระบบสารสนเทศเพื่อการจัดการ', 'บันทึกเวลาปฏิบัติราชการ'] }),
+  // ผู้ดูแลหน่วยงาน (r2)
+  u('u5', { prefix: 'นางสาว', firstTh: 'ปิยะดา', lastTh: 'ศรีสวัสดิ์', firstEn: 'Piyada', lastEn: 'Srisawat', position: 'นักทรัพยากรบุคคล', level: 'ชำนาญการ', dept: 'กองการเจ้าหน้าที่', email: 'piyada.s@opm.go.th', phone: '02-288-4101', worksite: 'ทำเนียบรัฐบาล', username: 'piyada.s', roleIds: ['r2'], systems: ['บุคลากร', 'ลาออนไลน์', 'บันทึกเวลาปฏิบัติราชการ'] }),
+  u('u6', { prefix: 'นาย', firstTh: 'วีระ', lastTh: 'พงษ์เจริญ', firstEn: 'Veera', lastEn: 'Pongcharoen', position: 'นักจัดการงานทั่วไป', level: 'ชำนาญการพิเศษ', dept: 'กองกลาง', email: 'veera.p@opm.go.th', phone: '02-288-4102', worksite: 'ทำเนียบรัฐบาล', username: 'veera.p', roleIds: ['r2'], systems: ['บันทึกเวลาปฏิบัติราชการ', 'ลาออนไลน์'] }),
+  // เจ้าหน้าที่ตรวจสอบรายงาน (r4)
+  u('u7', { prefix: 'นางสาว', firstTh: 'สมหญิง', lastTh: 'รักงาน', firstEn: 'Somying', lastEn: 'Rakngan', position: 'นักทรัพยากรบุคคล', level: 'ชำนาญการพิเศษ', dept: 'กองการเจ้าหน้าที่', email: 'somying.r@opm.go.th', phone: '02-288-4103', worksite: 'ทำเนียบรัฐบาล', username: 'somying.r', roleIds: ['r4'], systems: ['บันทึกเวลาปฏิบัติราชการ', 'บุคลากร'] }),
+  u('u8', { prefix: 'นาย', firstTh: 'อนุเมธ', lastTh: 'หลอดบน', firstEn: 'Anumet', lastEn: 'Lodbon', position: 'นักวิเคราะห์นโยบายและแผน', level: 'ชำนาญการ', dept: 'กองแผนงานและงบประมาณ', email: 'anumet.l@opm.go.th', phone: '02-288-4104', worksite: 'ทำเนียบรัฐบาล', username: 'anumet.l', roleIds: ['r4'], systems: ['บันทึกเวลาปฏิบัติราชการ', 'งบประมาณ'] }),
+  // เจ้าหน้าที่ทั่วไป (r3)
+  u('u2', { prefix: 'นาย', firstTh: 'อาทิตย์', lastTh: 'ใจดี', firstEn: 'Arthit', lastEn: 'Jaidee', position: 'นักวิเคราะห์นโยบายและแผน', level: 'ปฏิบัติการ', dept: 'กองนโยบายและแผน', email: 'arthit.j@opm.go.th', phone: '02-288-4109', worksite: 'ทำเนียบรัฐบาล', username: 'arthit.j', roleIds: ['r3'], systems: ['บันทึกเวลาปฏิบัติราชการ', 'ลาออนไลน์'] }),
+  u('u3', { prefix: 'นาย', firstTh: 'สุชาติ', lastTh: 'มีดี', firstEn: 'Suchat', lastEn: 'Meedee', position: 'นักวิชาการพัสดุ', level: 'ชำนาญการ', dept: 'กองพัสดุและอาคารสถานที่', email: 'suchat.m@opm.go.th', phone: '02-288-4110', worksite: 'ทำเนียบรัฐบาล', username: 'suchat.m', roleIds: ['r3'], systems: ['บันทึกเวลาปฏิบัติราชการ', 'พัสดุและครุภัณฑ์'] }),
+  u('u4', { prefix: 'นาย', firstTh: 'นพลักษณ์', lastTh: 'มิบังอาจ', firstEn: 'Noppalak', lastEn: 'Mibang-art', position: 'นิติกร', level: 'ปฏิบัติการ', dept: 'กองกลาง', email: 'noppalak.m@opm.go.th', phone: '02-288-4111', worksite: 'ทำเนียบรัฐบาล', username: 'noppalak.m', roleIds: ['r3'], systems: ['บันทึกเวลาปฏิบัติราชการ'] }),
+  u('u10', { prefix: 'นาย', firstTh: 'ธนกฤต', lastTh: 'สุขสวัสดิ์', firstEn: 'Thanakrit', lastEn: 'Suksawat', position: 'เจ้าพนักงานธุรการ', level: 'ปฏิบัติงาน', dept: 'กองกลาง', email: 'thanakrit.s@opm.go.th', phone: '02-288-4106', worksite: 'ทำเนียบรัฐบาล', username: 'thanakrit.s', roleIds: ['r3'], status: 'pending', systems: ['บันทึกเวลาปฏิบัติราชการ'] }),
+  u('u11', { prefix: 'นางสาว', firstTh: 'น้ำฝน', lastTh: 'ใจเย็น', firstEn: 'Namfon', lastEn: 'Jaiyen', position: 'เจ้าพนักงานธุรการ', level: 'ปฏิบัติงาน', dept: 'กองการเจ้าหน้าที่', email: 'namfon.j@opm.go.th', phone: '02-288-4107', worksite: 'ทำเนียบรัฐบาล', username: 'namfon.j', roleIds: ['r3'], systems: ['บันทึกเวลาปฏิบัติราชการ', 'ลาออนไลน์'] }),
+  u('u12', { prefix: 'นาย', firstTh: 'ประเสริฐ', lastTh: 'วงศ์ดี', firstEn: 'Prasert', lastEn: 'Wongdee', position: 'นักวิชาการเงินและบัญชี', level: 'ปฏิบัติการ', dept: 'กองคลัง', email: 'prasert.w@opm.go.th', phone: '02-288-4108', worksite: 'ทำเนียบรัฐบาล', username: 'prasert.w', roleIds: ['r3'], status: 'rejected', systems: ['บันทึกเวลาปฏิบัติราชการ'] }),
 ];
 
 export const userFullName = (x) => `${x.prefix || ''}${x.firstTh} ${x.lastTh}`;

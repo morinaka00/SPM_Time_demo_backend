@@ -5,6 +5,7 @@ import {
   SnippetsOutlined,
   SettingOutlined,
   FileSearchOutlined,
+  CheckSquareOutlined,
 } from '@ant-design/icons';
 
 // เมนูหลักของระบบ — ใช้ทั้งเมนูด้านซ้าย (App.jsx) และตารางสิทธิ์การเข้าถึงเมนู (หน้าสิทธิการใช้งาน)
@@ -18,6 +19,7 @@ export const MENU_ITEMS = [
     children: [
       { key: '/attendance/AttendancePage', icon: <ClockCircleOutlined />, label: 'ลงเวลาทำงาน' },
       { key: '/attendance/AttendanceRequestPage', icon: <CalendarOutlined />, label: 'ขอลงเวลา' },
+      { key: '/attendance/AttendanceApprovePage', icon: <CheckSquareOutlined />, label: 'อนุมัติลงเวลา' },
       { key: '/attendance/CalendarPage', icon: <CalendarOutlined />, label: 'ปฏิทินการทำงาน' },
       { key: '/attendance/LeavehistoryPage', icon: <SnippetsOutlined />, label: 'ประวัติการลา' },
       { key: '/attendance/OvertimeHistoryPage', icon: <DashboardOutlined />, label: 'ประวัติการทำงานล่วงเวลา' },

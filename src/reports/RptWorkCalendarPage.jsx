@@ -1,217 +1,225 @@
-import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, Popover } from 'antd';
-import {
-  LeftOutlined,
-  RightOutlined
-} from '@ant-design/icons';
+import { useMemo, useState } from 'react';
+import { Card, Row, Col, Button, Select, Input, Table, Typography, Space, Popover, Modal, message } from 'antd';
+import { LeftOutlined, RightOutlined, CalendarOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 import FilterPanel, { FilterField } from '../components/FilterPanel';
+import { WORK_TIMES, workTimeLabel } from '../pages/attandance_setting/workTimeData';
 
 const { Text } = Typography;
 const { Option } = Select;
 
-export default function RptWorkCalendarPage() {
+// ปฏิทินสรุปการมาปฏิบัติราชการ — ตารางเจ้าหน้าที่ × วันในเดือน
+// ต้นแบบ: เดือน พ.ย.–ธ.ค. 2569 ใช้ข้อมูลกำหนดเอง เดือนอื่นสุ่มแบบคงที่จากวันที่ ยังไม่เชื่อม backend
+// คลิกช่องวันเพื่อกำหนดตารางการทำงานของวันนั้น (เก็บในหน่วยความจำ refresh แล้วกลับเป็นค่าตั้งต้น)
 
-  // ข้อมูลจำลองพนักงานและสถานะการทำงานรายวัน (สิงหาคม 2026 มี 31 วัน)
-  const staffData = [
-    {
-      key: '1',
-      name: 'นาย xxx xxx',
-      code: '10101',
-      statuses: {
-        1: 'holiday', 2: 'holiday', 3: 'normal', 4: 'normal', 5: 'normal', 6: 'normal', 7: 'normal',
-        8: 'holiday', 9: 'holiday', 10: 'normal', 11: 'normal', 12: 'holiday', 13: 'normal', 14: 'leave',
-        15: 'holiday', 16: 'holiday', 17: 'normal', 18: 'late', 19: 'normal', 20: 'normal', 21: 'absent',
-        22: 'holiday', 23: 'holiday', 24: 'normal', 25: 'normal', 26: 'normal', 27: 'incomplete', 
-        29: 'holiday', 30: 'holiday'
-      }
+const WEEKDAYS = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+const LOCATION = 'The Government House';
+
+// วันหยุดราชการ (ตัวอย่าง ปี 2569)
+const HOLIDAYS = {
+  '2026-01-01': 'วันขึ้นปีใหม่',
+  '2026-04-06': 'วันจักรี',
+  '2026-04-13': 'วันสงกรานต์',
+  '2026-04-14': 'วันสงกรานต์',
+  '2026-04-15': 'วันสงกรานต์',
+  '2026-05-01': 'วันแรงงานแห่งชาติ',
+  '2026-06-03': 'วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี',
+  '2026-07-28': 'วันเฉลิมพระชนมพรรษา ร.10',
+  '2026-08-12': 'วันแม่แห่งชาติ',
+  '2026-10-13': 'วันนวมินทรมหาราช',
+  '2026-10-23': 'วันปิยมหาราช',
+  '2026-12-05': 'วันพ่อแห่งชาติ',
+  '2026-12-10': 'วันรัฐธรรมนูญ',
+  '2026-12-31': 'วันสิ้นปี',
+};
+
+// สถานะรายวัน → สัญลักษณ์และสีตามธีมระบบ (ใช้ทั้งในตารางและคำอธิบายสี)
+const STATUS = {
+  normal: { label: 'ลงเวลาปกติ', dot: 'var(--ok)' },
+  late: { label: 'เข้างานสาย', dot: 'var(--warn)' },
+  early: { label: 'ออกงานก่อนเวลา', dot: 'var(--gold)' },
+  incomplete: { label: 'ลงเวลาไม่ครบ', dot: 'var(--text-muted)' },
+  sick: { label: 'ลาป่วย', letter: 'ป' },
+  vacation: { label: 'ลาพักร้อน', letter: 'พ' },
+  absent: { label: 'ขาดงาน', cross: true },
+};
+
+const LEAVE_REASONS = {
+  sick: ['มีไข้ ปวดศีรษะ', 'พบแพทย์ตามนัด', 'ท้องเสีย'],
+  vacation: ['ท่องเที่ยวกับครอบครัว', 'ธุระส่วนตัวต่างจังหวัด', 'พักผ่อนประจำปี'],
+};
+
+// เจ้าหน้าที่ + ตารางการทำงานตั้งต้น + ข้อมูลจำลอง พ.ย./ธ.ค. 2569 (วันทำงานที่ไม่ระบุ = ลงเวลาปกติ)
+const STAFF = [
+  {
+    key: '1', name: 'นาย xxx xxx', code: '10101', workTime: '2',
+    mock: {
+      '2026-11': { 4: 'late', 9: 'sick', 10: 'sick', 13: 'absent', 20: 'vacation', 24: 'early', 26: 'incomplete' },
+      '2026-12': { 2: 'late', 8: 'vacation', 9: 'vacation', 15: 'early', 18: 'absent', 29: 'sick' },
     },
-    {
-      key: '2',
-      name: 'นาย xxx xxx',
-      code: '10102',
-      statuses: {
-        1: 'holiday', 2: 'holiday', 3: 'normal', 4: 'normal', 5: 'normal', 6: 'absent', 7: 'normal',
-        8: 'holiday', 9: 'holiday', 10: 'normal', 11: 'normal', 12: 'holiday', 13: 'normal', 14: 'normal',
-        15: 'holiday', 16: 'holiday', 17: 'normal', 18: 'normal', 19: 'late', 20: 'normal', 21: 'normal',
-        22: 'holiday', 23: 'holiday', 24: 'normal', 25: 'normal', 26: 'leave', 27: 'incomplete', 
-        29: 'holiday', 30: 'holiday'
-      }
+  },
+  {
+    key: '2', name: 'นาย xxx xxx', code: '10102', workTime: '2',
+    mock: {
+      '2026-11': { 3: 'late', 6: 'absent', 12: 'vacation', 17: 'late', 25: 'sick', 30: 'incomplete' },
+      '2026-12': { 1: 'sick', 4: 'late', 11: 'early', 16: 'vacation', 17: 'vacation', 22: 'absent' },
     },
-    {
-      key: '3',
-      name: 'นาย xxx xxx',
-      code: '20202',
-      statuses: {
-        1: 'holiday', 2: 'holiday', 3: 'normal', 4: 'normal', 5: 'leave', 6: 'normal', 7: 'normal',
-        8: 'holiday', 9: 'holiday', 10: 'normal', 11: 'normal', 12: 'holiday', 13: 'absent', 14: 'normal',
-        15: 'holiday', 16: 'holiday', 17: 'normal', 18: 'normal', 19: 'normal', 20: 'late', 21: 'normal',
-        22: 'holiday', 23: 'holiday', 24: 'normal', 25: 'normal', 26: 'normal', 27: 'incomplete', 
-        29: 'holiday', 30: 'holiday'
-      }
+  },
+  {
+    key: '3', name: 'นาย xxx xxx', code: '20202', workTime: '2',
+    mock: {
+      '2026-11': { 5: 'vacation', 11: 'early', 16: 'late', 19: 'absent', 23: 'sick', 27: 'late' },
+      '2026-12': { 3: 'absent', 9: 'late', 14: 'sick', 21: 'vacation', 24: 'incomplete', 28: 'late' },
     },
-    {
-      key: '4',
-      name: 'นางสาว xxx xxx',
-      code: '20404',
-      statuses: {
-        1: 'holiday', 2: 'holiday', 3: 'normal', 4: 'normal', 5: 'normal', 6: 'normal', 7: 'late',
-        8: 'holiday', 9: 'holiday', 10: 'leave', 11: 'normal', 12: 'holiday', 13: 'normal', 14: 'normal',
-        15: 'holiday', 16: 'holiday', 17: 'normal', 18: 'normal', 19: 'normal', 20: 'normal', 21: 'normal',
-        22: 'holiday', 23: 'holiday', 24: 'absent', 25: 'normal', 26: 'normal', 27: 'incomplete', 
-        29: 'holiday', 30: 'holiday'
-      }
+  },
+  {
+    key: '4', name: 'นางสาว xxx xxx', code: '20404', workTime: '1',
+    mock: {
+      '2026-11': { 2: 'early', 10: 'late', 18: 'vacation', 19: 'vacation', 24: 'absent', 30: 'sick' },
+      '2026-12': { 7: 'late', 8: 'sick', 17: 'absent', 23: 'early', 25: 'vacation', 30: 'late' },
     },
-    {
-      key: '5',
-      name: 'นางสาว xxx xxx',
-      code: '20601',
-      statuses: {
-        1: 'holiday', 2: 'holiday', 3: 'normal', 4: 'absent', 5: 'normal', 6: 'normal', 7: 'normal',
-        8: 'holiday', 9: 'holiday', 10: 'normal', 11: 'normal', 12: 'holiday', 13: 'normal', 14: 'normal',
-        15: 'holiday', 16: 'holiday', 17: 'leave', 18: 'normal', 19: 'normal', 20: 'normal', 21: 'normal',
-        22: 'holiday', 23: 'holiday', 24: 'normal', 25: 'late', 26: 'normal', 27: 'incomplete', 
-        29: 'holiday', 30: 'holiday'
-      }
-    }
-  ];
+  },
+  {
+    key: '5', name: 'นางสาว xxx xxx', code: '20601', workTime: '2',
+    mock: {
+      '2026-11': { 4: 'absent', 9: 'late', 13: 'sick', 20: 'incomplete', 26: 'vacation', 27: 'vacation' },
+      '2026-12': { 2: 'vacation', 11: 'late', 15: 'sick', 18: 'early', 23: 'absent', 29: 'late' },
+    },
+  },
+];
 
-  // วันในสัปดาห์ของเดือนสิงหาคม 2026 (เริ่มวันที่ 1 ส.ค. 2026 เป็นวันเสาร์)
-  const daysInAugust = [
-    { day: 1, dow: 'ส' }, { day: 2, dow: 'อา' }, { day: 3, dow: 'จ' }, { day: 4, dow: 'อ' }, 
-    { day: 5, dow: 'พ' }, { day: 6, dow: 'พฤ' }, { day: 7, dow: 'ศ' }, { day: 8, dow: 'ส' }, 
-    { day: 9, dow: 'อา' }, { day: 10, dow: 'จ' }, { day: 11, dow: 'อ' }, { day: 12, dow: 'พ' }, 
-    { day: 13, dow: 'พฤ' }, { day: 14, dow: 'ศ' }, { day: 15, dow: 'ส' }, { day: 16, dow: 'อา' }, 
-    { day: 17, dow: 'จ' }, { day: 18, dow: 'อ' }, { day: 19, dow: 'พ' }, { day: 20, dow: 'พฤ' }, 
-    { day: 21, dow: 'ศ' }, { day: 22, dow: 'ส' }, { day: 23, dow: 'อา' }, { day: 24, dow: 'จ' }, 
-    { day: 25, dow: 'อ' }, { day: 26, dow: 'พ' }, { day: 27, dow: 'พฤ' }, { day: 28, dow: 'ศ' }, 
-    { day: 29, dow: 'ส' }, { day: 30, dow: 'อา' }, { day: 31, dow: 'จ' }
-  ];
+// ตัวเลขสุ่มแบบคงที่ (เปิดกี่ครั้งก็ได้ผลเดิม)
+const seeded = (key, salt = 0) => {
+  let h = 2166136261 ^ salt;
+  for (const ch of key) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return ((h >>> 0) % 1000) / 1000;
+};
+const pad = (n) => String(n).padStart(2, '0');
+const toMin = (hhmm) => (/^\d{2}:\d{2}$/.test(hhmm || '') ? Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3)) : null);
+const fmt = (m) => {
+  const v = ((m % 1440) + 1440) % 1440;
+  return `${pad(Math.floor(v / 60))}:${pad(v % 60)}`;
+};
+const workTimeOf = (key) => WORK_TIMES.find((w) => w.key === key) || WORK_TIMES[1];
 
-  // ฟังก์ชันเรนเดอร์สัญลักษณ์สถานะในแต่ละวัน พร้อม Popover รายละเอียด
-  const renderStatusCell = (status) => {
-    let content;
-    let popoverContent = null;
+// เวลาเข้า/ออกตามตารางการทำงาน — แบบกำหนดชั่วโมงใช้ 08:30 + จำนวนชั่วโมง
+function scheduleTimes(w) {
+  const inMin = toMin(w.timeIn) ?? 8 * 60 + 30;
+  const outMin = toMin(w.timeOut) ?? inMin + (parseInt(w.timeIn, 10) || 8) * 60;
+  return { inMin, outMin };
+}
 
-    switch (status) {
-      case 'absent':
-        content = <span style={{ color: 'var(--danger)', fontSize: '16px', fontWeight: 'bold' }}>✕</span>;
-        popoverContent = (
+function statusOf(staff, d, today) {
+  const key = d.format('YYYY-MM-DD');
+  if (d.day() === 0 || d.day() === 6) return { off: 'weekend' };
+  if (HOLIDAYS[key]) return { off: 'holiday', holidayName: HOLIDAYS[key] };
+  const mock = staff.mock[d.format('YYYY-MM')];
+  if (mock) return { status: mock[d.date()] || 'normal' };
+  if (!d.isBefore(today, 'day')) return {}; // ยังไม่ถึง
+  const r = seeded(`${staff.key}|${key}`, 3);
+  if (r < 0.7) return { status: 'normal' };
+  if (r < 0.78) return { status: 'late' };
+  if (r < 0.83) return { status: 'early' };
+  if (r < 0.87) return { status: 'incomplete' };
+  if (r < 0.91) return { status: 'sick' };
+  if (r < 0.95) return { status: 'vacation' };
+  return { status: 'absent' };
+}
 
-          <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
-              ขาดงาน
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
-                
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>-</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
-              </div>
-              <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>-</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
-              </div>
-            </div>
-          </div>
+// รายละเอียดการลงเวลาของวันนั้นตามสถานะและตารางการทำงาน
+function attendanceOf(status, w, seedKey) {
+  const { inMin, outMin } = scheduleTimes(w);
+  const rnd = (salt, from, to) => Math.floor(from + seeded(seedKey, salt) * (to - from));
+  switch (status) {
+    case 'normal': return { checkIn: fmt(inMin - rnd(1, 5, 45)), checkOut: fmt(outMin + rnd(2, 1, 60)) };
+    case 'late': return { checkIn: fmt(inMin + rnd(1, 5, 60)), checkOut: fmt(outMin + rnd(2, 1, 40)) };
+    case 'early': return { checkIn: fmt(inMin - rnd(1, 5, 40)), checkOut: fmt(outMin - rnd(2, 15, 90)) };
+    case 'incomplete': return { checkIn: fmt(inMin - rnd(1, 5, 40)), checkOut: null };
+    default: return { checkIn: null, checkOut: null };
+  }
+}
 
+function StatusMark({ status, size = 10 }) {
+  const s = STATUS[status];
+  if (!s) return null;
+  if (s.cross) return <span className="wc-cross" style={{ fontSize: size + 6 }}>✕</span>;
+  if (s.letter) return <span className={`wc-leave ${status}`}>{s.letter}</span>;
+  return <span className="wc-dot" style={{ width: size, height: size, background: s.dot }} />;
+}
 
-        );
-        break;
-      case 'incomplete':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--text-muted)' }}></span>;
-        popoverContent = (
-          <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
-              ยังไม่สมบูรณ์
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
-                
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
-              </div>
-              <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>-</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>-</div>
-              </div>
-            </div>
-          </div>
-
-        );
-        break;
-      case 'late':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--warn)' }}></span>;
-        popoverContent = (
-          <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
-              เข้างานสาย/ออกงานก่อนเวลา
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
-                
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
-              </div>
-              <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: 'var(--danger)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>16:10</div>
-              </div>
-            </div>
-          </div>
-
-        );
-        break;
-      case 'leave':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--navy-3)' }}></span>;
-        popoverContent = (
-          <div style={{ textAlign: 'center', padding: '4px' }}>
-            <Text strong style={{ fontSize: '12px' }}>ลาป่วย 08:30-16.30 </Text>
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: 2 }}>มีไข้ มีน้ำมูก เจ็บคอ</div>
-          </div>
-        );
-        break;
-      case 'normal':
-      case 'ontime':
-        content = <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--ok)' }}></span>;
-        popoverContent = (
-          <div style={{ width: '210px', padding: '4px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '12px', marginBottom: 6, borderBottom: '1px solid var(--border-soft)', paddingBottom: 4, textAlign: 'center' }}>
-              ลงเวลาปกติ
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-              <div style={{ textAlign: 'center', flex: 1, borderRight: '1px solid var(--border-soft)', paddingRight: 4 }}>
-                
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาเข้า (08:30)</div>
-                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>08:10</div>
-              </div>
-              <div style={{ textAlign: 'center', flex: 1, paddingLeft: 4 }}>
-                <div style={{ fontWeight: 'bold',color: 'var(--text-muted)' }}>The Government House</div>
-                <div style={{ color: 'var(--text-muted)' }}>ลงเวลาออก (16:30)</div>
-                <div style={{ color: 'var(--ok)', fontWeight: 'bold', fontSize: '12px', marginTop: 2 }}>16:31</div>
-              </div>
-            </div>
-          </div>
-        );
-        break;
-      default:
-        content = null;
-    }
-
-    if (!content) return null;
-
+// รายละเอียดวัน (ใช้ทั้ง popover ตอนชี้ และในหน้าต่างกำหนดตารางการทำงาน)
+function DayDetail({ info, wide }) {
+  const { status, workTime, checkIn, checkOut, seedKey } = info;
+  const s = STATUS[status];
+  if (!s) return null;
+  if (s.letter) {
+    const reasons = LEAVE_REASONS[status];
     return (
-      <Popover content={popoverContent} trigger="hover" placement="top">
-        <div style={{ cursor: 'pointer', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          {content}
-        </div>
-      </Popover>
+      <div className="wc-detail" style={{ width: wide ? 'auto' : 210, textAlign: 'center' }}>
+        <div className="wc-detail-title">{s.label} (ทั้งวัน)</div>
+        <div className="wc-detail-sub">{reasons[Math.floor(seeded(seedKey, 9) * reasons.length)]}</div>
+      </div>
     );
+  }
+  const block = (label, value, located, okTone) => (
+    <div className="wc-detail-col">
+      <div className="wc-detail-loc">{located ? LOCATION : '-'}</div>
+      <div className="wc-detail-sub">{label}</div>
+      <div className="wc-detail-time" style={{ color: value ? (okTone ? 'var(--ok)' : 'var(--danger)') : 'var(--text-muted)' }}>{value || '-'}</div>
+    </div>
+  );
+  const { inMin, outMin } = scheduleTimes(workTime);
+  return (
+    <div className="wc-detail" style={{ width: wide ? 'auto' : 220 }}>
+      <div className="wc-detail-title">{s.label}</div>
+      <div className="wc-detail-cols">
+        {block(`ลงเวลาเข้า (${fmt(inMin)})`, checkIn, !!checkIn, status !== 'late')}
+        {block(`ลงเวลาออก (${fmt(outMin)})`, checkOut, !!checkOut, status !== 'early')}
+      </div>
+    </div>
+  );
+}
+
+export default function RptWorkCalendarPage() {
+  const today = useMemo(() => dayjs(), []);
+  const [month, setMonth] = useState(() => today.startOf('month'));
+  // ตารางการทำงานรายวันที่กำหนดเอง: { 'staffKey|YYYY-MM-DD': workTimeKey }
+  const [overrides, setOverrides] = useState({});
+  const [editing, setEditing] = useState(null); // { staff, date }
+  const [pickedWorkTime, setPickedWorkTime] = useState(null);
+
+  const days = useMemo(
+    () => Array.from({ length: month.daysInMonth() }, (_, i) => month.add(i, 'day')),
+    [month],
+  );
+
+  const workTimeFor = (staff, d) => workTimeOf(overrides[`${staff.key}|${d.format('YYYY-MM-DD')}`] || staff.workTime);
+
+  const dayInfo = (staff, d) => {
+    const seedKey = `${staff.key}|${d.format('YYYY-MM-DD')}`;
+    const base = statusOf(staff, d, today);
+    const workTime = workTimeFor(staff, d);
+    return { ...base, workTime, seedKey, custom: Boolean(overrides[seedKey]), ...attendanceOf(base.status, workTime, seedKey) };
+  };
+
+  const openEditor = (staff, d) => {
+    setEditing({ staff, date: d });
+    setPickedWorkTime(workTimeFor(staff, d).key);
+  };
+
+  const saveWorkTime = () => {
+    if (!editing) return;
+    const { staff, date } = editing;
+    const k = `${staff.key}|${date.format('YYYY-MM-DD')}`;
+    setOverrides((prev) => {
+      const next = { ...prev };
+      // เลือกกลับเป็นตารางตั้งต้นของเจ้าหน้าที่ = ไม่ต้องเก็บค่าที่กำหนดเอง
+      if (pickedWorkTime === staff.workTime) delete next[k];
+      else next[k] = pickedWorkTime;
+      return next;
+    });
+    message.success(`บันทึกตารางการทำงานวันที่ ${date.format('D MMM BBBB')} แล้ว`);
+    setEditing(null);
   };
 
   const columns = [
@@ -224,56 +232,102 @@ export default function RptWorkCalendarPage() {
       render: (text, record) => (
         <div>
           <Text strong style={{ fontSize: '13px', display: 'block' }}>{text}</Text>
-          <Text type="secondary" style={{ fontSize: '11px' }}>{record.code}</Text>
+          <Text type="secondary" style={{ fontSize: '11px' }}>{record.code} · {workTimeOf(record.workTime).name}</Text>
         </div>
       ),
     },
-    ...daysInAugust.map((item) => ({
-      title: (
-        <div style={{ textAlign: 'center', lineHeight: '1.2' }}>
-          <div style={{ fontSize: '12px', fontWeight: 'bold' }}>{item.day}</div>
-          <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{item.dow}</div>
-        </div>
-      ),
-      dataIndex: ['statuses', item.day],
-      key: `day_${item.day}`,
-      align: 'center',
-      width: 42,
-      onCell: (record) => {
-        const st = record.statuses[item.day];
-        if (st === 'holiday') {
-          return { style: { backgroundColor: 'var(--border)', padding: 0 } };
-        }
-        return { style: { padding: 0 } };
-      },
-      render: (status) => {
-        if (status === 'holiday') return null;
-        return renderStatusCell(status);
-      }
-    }))
+    ...days.map((d) => {
+      const key = d.format('YYYY-MM-DD');
+      const offDay = d.day() === 0 || d.day() === 6 || HOLIDAYS[key];
+      return {
+        title: (
+          <div style={{ textAlign: 'center', lineHeight: '1.2', color: offDay ? 'var(--danger)' : undefined }}>
+            <div style={{ fontSize: '12px', fontWeight: 'bold' }}>{d.date()}</div>
+            <div style={{ fontSize: '10px', color: offDay ? 'var(--danger)' : 'var(--text-muted)' }}>{WEEKDAYS[d.day()]}</div>
+          </div>
+        ),
+        key: `day_${key}`,
+        align: 'center',
+        width: 42,
+        onCell: (record) => {
+          const info = dayInfo(record, d);
+          const tint = info.off === 'holiday' ? 'wc-holiday' : info.off === 'weekend' ? 'wc-weekend' : '';
+          return {
+            className: `wc-cell ${tint}${info.custom ? ' wc-custom' : ''}`,
+            onClick: () => openEditor(record, d),
+            title: info.holidayName,
+          };
+        },
+        render: (_, record) => {
+          const info = dayInfo(record, d);
+          if (!info.status) return null;
+          return (
+            <Popover content={<DayDetail info={info} />} trigger="hover" placement="top">
+              <div className="wc-mark"><StatusMark status={info.status} /></div>
+            </Popover>
+          );
+        },
+      };
+    }),
   ];
+
+  const editingInfo = editing ? dayInfo(editing.staff, editing.date) : null;
 
   return (
     <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto', textAlign: 'left' }}>
       <style>{`
-        .ant-table-cell {
-          padding: 6px 4px !important;
+        .wc-table .ant-table-cell { padding: 6px 4px !important; }
+        .wc-table td.wc-cell { position: relative; padding: 0 !important; height: 40px; cursor: pointer; transition: box-shadow 180ms var(--ease); }
+        .wc-table td.wc-cell:hover { box-shadow: inset 0 0 0 2px var(--gold); }
+        .wc-table td.wc-weekend { background: var(--border) !important; }
+        .wc-table td.wc-holiday { background: var(--danger-bg) !important; }
+        .wc-table td.wc-custom::after, .wc-legend .wc-custom-mark::after { content: ''; position: absolute; top: 0; right: 0; border-style: solid; border-width: 0 9px 9px 0; border-color: transparent var(--gold) transparent transparent; }
+        .wc-mark { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+        .wc-dot { display: inline-block; border-radius: 50%; }
+        .wc-cross { color: var(--danger); font-weight: bold; line-height: 1; }
+        .wc-leave { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; font-weight: 700; line-height: 1; }
+        .wc-leave.sick { background: var(--danger-bg); color: var(--danger); box-shadow: inset 0 0 0 1px var(--danger-border); }
+        .wc-leave.vacation { background: var(--navy-tint); color: var(--navy-3); box-shadow: inset 0 0 0 1px var(--navy-3); }
+
+        .wc-legend { margin-bottom: 16px; padding: 12px 16px; background: var(--surface); border-radius: 8px; border: 1px solid var(--border-soft); }
+        .wc-legend-item { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dark); }
+        .wc-legend-icon { display: inline-grid; place-items: center; width: 22px; height: 22px; flex: none; }
+        .wc-legend .wc-swatch { width: 18px; height: 14px; border-radius: 3px; }
+        .wc-legend .wc-custom-mark { position: relative; width: 18px; height: 14px; border: 1px solid var(--border); border-radius: 3px; background: var(--surface); overflow: hidden; }
+
+        .wc-detail { padding: 4px; }
+        .wc-detail-title { font-weight: bold; font-size: 12.5px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border-soft); text-align: center; }
+        .wc-detail-cols { display: flex; font-size: 11px; }
+        .wc-detail-col { flex: 1; text-align: center; padding: 0 4px; }
+        .wc-detail-col + .wc-detail-col { border-left: 1px solid var(--border-soft); }
+        .wc-detail-loc { font-weight: bold; color: var(--text-muted); }
+        .wc-detail-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .wc-detail-time { font-weight: bold; font-size: 13px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+        .wc-modal-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border-soft); font-size: 13.5px; }
+        .wc-modal-row > :first-child { flex: none; width: 92px; color: var(--text-muted); }
+        .wc-modal-field { margin-top: 16px; }
+        .wc-modal-field label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-dark); }
+        .wc-card .ant-card-head-title { white-space: normal; }
+        @media (max-width: 575.98px) {
+          .wc-card .ant-card-head-wrapper { flex-wrap: wrap; }
+          .wc-card .ant-card-head-title { flex: 1 1 100%; padding: 12px 0 6px; }
+          .wc-card .ant-card-extra { margin: 0 0 10px; }
         }
       `}</style>
 
-      <Card 
+      <Card
+        className="wc-card"
         title={
-          <Space>
-            <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
-              ปฏิทินการเข้าทำงาน สิงหาคม 2026
-            </Text>
-          </Space>
+          <Text style={{ color: 'var(--white)', fontSize: '16px', fontWeight: 'bold' }}>
+            <CalendarOutlined /> ปฏิทินการเข้าทำงาน {month.format('MMMM BBBB')}
+          </Text>
         }
         extra={
           <Space>
-            <Button size="small" style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }}>เดือนปัจจุบัน</Button>
-            <Button size="small" icon={<LeftOutlined />} style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }} />
-            <Button size="small" icon={<RightOutlined />} style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }} />
+            <Button size="small" disabled={month.isSame(today, 'month')} onClick={() => setMonth(today.startOf('month'))} style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }}>เดือนปัจจุบัน</Button>
+            <Button size="small" aria-label="เดือนก่อนหน้า" icon={<LeftOutlined />} onClick={() => setMonth(month.subtract(1, 'month'))} style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }} />
+            <Button size="small" aria-label="เดือนถัดไป" icon={<RightOutlined />} onClick={() => setMonth(month.add(1, 'month'))} style={{ backgroundColor: 'var(--surface)', color: 'var(--text-dark)' }} />
           </Space>
         }
         styles={{ header: { backgroundColor: 'var(--navy-1)', borderTopLeftRadius: 8, borderTopRightRadius: 8 } }}
@@ -302,41 +356,98 @@ export default function RptWorkCalendarPage() {
           </FilterField>
         </FilterPanel>
 
-        {/* ส่วนคำอธิบายความหมายของสี (Legend) */}
-        <div style={{ marginBottom: 16, padding: '12px 16px', background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border-soft)' }}>
+        {/* คำอธิบายความหมายของสี — ครบทุกสถานะในตาราง */}
+        <div className="wc-legend">
           <Text strong style={{ display: 'block', marginBottom: 8 }}>ความหมายของสี :</Text>
           <Row gutter={[16, 8]}>
+            {Object.entries(STATUS).map(([k, s]) => (
+              <Col xs={12} sm={8} md={6} key={k}>
+                <span className="wc-legend-item">
+                  <span className="wc-legend-icon"><StatusMark status={k} /></span>= {s.label}
+                </span>
+              </Col>
+            ))}
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--text-muted)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ยังไม่สมบูรณ์</Text></Space>
+              <span className="wc-legend-item">
+                <span className="wc-legend-icon"><span className="wc-swatch" style={{ background: 'var(--border)' }} /></span>= วันหยุดประจำสัปดาห์
+              </span>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--ok)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ลงเวลาปกติ</Text></Space>
+              <span className="wc-legend-item">
+                <span className="wc-legend-icon"><span className="wc-swatch" style={{ background: 'var(--danger-bg)', boxShadow: 'inset 0 0 0 1px var(--danger-border)' }} /></span>= วันหยุดนักขัตฤกษ์
+              </span>
             </Col>
             <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--warn)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= เข้างานสาย/ออกงานก่อนเวลา</Text></Space>
-            </Col>
-            <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--navy-3)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= ลา</Text></Space>
-            </Col>
-            <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ width: 10, height: 10, background: 'var(--border)', display: 'inline-block' }}></span> <Text style={{ fontSize: '12px' }}>= วันหยุดนักขัตฤกษ์ / ประจำสัปดาห์</Text></Space>
-            </Col>
-            <Col xs={12} sm={8} md={6}>
-              <Space><span style={{ color: 'var(--danger)', fontWeight: 'bold' }}>✕</span> <Text style={{ fontSize: '12px' }}>= ขาดงาน</Text></Space>
+              <span className="wc-legend-item">
+                <span className="wc-legend-icon"><span className="wc-custom-mark" /></span>= กำหนดตารางการทำงานรายวัน
+              </span>
             </Col>
           </Row>
+          <Text type="secondary" style={{ display: 'block', marginTop: 8, fontSize: 12 }}>
+            ชี้ที่ช่องเพื่อดูรายละเอียด · คลิกช่องวันเพื่อกำหนดตารางการทำงาน
+          </Text>
         </div>
 
         {/* ตารางปฏิทิน Matrix */}
-        <Table 
-          dataSource={staffData} 
-          columns={columns} 
-          pagination={false} 
+        <Table
+          className="wc-table"
+          dataSource={STAFF}
+          columns={columns}
+          pagination={false}
           bordered
           size="small"
-          scroll={{ x: 1300 }}
+          scroll={{ x: 180 + days.length * 42 }}
         />
       </Card>
+
+      {/* กำหนดตารางการทำงานของวันที่คลิก */}
+      <Modal
+        open={Boolean(editing)}
+        title="กำหนดตารางการทำงาน"
+        okText="บันทึก"
+        cancelText="ยกเลิก"
+        onOk={saveWorkTime}
+        onCancel={() => setEditing(null)}
+        destroyOnHidden
+      >
+        {editing && (
+          <>
+            <div className="wc-modal-row"><span>เจ้าหน้าที่</span><strong>{editing.staff.name} ({editing.staff.code})</strong></div>
+            <div className="wc-modal-row"><span>วันที่</span><span>{editing.date.format('ddddที่ D MMMM BBBB')}</span></div>
+            <div className="wc-modal-row">
+              <span>สถานะ</span>
+              {editingInfo.status ? (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <StatusMark status={editingInfo.status} /> {STATUS[editingInfo.status].label}
+                </span>
+              ) : (
+                <span style={{ color: 'var(--text-muted)' }}>
+                  {editingInfo.holidayName || (editingInfo.off === 'weekend' ? 'วันหยุดประจำสัปดาห์' : 'ยังไม่มีข้อมูลการลงเวลา')}
+                </span>
+              )}
+            </div>
+            {editingInfo.status && !STATUS[editingInfo.status].cross && (
+              <div style={{ padding: '10px 0', borderBottom: '1px solid var(--border-soft)' }}>
+                <DayDetail info={editingInfo} wide />
+              </div>
+            )}
+
+            <div className="wc-modal-field">
+              <label htmlFor="wc-worktime">ตารางการทำงาน</label>
+              <Select
+                id="wc-worktime"
+                value={pickedWorkTime}
+                onChange={setPickedWorkTime}
+                style={{ width: '100%' }}
+                options={WORK_TIMES.map((w) => ({ value: w.key, label: workTimeLabel(w) }))}
+              />
+              <Text type="secondary" style={{ display: 'block', marginTop: 6, fontSize: 12 }}>
+                ตารางตั้งต้นของเจ้าหน้าที่: {workTimeLabel(workTimeOf(editing.staff.workTime))}
+              </Text>
+            </div>
+          </>
+        )}
+      </Modal>
     </div>
   );
 }
