@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { Card, Button, Select, Input, Table, Typography, Space, DatePicker } from 'antd';
 import {
   ArrowLeftOutlined,
-  FileExcelOutlined,
-  FilePdfOutlined,
-  PrinterOutlined
+  FileExcelOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -12,6 +10,9 @@ import FilterPanel, { FilterField } from '../components/FilterPanel';
 
 const { Text } = Typography;
 const { Option } = Select;
+
+// ปุ่ม Export ใช้ชุดสีเดียวกับปุ่ม Export Excel (โทนเขียว)
+const EXPORT_BTN_STYLE = { backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' };
 
 export default function RptOvertimePage() {
   const navigate = useNavigate();
@@ -144,24 +145,23 @@ export default function RptOvertimePage() {
           onSearch={reload}
           onReset={reload}
           extra={
+            // ต้นแบบ: ดาวน์โหลดไฟล์ตัวอย่างใน public/files (ยังไม่สร้างจากข้อมูลที่ค้นหา)
             <>
               <Button
                 icon={<FileExcelOutlined />}
-                style={{ backgroundColor: 'var(--ok-bg)', borderColor: 'var(--ok-border)', color: 'var(--ok)', fontWeight: '500' }}
+                href="/files/Rpt_OTSummary.xlsx"
+                download="Rpt_OTSummary.xlsx"
+                style={EXPORT_BTN_STYLE}
               >
-                Export Excel
+                รายงานสรุปข้อมูลการทำงานล่วงเวลา
               </Button>
               <Button
-                icon={<FilePdfOutlined />}
-                style={{ backgroundColor: 'var(--danger-bg)', borderColor: 'var(--danger-border)', color: 'var(--danger)', fontWeight: '500' }}
+                icon={<FileExcelOutlined />}
+                href="/files/Rpt_OTDetails.xlsx"
+                download="Rpt_OTDetails.xlsx"
+                style={EXPORT_BTN_STYLE}
               >
-                Export PDF
-              </Button>
-              <Button
-                icon={<PrinterOutlined />}
-                style={{ backgroundColor: 'var(--navy-tint)', borderColor: 'var(--navy-tint-border)', color: 'var(--navy-3)', fontWeight: '500' }}
-              >
-                พิมพ์รายงาน
+                รายงานข้อมูลการทำงานล่วงเวลา
               </Button>
             </>
           }
@@ -205,6 +205,7 @@ export default function RptOvertimePage() {
           pagination={false}
           bordered
           size="small"
+          scroll={{ x: 'max-content' }}
           rowClassName={(record, index) => index % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
         />
       </Card>

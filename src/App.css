@@ -493,6 +493,11 @@
   gap: 10px;
   margin-top: 20px;
 }
+/* มือถือ: ปุ่มชื่อยาว (เช่นปุ่ม Export รายงาน) ขึ้นบรรทัดใหม่แทนการล้นจอ */
+@media (max-width: 575.98px) {
+  .filter-panel-actions .ant-space-item { max-width: 100%; }
+  .filter-panel-actions .ant-btn { max-width: 100%; height: auto; min-height: 32px; white-space: normal; text-align: left; }
+}
 
 /* ---------- Section label ---------- */
 .section-label {

@@ -32,6 +32,7 @@
 | 21 | ปฏิทินสรุปการมาปฏิบัติราชการ: ข้อมูล พ.ย.–ธ.ค., ไอคอน ป/พ, คำอธิบายสีครบ, popup กำหนดตารางการทำงาน | เลื่อนเดือนได้ + Dropdown จากข้อมูล WorkTimePage |
 | 22 | รายงานสรุปการลา / ล่วงเวลา แสดงตารางทันทีที่เปิดหน้า | ไม่ต้องกดค้นหาก่อน |
 | 23 | สิทธิ์การใช้งานเหลือ 4 สิทธิ์ + ข้อมูลผู้ใช้สัมพันธ์กัน | UserGroupPage / UserPage ใช้ข้อมูลชุดเดียวกัน |
+| 24 | รายงานการทำงานล่วงเวลา: ปุ่ม Export รายงาน 2 ตัวแทน Export Excel/PDF/พิมพ์ | ดาวน์โหลด Rpt_OTSummary.xlsx / Rpt_OTDetails.xlsx |
 
 ผลการตรวจหลังแก้ครบทุกข้อ:
 
@@ -467,6 +468,20 @@
 
 ---
 
+## 24. รายงานการทำงานล่วงเวลา (RptOvertimePage): ปุ่ม Export รายงาน
+
+- **ไฟล์ใหม่:** `public/files/Rpt_OTSummary.xlsx`, `public/files/Rpt_OTDetails.xlsx` (คัดลอกจากไฟล์ที่ได้รับ)
+- **ไฟล์ที่แก้:** `src/reports/RptOvertimePage.jsx`, `src/App.css`
+- **เอาออก:** ปุ่ม Export Excel, Export PDF และพิมพ์รายงาน
+- **เพิ่ม:** ปุ่ม 2 ตัวชุดสีเดียวกับปุ่ม Export Excel เดิม (พื้นเขียวอ่อน + ไอคอน Excel)
+  - "รายงานสรุปข้อมูลการทำงานล่วงเวลา" → ดาวน์โหลด `Rpt_OTSummary.xlsx`
+  - "รายงานข้อมูลการทำงานล่วงเวลา" → ดาวน์โหลด `Rpt_OTDetails.xlsx`
+  - ต้นแบบ: เป็นไฟล์ตัวอย่างคงที่ ยังไม่สร้างจากข้อมูลที่ค้นหา
+- **มือถือ:** ปุ่มชื่อยาวในแถบค้นหาขึ้นบรรทัดใหม่แทนการล้นจอ (กฎใน `App.css` มีผลกับทุกหน้าที่ใช้ FilterPanel เฉพาะจอ < 576px) และตารางรายงานเลื่อนแนวนอนในการ์ดแทนการทำให้ทั้งหน้าเลื่อน
+- **ตรวจแล้ว:** ปุ่มมีลิงก์และชื่อไฟล์ถูกต้อง, ไฟล์ทั้งสองโหลดได้ (200), สีปุ่มตรงชุดสีเดิม, จอ 375px ไม่ล้น
+
+---
+
 ## รายการไฟล์
 
 **ไฟล์ใหม่**
@@ -500,6 +515,7 @@
 | `public/bg-building.png` | ภาพอาคารในแผงซ้ายของหน้า Login (จาก artifact) |
 | `public/files/RptAttatancePage.xlsx` | ไฟล์ Excel ที่ปุ่ม Export Excel ของรายงานสรุปการมาปฏิบัติราชการดาวน์โหลด |
 | `public/files/RptLeaveReport.xlsx` | ไฟล์ Excel ที่ปุ่ม Export Excel ของรายงานสรุปการลาดาวน์โหลด |
+| `public/files/Rpt_OTSummary.xlsx`, `public/files/Rpt_OTDetails.xlsx` | ไฟล์ Excel ที่ปุ่ม Export รายงานของรายงานการทำงานล่วงเวลาดาวน์โหลด |
 | `Dockerfile`, `.dockerignore`, `nginx.conf`, `build-docker.ps1`, `docker-compose.yml` | ชุด build Docker มาตรฐานของทีม (คัดลอกจาก `D:\Code\DockerBuild\SPM_Time_Backend_Demo`) |
 | `HistoryLog.md` | เอกสารนี้ |
 
