@@ -108,9 +108,7 @@ export default function OvertimeHistoryPage() {
                     <span style={{ fontSize: '14px' }}>{item.date} ({item.timeRange})</span>
                   </Space>
                 } 
-                extra={renderStatusTag(item.status)}
-                hoverable
-                style={{ height: '100%', borderRadius: 8 }}
+                
               >
                 <Space orientation="vertical" size={8} style={{ width: '100%' }}>
                   <Text>
