@@ -140,7 +140,7 @@ export default function UserGroupPage() {
           </Button>
         }
       >
-        <Text type="secondary" style={{ display: 'block', marginBottom: 20 }}>กำหนดกลุ่มสิทธิ์และเมนูที่เข้าถึงได้ สำหรับระบบลงเวลาปฏิบัติราชการ</Text>
+        <Text type="secondary" style={{ display: 'block', marginBottom: 20 }}>กำหนดกลุ่มสิทธิ์และเมนูที่เข้าถึงได้ สำหรับระบบบันทึกเวลาปฏิบัติราชการ</Text>
 
         <FilterPanel
           onSearch={() => setFilter(draft)}

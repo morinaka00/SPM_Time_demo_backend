@@ -25,8 +25,8 @@ import './LoginPage.css';
 
 const PANELS = {
   system: {
-    title: 'ระบบลงเวลาปฏิบัติราชการ',
-    desc: 'สำหรับเจ้าหน้าที่และผู้ได้รับสิทธิ์เข้าใช้งานระบบลงเวลาปฏิบัติราชการ',
+    title: 'ระบบบันทึกเวลาปฏิบัติราชการ (Time Attendance)',
+    desc: 'สำหรับเจ้าหน้าที่และผู้ได้รับสิทธิ์เข้าใช้งานระบบบันทึกเวลาปฏิบัติราชการ',
     footnote:
       'ระบบนี้ใช้การยืนยันตัวตนผ่านระบบบริการอิเล็กทรอนิกส์แบบรวมศูนย์ (SSO) เป็นช่องทางหลัก ผู้ใช้ที่มีบัญชีผู้ใช้งานของระบบ (User local) สามารถเข้าสู่ระบบด้วยบัญชีเดียวกันได้',
   },
@@ -114,7 +114,7 @@ function CredentialForm({ submitText, onSubmit, extra }) {
 function ChooseStep({ goTo }) {
   return (
     <>
-      <p className="login-eyebrow">ระบบลงเวลาปฏิบัติราชการ</p>
+      <p className="login-eyebrow">ระบบบันทึกเวลาปฏิบัติราชการ</p>
       <h2 className="login-title">เข้าสู่ระบบ</h2>
       <p className="login-sub">เลือกวิธีเข้าสู่ระบบ</p>
 
@@ -136,7 +136,7 @@ function LocalStep({ goTo, onLogin }) {
   return (
     <>
       <BackLink onClick={() => goTo('choose')} />
-      <p className="login-eyebrow">ระบบลงเวลาปฏิบัติราชการ</p>
+      <p className="login-eyebrow">ระบบบันทึกเวลาปฏิบัติราชการ</p>
       <h2 className="login-title">เข้าสู่ระบบด้วย User local</h2>
       <p className="login-sub">กรอกชื่อผู้ใช้งานและรหัสผ่านของระบบ</p>
       <CredentialForm submitText="เข้าสู่ระบบ" onSubmit={(username) => onLogin(username, 'local')} />

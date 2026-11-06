@@ -111,8 +111,8 @@ function MainLayout({ isDark, onToggleTheme, onLogout }) {
           {!collapsed && (
             <>
               <span className="brand-name">
-                ระบบลงเวลา
-                <small>ปฏิบัติราชการ</small>
+                ระบบบันทึกเวลาปฏิบัติราชการ
+                <small>Time Attendance</small>
               </span>
             </>
           )}

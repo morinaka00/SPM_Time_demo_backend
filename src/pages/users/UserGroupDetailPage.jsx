@@ -147,7 +147,7 @@ export default function UserGroupDetailPage() {
         style={{ borderRadius: 8 }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
-          <Text type="secondary">กำหนดชื่อกลุ่มสิทธิ์และสิทธิ์การเข้าถึงเมนูของระบบลงเวลาปฏิบัติราชการ</Text>
+          <Text type="secondary">กำหนดชื่อกลุ่มสิทธิ์และสิทธิ์การเข้าถึงเมนูของระบบบันทึกเวลาปฏิบัติราชการ</Text>
           {isEdit && (
             <Space size={6} wrap>
               <Text type="secondary">ระดับสิทธิ์:</Text>
