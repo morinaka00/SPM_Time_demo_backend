@@ -61,6 +61,7 @@ import LocationPage from './pages/setting/LocationPage';
 import RptAttatancePage from './reports/RptAttatancePage';
 import RptLeaveDetailPage from './reports/RptLeaveDetailPage';
 import RptOvertimePage from './reports/RptOvertimePage';
+import AttendanceLogPage from './reports/AttendanceLogPage';
 
 //user && permission
 import TermsConditionPage from './pages/setting/TermsConditionPage';
@@ -158,6 +159,7 @@ function MainLayout({ isDark, onToggleTheme, onLogout }) {
               <Route path="/report/RptWorkCalendarPage" element={<RptWorkCalendarPage />} />
               <Route path="/report/RptLeaveDetailPage" element={<RptLeaveDetailPage />} />
               <Route path="/report/RptOvertimePage" element={<RptOvertimePage />} />
+              <Route path="/report/AttendanceLogPage" element={<AttendanceLogPage />} />
 
               {/* เปลี่ยนมาเรียกใช้งานคอมโพเนนต์ WorkTimePage จริงๆ ตรงนี้ */}
               <Route path="/settings/WorkTimePage" element={<WorkTimePage />} />

@@ -45,6 +45,7 @@ export const MENU_ITEMS = [
       { key: '/report/RptAttatancePage', label: 'รายงานสรุปการมาปฏิบัติราชการ' },
       { key: '/report/RptLeaveDetailPage', label: 'รายงานสรุปข้อมูลการลา' },
       { key: '/report/RptOvertimePage', label: 'รายงานสรุปการข้อมูลการทำงานล่วงเวลา' },
+      { key: '/report/AttendanceLogPage', label: 'ประวัติการลงเวลา' },
     ],
   },
   {
