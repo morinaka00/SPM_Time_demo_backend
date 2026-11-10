@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Row, Col, Typography, Space, message } from 'antd';
-import { EnvironmentOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
 const { Text } = Typography;
@@ -109,16 +109,6 @@ export default function AttendancePage() {
             </div>
           ))}
         </Space>
-      </div>
-
-      {/* 6. ปุ่มบวก (+) มุมขวาล่าง */}
-      <div style={{ padding: '8px 16px', background: 'var(--surface)', textAlign: 'right', borderTop: '1px solid var(--border-soft)' }}>
-        <Button 
-          type="text" 
-          shape="circle" 
-          icon={<PlusCircleOutlined style={{ fontSize: '26px', color: 'var(--text-dark)' }} />} 
-          onClick={handleCheckIn}
-        />
       </div>
 
     </div>
