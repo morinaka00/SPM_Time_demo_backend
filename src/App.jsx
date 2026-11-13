@@ -69,8 +69,12 @@ import UserPage from './pages/users/UserPage';
 import UserDetailPage from './pages/users/UserDetailPage';
 import UserGroupPage from './pages/users/UserGroupPage';
 import UserGroupDetailPage from './pages/users/UserGroupDetailPage';
+import ActivityPage from './pages/users/ActivityPage';
+import LoginLogPage from './pages/users/LoginPage';
 import ClientPage from './pages/system_settings/ClientPage';
 import MailPage from './pages/system_settings/MailPage';
+import CaptchaPage from './pages/system_settings/CaptchaPage';
+import LineOAPage from './pages/system_settings/LineOAPage';
 
 
 
@@ -180,8 +184,12 @@ function MainLayout({ isDark, onToggleTheme, onLogout }) {
               <Route path="/users/UserDetailPage" element={<UserDetailPage />} />
               <Route path="/users/UserGroupPage" element={<UserGroupPage />} />
               <Route path="/users/UserGroupDetailPage" element={<UserGroupDetailPage />} />
+              <Route path="/users/ActivityPage" element={<ActivityPage />} />
+              <Route path="/users/LoginPage" element={<LoginLogPage />} />
               <Route path="/system_settings/ClientPage" element={<ClientPage />} />
               <Route path="/system_settings/MailPage" element={<MailPage />} />
+              <Route path="/system_settings/CaptchaPage" element={<CaptchaPage />} />
+              <Route path="/system_settings/LineOAPage" element={<LineOAPage />} />
 
               <Route path="/settings/TermsConditionPage" element={<TermsConditionPage title="ตั้งค่าข้อกำหนดและเงื่อนไขการใช้งาน" />} />
               
